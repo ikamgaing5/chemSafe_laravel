@@ -9,6 +9,7 @@ class FDS extends Model
 {
     use HasFactory;
 
+    protected $table = 'infofds';
     protected $fillable = [
         'produit_id',
         'physique',

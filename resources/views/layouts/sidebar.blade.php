@@ -1,3 +1,7 @@
+<?php
+use Illuminate\Support\Facades\Crypt;
+
+?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=science" />
@@ -18,7 +22,7 @@
 					<i class="bi bi-house-door-fill"></i> <span class="nav-text">Tableau de Bord</span>
 				</a>
 			</li>
-			@if (Auth::user()->role === 'superadmin') 
+			@if (Auth::user()->role === 'superadmin')
 				<li>
 					<a href="/factory/all-factory">
 						<i class="bi bi-buildings-fill"></i>
@@ -26,9 +30,10 @@
 					</a>
 				</li>
 			@endif
-			@if (Auth::user()->role === 'admin' || Auth::user()->role == 'user') 
+			@if (Auth::user()->role === 'admin' || Auth::user()->role == 'user')
 				<li>
-					<a href="/workshop/all-workshop/<?= Crypt::encrypt(Auth::user()->idusine) ?>">
+					
+					<a href="/workshop/all-workshop/{{ Crypt::encrypt(Auth::user()->usine_id) }}">
 						<i class="bi bi-building-fill-gear"></i>
 						<span class="nav-text">Liste des Ateliers</span>
 					</a>
@@ -36,7 +41,7 @@
 			@endif
 
 
-			@if (Auth::user()->role === 'superadmin') 
+			@if (Auth::user()->role === 'superadmin')
 				<li>
 					<a href="/workshop/all-workshop/">
 						<i class="bi bi-building-fill-gear"></i>
@@ -46,7 +51,7 @@
 			@endif
 
 
-			@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
+			@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
 
 				<li>
 					<a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
@@ -73,9 +78,9 @@
 					<span class="nav-text">Produits</span>
 				</a>
 				<ul aria-expanded="false">
-					@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
+					@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
 						<li><a href="/product/new-product">Ajouter un produit</a></li>
-                    @endif
+					@endif
 					<li><a href="/product/all-product">Liste des produits</a></li>
 				</ul>
 			</li>

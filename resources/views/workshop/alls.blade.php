@@ -18,7 +18,6 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
     // $chemin = '/workshop/all-workshop/' . $params['idusine'];
     // $_SESSION['vue'] = '/workshop/all-workshop/' . $params['idusine'];
 }
-// dd($idusine);
 
 
 // die();
@@ -57,7 +56,7 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
     <link rel="stylesheet" href="/css/all.css">
     <script src="/js/all.js"></script>
     <script>
-        document.title = "ChemSafe";
+    document.title = "ChemSafe";
     </script>
 
 </head>
@@ -85,12 +84,12 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
         <div class="content-body">
             <div class="container-fluid">
                 @if (
-                        (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') && strpos(
-                            $current_page,
-                            'workshop/all-workshop/'
-                        ) === 0 
-                    )
-                    @include('workshop.partials.new-workshop')
+                (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') && strpos(
+                $current_page,
+                'workshop/all-workshop/'
+                ) === 0 && isset($idusine)
+                )
+                @include('workshop.partials.new-workshop')
                 @endif
                 <!-- Row -->
                 <div class="row">
@@ -132,9 +131,9 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5" href="/dashboard">Tableau de bord</a></u>
                                     @if (Auth::user()->role == 'superadmin')
-                                        <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
-                                        <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos
-                                                Usines</a></u>
+                                    <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
+                                    <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos
+                                            Usines</a></u>
                                     @endif
 
                                     <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
@@ -149,28 +148,16 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                                     Tableau de bord
                                 </a></u>
                             <div class="fs-5">
-                                Nombre d'ateliers : <strong class="card-title fw-bold fs-5">{{ $nbreAtelier }}</strong>
+                                Nombre d'ateliers : <strong class="card-title fw-bold fs-5">{{ $nbreAtelier ?? '' }}</strong>
                             </div>
                         </div>
                     </div>
 
-                    <?php
-foreach ($AllUsine as $key) {
-    $idusines = $key['id'];
+                    
+@foreach ($AllUsine as $key) 
 
-    // Cas pour l'admin : on vérifie si c'est bien l'usine de l'admin
-    if ((Auth::user()->role === 'admin' || Auth::user()->role === 'user') && $idusines != ($idusine)) {
-        continue; // On saute les usines qui ne correspondent pas
-    }
-
-
-    if (isset($idusine)) {
-        if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)) {
-            continue; // On saute les usines qui ne correspondent pas
-        }
-    }
-    // $allAtelier = $atelier->AllAtelier($conn, $idusine);
-    ?>
+    {{-- $allAtelier = $atelier->AllAtelier($conn, $idusine); --}}
+    
                     <div class="col-xl-12">
                         <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
                             <!-- Ajout des classes de visibilité -->
@@ -178,12 +165,12 @@ foreach ($AllUsine as $key) {
                                 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <div>
                                     <div class="fs-5">Atelier de
-                                        l'{{$usine->nomusine ?? $atelier->usine->nomusine ?? ''}}
+                                        l'{{$key->nomusine ?? ''}}
                                     </div>
                                 </div>
                                 <div class="fs-5">
                                     Nombre d'ateliers : <strong
-                                        class="card-title fw-bold fs-5">{{$nbreAtelier}}</strong>
+                                        class="card-title fw-bold fs-5">{{$key->ateliers->where('active', 'true')->count()}}</strong>
                                 </div>
 
                             </div>
@@ -191,7 +178,7 @@ foreach ($AllUsine as $key) {
 
                         <div class="shadow-lg page-title d-xl-none text-center py-2">
                             <u>
-                                <div class="fs-5">Atelier de l'{{$usine->nomusine ?? $atelier->usine->nomusine ?? ''}}
+                                <div class="fs-5">Atelier de l'{{ $key->nomusine ?? ''}}
                                 </div>
                             </u>
                         </div>
@@ -199,57 +186,55 @@ foreach ($AllUsine as $key) {
                     <div class="col-xl-12">
                         <!-- Row -->
                         <div class="row">
-                            <?php
-    // echo $message_succes;
-								?>
                             <div class="col-xl-12">
                                 <!-- Row -->
                                 <div class="main">
+                                    @if ($key->ateliers->where('active', 'true')->count())
                                     <div class="scrollable-row ">
-                                        @foreach ($workshop->where('active', 'true')->sortBy('nomatelier') as $key)
-                                            <div class="col-xl-3 col-lg-4 col-sm-6 px-3">
-                                                <div class=" card contact_list text-center">
-
-                                                    <div class="card-body">
-                                                        <div class="user-content">
-                                                            <div class="user-info">
-                                                                <div class="user-details">
-                                                                    <p style="font-weight: 700;">Atelier nommé</p>
-                                                                    <h4 class="user-name mb-0">{{ $key['nomatelier'] }}
-                                                                    </h4>
-                                                                </div>
+                                        
+                                        @foreach ($key->ateliers->where('active', 'true')->sortBy('nomatelier') as $keys)
+                                        <div class="col-xl-3 col-lg-4 col-sm-6 px-3">
+                                            <div class=" card contact_list text-center">
+                                                <div class="card-body">
+                                                    <div class="user-content">
+                                                        <div class="user-info">
+                                                            <div class="user-details">
+                                                                <p style="font-weight: 700;">Atelier nommé</p>
+                                                                <h4 class="user-name mb-0">{{ $keys->nomatelier }}
+                                                                </h4>
                                                             </div>
                                                         </div>
-                                                        <div class="contact-icon">
-                                                            <label style="font-weight: 700;"
-                                                                style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Nombre
-                                                                de produit:</label><span
-                                                                class="badge badge-success light">{{ $key->contenir_count }}</span>
-
-                                                            <br>
-                                                            <label style="font-weight: 700;"
-                                                                style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
-                                                                sans fds: </label><span
-                                                                class="badge badge-danger light">{{ $key->produits_sans_fds_count }}</span>
-                                                        </div>
-                                                        <div class="d-flex mb-3 justify-content-center align-items-center">
-                                                            @if (Auth::user()->role != 'user')
-                                                                <center>
-                                                                    @include('workshop.partials.edit')
-                                                                    @include('workshop.partials.delete')
-                                                                </center>
-                                                            @endif
-                                                        </div>
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="/all-products/{{ $key['uuid'] }}"
-                                                                class="btn btn-secondary btn-sm w-100 me-2">Voir les
-                                                                produits</a>
-                                                        </div>
                                                     </div>
+                                                    <div class="contact-icon">
+                                                        <label style="font-weight: 700;"
+                                                            style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Nombre
+                                                            de produit:</label><span
+                                                            class="badge badge-success light">{{ $keys->contenir->count() }}</span>
 
+                                                        <br>
+                                                        <label style="font-weight: 700;"
+                                                            style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
+                                                            sans fds: </label><span
+                                                            class="badge badge-danger light">{{ $keys->produitsSansFds->count() }}</span>
+                                                    </div>
+                                                    <div class="d-flex mb-3 justify-content-center align-items-center">
+                                                        @if (Auth::user()->role != 'user')
+                                                        <center>
+                                                            @include('workshop.partials.edit')
+                                                            @include('workshop.partials.delete')
+                                                        </center>
+                                                        @endif
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <a href="/all-products/{{ $key['idatelier'] }}"
+                                                            class="btn btn-secondary btn-sm w-100 me-2">Voir les
+                                                            produits</a>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         @endforeach
+                                        
                                     </div>
                                     <div class="scroll-indicator">
                                         <div class="scroll-indicator-text">Faites défiler pour voir plus</div>
@@ -261,22 +246,25 @@ foreach ($AllUsine as $key) {
                                             </svg>
                                         </div>
                                     </div>
+                                    @else
+                                        <div class="text-muted">Aucun atelier pour cette usine.</div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-
+@endforeach
                     <?php
-    if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
-        break;
-    }
+                        // if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
+                        //     break;
+                        // }
 
     // if (Auth::user()->role === 'superadmin' && $idusine == IdEncryptor::decode($idusine)) {
     // 	break; 
     // }
 
 
-}
+
 					?>
                 </div>
             </div>

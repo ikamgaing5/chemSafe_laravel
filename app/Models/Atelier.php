@@ -14,6 +14,7 @@ class Atelier extends Model
      *
      * @var array
      */
+    protected $table = 'atelier';
     protected $fillable = [
         'usine_id',
         'nomatelier',
@@ -25,5 +26,12 @@ class Atelier extends Model
     }
     public function usine(){
         return $this->belongsTo(Usine::class, 'usine_id');
+    }
+
+    public function produitsSansFds()
+    {
+        return $this->belongsToMany(Produit::class, 'contenir', 'atelier_id', 'produit_id')
+            ->whereNull('fds')
+            ->orWhere('fds', '');
     }
 }

@@ -13,7 +13,7 @@ Route::get('/dashboards', [UserController::class, 'dashboard'])->name('dashboard
 
 
 Route::get('/workshop/all-workshop/{idusine}', [AtelierController::class, 'all']);
-
+Route::get('/workshop/all-workshop/', [AtelierController::class, 'alls']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

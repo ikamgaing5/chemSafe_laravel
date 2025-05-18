@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,9 +12,9 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('usine_id')->default('null');
+            $table->string('usine_id');
             $table->string('name');
-            $table->string('username',191)->unique();
+            $table->string('username', 191)->unique();
             $table->string('password');
             $table->string('role');
             $table->rememberToken();
@@ -61,6 +60,29 @@ return new class extends Migration
             $table->string('nomdanger');
         });
 
+        schema::create('historique_acces', function (Blueprint $table) {
+            $table->string('id', 191)->primary();
+            $table->string('user_id');
+            $table->date('created_at');
+            $table->time('time');
+            $table->string('action');
+        });
+
+        Schema::create('infofds', function (Blueprint $table) {
+            $table->string('id', 191)->primary();
+            $table->string('produit_id');
+            $table->string('physique');
+            $table->string('sante');
+            $table->string('ppt');
+            $table->string('stabilite');
+            $table->string('eviter');
+            $table->string('incompatible');
+            $table->string('reactivite');
+            $table->string('stockage');
+            $table->string('secours');
+            $table->string('epi');
+        });
+
         schema::create('atelier', function (Blueprint $table) {
             $table->string('id', 191)->primary();
             $table->string('usine_id');
@@ -68,10 +90,21 @@ return new class extends Migration
             $table->string('active')->default(true);
         });
 
-        
+        schema::create('historique', function (Blueprint $table) {
+            $table->string('id', 191)->primary();
+            $table->string('user_id');
+            $table->string('produit_id');
+            $table->string('atelier_id');
+            $table->string('usine_id');
+            $table->string('action');
+            $table->timestamp('created_at');
+            $table->string('created_by');
+        });
+
+
     }
 
-    
+
 
     /**
      * Reverse the migrations.

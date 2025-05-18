@@ -13,7 +13,8 @@ class Produit extends Model
      *
      * @var array
      */
-    protected $fillable = [
+    protected $table = 'produit';
+     protected $fillable = [
         'nomprod',
         'type_emballage',
         'poids',

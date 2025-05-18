@@ -13,6 +13,7 @@ class Danger extends Model
      *
      * @var array
      */
+    protected $table = 'danger';
     protected $fillable = [
         'nomdanger'
     ];
