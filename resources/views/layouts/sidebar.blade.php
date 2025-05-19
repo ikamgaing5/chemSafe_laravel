@@ -24,26 +24,23 @@ use Illuminate\Support\Facades\Crypt;
 			</li>
 			@if (Auth::user()->role === 'superadmin')
 				<li>
-					<a href="/factory/all-factory">
+					<a href="{{route('all-factorie')}}">
 						<i class="bi bi-buildings-fill"></i>
 						<span class="nav-text">Liste des Usines</span>
 					</a>
 				</li>
 			@endif
-			@if (Auth::user()->role === 'admin' || Auth::user()->role == 'user')
+			@if ((Auth::user()->role === 'admin' || Auth::user()->role == 'user') && isset(Auth::user()->usine_id))
 				<li>
-					
-					<a href="/workshop/all-workshop/{{ Crypt::encrypt(Auth::user()->usine_id) }}">
+					<a href="{{route('oneworkshop', Crypt::encrypt(Auth::user()->usine_id))}}">
 						<i class="bi bi-building-fill-gear"></i>
 						<span class="nav-text">Liste des Ateliers</span>
 					</a>
 				</li>
 			@endif
-
-
 			@if (Auth::user()->role === 'superadmin')
 				<li>
-					<a href="/workshop/all-workshop/">
+					<a href="{{route('superadminWorkshop')}}">
 						<i class="bi bi-building-fill-gear"></i>
 						<span class="nav-text">Liste des Ateliers</span>
 					</a>

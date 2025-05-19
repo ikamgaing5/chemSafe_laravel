@@ -17,6 +17,7 @@ class Danger extends Model
     protected $fillable = [
         'nomdanger'
     ];
+    public $timestamps = false;
     public function produit(){
         return $this->belongsToMany(Produit::class, 'possede','danger_id', 'produit_id');
     }

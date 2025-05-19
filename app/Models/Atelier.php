@@ -21,10 +21,14 @@ class Atelier extends Model
         'active'
     ];
 
-    public function contenir(){
-        return $this->belongsToMany(Produit::class, 'contenir','atelier_id', 'produit_id');
+    public $timestamps = false;
+
+    public function contenir()
+    {
+        return $this->belongsToMany(Produit::class, 'contenir', 'atelier_id', 'produit_id');
     }
-    public function usine(){
+    public function usine()
+    {
         return $this->belongsTo(Usine::class, 'usine_id');
     }
 

@@ -10,6 +10,7 @@ class historique_acces extends Model
     use HasFactory;
 
     protected $table = 'historique_acces';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'created_at',

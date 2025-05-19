@@ -52,7 +52,7 @@ return new class extends Migration {
         schema::create('usine', function (Blueprint $table) {
             $table->string('id', 191)->primary();
             $table->string('nomusine');
-            $table->string('active')->default(true);
+            $table->string('active')->default("true");
         });
 
         schema::create('danger', function (Blueprint $table) {

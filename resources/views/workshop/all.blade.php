@@ -1,22 +1,17 @@
 <?php
 use Illuminate\Support\Facades\Auth;
 
-// require_once __DIR__ . '/../../utilities/session.php';
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-// $conn = Database::getInstance()->getConnection();
 
 if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmin') {
     // Cas du superadmin sans usine spécifique
     $message = 'Liste des Ateliers de toutes les Usines.';
     $chemin = '/workshop/all-workshop';
     $_SESSION['vue'] = '/workshop/all-workshop';
-} elseif (strpos($current_page, 'workshop/all-workshop/') === 0) {
-    // Cas de tout utilisateur accédant à un atelier d'une usine spécifique
-    // $idusine = IdEncryptor::decode($idusine);
-    // $nom = Usine::getNameById($conn, $idusine);
-    $message = "Liste des Ateliers de l'$usine->nomusine.";
-    // $chemin = '/workshop/all-workshop/' . $params['idusine'];
-    // $_SESSION['vue'] = '/workshop/all-workshop/' . $params['idusine'];
+} elseif (strpos($current_page, 'workshop/all-workshop/') === 0 && isset($usine)) {
+    $message = "Liste des Ateliers de l'usine " . $usine->nomusine;
+} else {
+    $message = "Liste des Ateliers";
 }
 // dd($idusine);
 
@@ -84,11 +79,24 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
 
         <div class="content-body">
             <div class="container-fluid">
+                @if (session('successadd'))
+                    {!!session('successadd')!!}
+                @elseif (session('erroradd'))
+                    {!!session('erroradd')!!}
+                @elseif (session('samename'))
+                    {!!session('samename')!!}
+                @elseif (session('deleteSuccess'))
+                    {!!session('deleteSuccess')!!}
+                @elseif (session('echecDelete'))
+                    {!!session('echecDelete')!!}
+                @elseif (session('updateOk'))
+                    {!!session('updateOk')!!}
+                @endif
                 @if (
                         (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') && strpos(
                             $current_page,
                             'workshop/all-workshop/'
-                        ) === 0 
+                        ) === 0
                     )
                     @include('workshop.partials.new-workshop')
                 @endif
@@ -122,8 +130,10 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
     echo $package->message($message, "success");
     unset($_SESSION['insertok']);
 }
-
 					?>
+                    @if (session('deleteok'))
+                        
+                    @endif
                     <div class="col-xl-12">
                         <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
                             <!-- Ajout des classes de visibilité -->
@@ -178,7 +188,7 @@ foreach ($AllUsine as $key) {
                                 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <div>
                                     <div class="fs-5">Atelier de
-                                        l'{{$usine->nomusine ?? $atelier->usine->nomusine ?? ''}}
+                                        l'{{ isset($usine) ? $usine->nomusine : 'Usine' }}
                                     </div>
                                 </div>
                                 <div class="fs-5">

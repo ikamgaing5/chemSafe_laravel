@@ -210,7 +210,8 @@
 										</a>
 
 									</div>
-									<form action="/logout" method="POST">
+									<form method="POST" action="{{ route('logout') }}">
+										@csrf
 										<div class="card-footer text-center p-3">
 
 											<input type="submit" name="deconnecter"

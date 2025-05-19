@@ -21,7 +21,6 @@ class Usine extends Model
      *
      * @var bool
      */
-    public $timestamps = false;
 
     /**
      * Les attributs qui peuvent être assignés en masse.
@@ -32,6 +31,7 @@ class Usine extends Model
         'nomusine',
         'active',
     ];
+    public $timestamps = false;
     public function ateliers()
     {
         return $this->hasMany(Atelier::class, 'usine_id', 'id');

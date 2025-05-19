@@ -6,7 +6,8 @@
 <div class="modal fade" id="addatelier" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
-        <form action="/factory/add" method="POST">
+        <form action="{{route('factory.add')}}" method="POST">
+            @csrf
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Ajout d'une Usine </h1>
@@ -14,7 +15,7 @@
                 </div>
                 <div class="modal-body">
                     <label class="form-label text-secondary">Nom de l'Usine: </label>
-                    <input type="text" class="form-control" name="nom" id="" value="">
+                    <input type="text" class="form-control" name="nomusine" id="" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

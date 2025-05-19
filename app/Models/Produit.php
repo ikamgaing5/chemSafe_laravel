@@ -14,6 +14,7 @@ class Produit extends Model
      * @var array
      */
     protected $table = 'produit';
+    public $timestamps = false;
      protected $fillable = [
         'nomprod',
         'type_emballage',

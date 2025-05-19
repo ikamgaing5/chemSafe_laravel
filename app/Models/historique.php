@@ -10,6 +10,7 @@ class historique extends Model
     use HasFactory;
 
     protected $table = 'historique';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'produit_id',

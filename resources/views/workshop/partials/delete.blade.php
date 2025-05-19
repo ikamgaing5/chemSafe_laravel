@@ -1,22 +1,24 @@
-<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#supp<?= $key['id'] ?>">
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#supp{{$key->id}}">
     Supprimer
   </button>
   
   <!-- Modal -->
-  <div class="modal fade" id="supp<?= $key['id'] ?>" tabindex="-1" data-bs-backdrop="static"
+  <div class="modal fade" id="supp{{$key->id}}" tabindex="-1" data-bs-backdrop="static"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog ">
-      <form action="/workshop/delete" method="POST">
+      <form action="{{route('workshop.delete', $key->id)}}" method="POST">
+        @csrf
+        @method('patch')
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Suppression de l'Atelier
-              <strong><?= $key['nomatelier'] ?></strong> </h1>
+              <strong>{{$key->nomatelier}}</strong> </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Voulez-vous réellement supprimer l'Atelier <strong><?= $key['nomatelier'] ?></strong> ?
-            <input type="hidden" name="idatelier" value="<?= $key['id'] ?>">
-            <input type="hidden" name="nom" value="<?= $key['nomatelier'] ?>">
+            Voulez-vous réellement supprimer l'Atelier <strong>{{$key->nomatelier}}</strong> ?
+            <input type="hidden" name="id" value="{{$key->id}}">
+            <input type="hidden" name="active" value="false">
             <input type="hidden" name="usine" value="{{$idusine ?? $key->id}}">
           </div>
           <div class="modal-footer">
