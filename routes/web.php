@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AtelierController;
+use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsineController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,11 @@ Route::post('/', [UserController::class, 'login'])->name('logins');
 
 Route::middleware(['auth'])->group(function () {
 Route::get('/dashboards', [UserController::class, 'dashboard'])->name('dashboards');
+
+Route::get('/workshop/all-products/{idatelier}',[ProduitController::class,'allByWorkshop'])->name('product.forworkshop');
+Route::get('/product/new-product', [ProduitController::class, 'add'])->name('product.add');
+Route::post('/product/new-product', [ProduitController::class, 'addPost'])->name('product.addPost');
+Route::get('/product/more-detail/{idatelier}/{idprodit}', [ProduitController::class, 'one'])->name('product.one');
 
 
 

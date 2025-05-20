@@ -15,7 +15,7 @@ class Produit extends Model
      */
     protected $table = 'produit';
     public $timestamps = false;
-     protected $fillable = [
+    protected $fillable = [
         'nomprod',
         'type_emballage',
         'poids',
@@ -25,13 +25,20 @@ class Produit extends Model
         'photo',
         'fds',
         'risque'
-    
+
     ];
 
-    public function atelier(){
+    public function atelier()
+    {
         return $this->belongsToMany(Atelier::class, 'contenir', 'produit_id', 'atelier_id');
     }
-    public function danger(){
-        return $this->belongsToMany(Produit::class, 'possede','produit_id', 'danger_id');
+    public function danger()
+    {
+        return $this->belongsToMany(Danger::class, 'possede', 'produit_id', 'danger_id');
+    }
+
+    public function infofds()
+    {
+        return $this->hasMany(FDS::class, 'produit_id', 'id');
     }
 }

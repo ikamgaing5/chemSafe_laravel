@@ -76,7 +76,7 @@ use Illuminate\Support\Facades\Crypt;
 				</a>
 				<ul aria-expanded="false">
 					@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
-						<li><a href="/product/new-product">Ajouter un produit</a></li>
+						<li><a href="{{route('product.add')}}">Ajouter un produit</a></li>
 					@endif
 					<li><a href="/product/all-product">Liste des produits</a></li>
 				</ul>

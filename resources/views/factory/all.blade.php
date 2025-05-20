@@ -178,7 +178,7 @@ if ($current_page == 'factory/all-factory') {
                                                         <label style="font-weight: 700;"
                                                             style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Nombre
                                                             d'atelier :</label><span
-                                                            class="badge badge-success light">{{$keys->ateliers()->count()}}</span>
+                                                            class="badge badge-success light">{{$keys->ateliers()->where('active', 'true')->count()}}</span>
 
                                                         <br>
                                                         <!-- <label style="font-weight: 700;" style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit sans fds: </label><span class="badge badge-danger light"></span> -->

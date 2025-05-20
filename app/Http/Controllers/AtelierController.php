@@ -24,7 +24,8 @@ class AtelierController extends Controller
         ])->where('usine_id', $idusine)->get();
         $AllUsine = Usine::where('active', 1)->orderBy('nomusine', 'asc')->get();
         if (Auth::user()->role == 'superadmin') {
-            $nbreAtelier = Atelier::where('active', 'true')->count();
+            // $nbreAtelier = Atelier::where('active', 'true')->count();
+            $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
         } else {
             $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
         }

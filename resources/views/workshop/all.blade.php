@@ -251,7 +251,7 @@ foreach ($AllUsine as $key) {
                                                             @endif
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <a href="/all-products/{{ $key['uuid'] }}"
+                                                            <a href="{{route('product.forworkshop',$key['id'])}}"
                                                                 class="btn btn-secondary btn-sm w-100 me-2">Voir les
                                                                 produits</a>
                                                         </div>

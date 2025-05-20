@@ -1,30 +1,30 @@
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('Script JS chargé');
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("Script JS chargé");
 
-    let nom = document.getElementById('nom');
-    let emballage = document.getElementById('emballage');
-    let vol = document.getElementById('vol');
-    let danger = document.getElementById('danger');
-    let atelier = document.getElementById('atelier');
-    let risque = document.getElementById('risque');
-    let fabriquant = document.getElementById('fabriquant');
-    let nature = document.getElementById('nature');
-    let utilisation = document.getElementById('utilisation');
-    let fdsInput = document.getElementById('pdfUpload');
+    let nom = document.getElementById("nom");
+    let emballage = document.getElementById("emballage");
+    let vol = document.getElementById("vol");
+    let danger = document.getElementById("danger");
+    let atelier = document.getElementById("atelier");
+    let risque = document.getElementById("risque");
+    let fabriquant = document.getElementById("fabriquant");
+    let nature = document.getElementById("nature");
+    let utilisation = document.getElementById("utilisation");
+    let fdsInput = document.getElementById("fds");
     let FDSDisplay = document.getElementById("FDSDisplay");
-    let DispoFDS = document.getElementById('DispoFDS');
-    let submitBtn = document.getElementById('submitBtn');
+    let DispoFDS = document.getElementById("DispoFDS");
+    let submitBtn = document.getElementById("submitBtn");
 
-    let messageNom = document.getElementById('messageNom');
-    let messageEmballage = document.getElementById('messageEmballage');
-    let messageVol = document.getElementById('messageVol');
-    let messageDanger = document.getElementById('messageDanger');
-    let messageAtelier = document.getElementById('messageAtelier');
-    let messageRisque = document.getElementById('messageRisque');
-    let messageFabriquant = document.getElementById('messageFabriquant');
-    let messageNature = document.getElementById('messageNature');
-    let messageUtilisation = document.getElementById('messageUtilisation');
-    let messageFDS = document.getElementById('messageFDS');
+    let messageNom = document.getElementById("messageNom");
+    let messageEmballage = document.getElementById("messageEmballage");
+    let messageVol = document.getElementById("messageVol");
+    let messageDanger = document.getElementById("messageDanger");
+    let messageAtelier = document.getElementById("messageAtelier");
+    let messageRisque = document.getElementById("messageRisque");
+    let messageFabriquant = document.getElementById("messageFabriquant");
+    let messageNature = document.getElementById("messageNature");
+    let messageUtilisation = document.getElementById("messageUtilisation");
+    let messageFDS = document.getElementById("messageFDS");
 
     const validationStates = {
         temoinNom: false,
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
         temoinNature: false,
         temoinUtilisation: false,
         temoinAtelier: false,
-        temoinFDS: false
+        temoinFDS: false,
     };
 
     // Vérification de la validation des champs
@@ -44,31 +44,31 @@ document.addEventListener('DOMContentLoaded', function () {
         // Validation du nom
         if (nom.value.trim() !== "") {
             validationStates.temoinNom = true;
-            messageNom.style.display = 'none';
+            messageNom.style.display = "none";
         } else {
             validationStates.temoinNom = false;
-            messageNom.style.display = 'block';
-            messageNom.textContent = 'Ce champ est obligatoire.';
+            messageNom.style.display = "block";
+            messageNom.textContent = "Ce champ est obligatoire.";
         }
 
         // Validation de l'emballage
         if (emballage.value.trim() !== "") {
             validationStates.temoinEmballage = true;
-            messageEmballage.style.display = 'none';
+            messageEmballage.style.display = "none";
         } else {
             validationStates.temoinEmballage = false;
-            messageEmballage.style.display = 'block';
-            messageEmballage.textContent = 'Ce champ est obligatoire.';
+            messageEmballage.style.display = "block";
+            messageEmballage.textContent = "Ce champ est obligatoire.";
         }
 
         // Validation du volume
         if (vol.value.trim() !== "") {
             validationStates.temoinVol = true;
-            messageVol.style.display = 'none';
+            messageVol.style.display = "none";
         } else {
             validationStates.temoinVol = false;
-            messageVol.style.display = 'block';
-            messageVol.textContent = 'Ce champ est obligatoire.';
+            messageVol.style.display = "block";
+            messageVol.textContent = "Ce champ est obligatoire.";
         }
 
         // Validation du danger
@@ -84,106 +84,118 @@ document.addEventListener('DOMContentLoaded', function () {
         //     messageDanger.textContent = 'Veuillez sélectionner au moins un danger.';
         // }
 
-
-        const selectedAtelier = Array.from(atelier.selectedOptions).map(option => option.value);
-        const isValidAtelier = selectedAtelier.length > 0 && !selectedAtelier.includes("none");
+        const selectedAtelier = Array.from(atelier.selectedOptions).map(
+            (option) => option.value
+        );
+        const isValidAtelier =
+            selectedAtelier.length > 0 && !selectedAtelier.includes("none");
 
         if (isValidAtelier) {
             validationStates.temoinAtelier = true;
-            messageAtelier.style.display = 'none';
+            messageAtelier.style.display = "none";
         } else {
             validationStates.temoinAtelier = false;
-            messageAtelier.style.display = 'block';
-            messageAtelier.textContent = 'Veuillez sélectionner au moins un atelier.';
+            messageAtelier.style.display = "block";
+            messageAtelier.textContent =
+                "Veuillez sélectionner au moins un atelier.";
         }
 
         // Validation du risque
         if (risque.value.trim() !== "") {
             validationStates.temoinRisque = true;
-            messageRisque.style.display = 'none';
+            messageRisque.style.display = "none";
         } else {
             validationStates.temoinRisque = false;
-            messageRisque.style.display = 'block';
-            messageRisque.textContent = 'Ce champ est obligatoire.';
+            messageRisque.style.display = "block";
+            messageRisque.textContent = "Ce champ est obligatoire.";
         }
 
         // Validation du fabriquant
         if (fabriquant.value.trim() !== "") {
             validationStates.temoinFabriquant = true;
-            messageFabriquant.style.display = 'none';
+            messageFabriquant.style.display = "none";
         } else {
             validationStates.temoinFabriquant = false;
-            messageFabriquant.style.display = 'block';
-            messageFabriquant.textContent = 'Ce champ est obligatoire.';
+            messageFabriquant.style.display = "block";
+            messageFabriquant.textContent = "Ce champ est obligatoire.";
         }
 
         // Validation de la nature
         if (nature.value.trim() !== "") {
             validationStates.temoinNature = true;
-            messageNature.style.display = 'none';
+            messageNature.style.display = "none";
         } else {
             validationStates.temoinNature = false;
-            messageNature.style.display = 'block';
-            messageNature.textContent = 'Ce champ est obligatoire.';
+            messageNature.style.display = "block";
+            messageNature.textContent = "Ce champ est obligatoire.";
         }
 
         // Validation de l'utilisation
         if (utilisation.value.trim() !== "") {
             validationStates.temoinUtilisation = true;
-            messageUtilisation.style.display = 'none';
+            messageUtilisation.style.display = "none";
         } else {
             validationStates.temoinUtilisation = false;
-            messageUtilisation.style.display = 'block';
-            messageUtilisation.textContent = 'Ce champ est obligatoire.';
+            messageUtilisation.style.display = "block";
+            messageUtilisation.textContent = "Ce champ est obligatoire.";
         }
 
         // Validation du FDS si "Oui" est sélectionné
         if (DispoFDS.value === "oui") {
             if (fdsInput && fdsInput.files.length > 0) {
-                messageFDS.style.display = 'none';
+                messageFDS.style.display = "none";
                 validationStates.temoinFDS = true;
             } else {
-                messageFDS.style.display = 'block';
-                messageFDS.textContent = 'Le fichier FDS est obligatoire.';
+                messageFDS.style.display = "block";
+                messageFDS.textContent = "Le fichier FDS est obligatoire.";
                 validationStates.temoinFDS = false;
             }
             FDSDisplay.style.display = "block"; // Affiche la zone de téléchargement FDS
         } else {
             validationStates.temoinFDS = true;
-            messageFDS.style.display = 'none';
+            messageFDS.style.display = "none";
             FDSDisplay.style.display = "none"; // Cache la zone de téléchargement FDS
         }
 
         // Contrôler si tous les champs sont valides et activer/désactiver le bouton submit
         if (submitBtn) {
-            submitBtn.disabled = !Object.values(validationStates).every(Boolean);
+            submitBtn.disabled =
+                !Object.values(validationStates).every(Boolean);
         }
-    }   
-   
-    danger.addEventListener('change', () => {
-        const selectedDanger = Array.from(danger.selectedOptions).map(option => option.value);
+    }
+
+    danger.addEventListener("change", () => {
+        const selectedDanger = Array.from(danger.selectedOptions).map(
+            (option) => option.value
+        );
         const isNoneSelected = selectedDanger.includes("1");
-        const hasOtherSelections = selectedDanger.some(value => value !== "1");
-    
-        const messageConflict = document.getElementById("message-conflit-danger");
-    
+        const hasOtherSelections = selectedDanger.some(
+            (value) => value !== "1"
+        );
+
+        const messageConflict = document.getElementById(
+            "message-conflit-danger"
+        );
+
         // Gestion du blocage logique
         if (selectedDanger.length === 0 || selectedDanger.includes("none")) {
             validationStates.temoinDanger = false;
-            messageDanger.style.display = 'block';
-            messageDanger.textContent = 'Veuillez sélectionner au moins un danger.';
-            messageConflict.style.display = 'none';
+            messageDanger.style.display = "block";
+            messageDanger.textContent =
+                "Veuillez sélectionner au moins un danger.";
+            messageConflict.style.display = "none";
         } else if (isNoneSelected && hasOtherSelections) {
             validationStates.temoinDanger = false;
-            messageConflict.style.display = 'block';
-            messageConflict.textContent = 'Vous avez sélectionné "Aucun danger" ainsi qu’un autre danger. Veuillez vérifier votre choix.';
-            messageDanger.style.display = 'none';
+            messageConflict.style.display = "block";
+            messageConflict.textContent =
+                'Vous avez sélectionné "Aucun danger" ainsi qu’un autre danger. Veuillez vérifier votre choix.';
+            messageDanger.style.display = "none";
         } else {
             validationStates.temoinDanger = true;
-            messageDanger.style.display = 'none';
-            messageConflict.style.display = 'none';
+            messageDanger.style.display = "none";
+            messageConflict.style.display = "none";
         }
-    
+
         // Gestion des options sélectionnables
         for (let option of danger.options) {
             if (isNoneSelected) {
@@ -201,101 +213,115 @@ document.addEventListener('DOMContentLoaded', function () {
                 option.disabled = false;
             }
         }
-    
+
         // Mise à jour du bouton
         const submitButton = document.getElementById("btn-valider");
         submitButton.disabled = !Object.values(validationStates).every(Boolean);
     });
-    
-   
-   
-    document.querySelector('form').addEventListener('submit', function (e) {
+
+    document.querySelector("form").addEventListener("submit", function (e) {
         checkValidation(); // Vérification des champs avant soumission
         if (!Object.values(validationStates).every(Boolean)) {
             e.preventDefault(); // Empêcher la soumission si un champ est invalide
-            alert("Veuillez remplir correctement tous les champs obligatoires.");
+            alert(
+                "Veuillez remplir correctement tous les champs obligatoires."
+            );
         }
     });
 
     // Validation des champs à la saisie de l'utilisateur
-    nom.addEventListener('input', function () { checkValidation(); });
-    emballage.addEventListener('input', function () { checkValidation(); });
-    vol.addEventListener('input', function () { checkValidation(); });
-    risque.addEventListener('input', function () { checkValidation(); });
-    fabriquant.addEventListener('input', function () { checkValidation(); });
-    nature.addEventListener('input', function () { checkValidation(); });
-    utilisation.addEventListener('input', function () { checkValidation(); });
-    danger.addEventListener('change', function () { checkValidation(); });
-    DispoFDS.addEventListener('change', function () { checkValidation(); });
+    nom.addEventListener("input", function () {
+        checkValidation();
+    });
+    emballage.addEventListener("input", function () {
+        checkValidation();
+    });
+    vol.addEventListener("input", function () {
+        checkValidation();
+    });
+    risque.addEventListener("input", function () {
+        checkValidation();
+    });
+    fabriquant.addEventListener("input", function () {
+        checkValidation();
+    });
+    nature.addEventListener("input", function () {
+        checkValidation();
+    });
+    utilisation.addEventListener("input", function () {
+        checkValidation();
+    });
+    danger.addEventListener("change", function () {
+        checkValidation();
+    });
+    DispoFDS.addEventListener("change", function () {
+        checkValidation();
+    });
     if (fdsInput) {
-        fdsInput.addEventListener('change', function () { checkValidation(); });
+        fdsInput.addEventListener("change", function () {
+            checkValidation();
+        });
     }
 
     // Initialisation de la validation lors du chargement de la page
     checkValidation();
 });
 
-
-
-
-
-
-    function readPDF(input) {
-        if (input.files && input.files[0]) {
-            var file = input.files[0];
-            if (file.type === "application/pdf") {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#pdfViewer').attr('src', e.target.result);
-                    $('#pdfPreview').fadeIn(300);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert("Veuillez sélectionner un fichier PDF.");
-                input.value = ""; // reset
-            }
+function readPDF(input) {
+    if (input.files && input.files[0]) {
+        var file = input.files[0];
+        if (file.type === "application/pdf") {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#pdfViewer").attr("src", e.target.result);
+                $("#pdfPreview").fadeIn(300);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert("Veuillez sélectionner un fichier PDF.");
+            input.value = ""; // reset
         }
     }
-    
-    $("#pdfUpload").change(function () {
-        readPDF(this);
-    });
-    
-    $(".remove-pdf").on("click", function () {
-        $('#pdfUpload').val('');
-        $('#pdfViewer').attr('src', '');
-        $('#pdfPreview').fadeOut(300);
-    });
+}
 
-
-
-
-
-
-$(function () {
-    $("#datepicker, #datepicker1, #datepicker2").datepicker({ 
-            autoclose: true, 
-            todayHighlight: true
-    }).datepicker('update', new Date());    
+$("#fds").change(function () {
+    readPDF(this);
 });
 
+$(".remove-pdf").on("click", function () {
+    $("#fds").val("");
+    $("#pdfViewer").attr("src", "");
+    $("#pdfPreview").fadeOut(300);
+});
+
+$(function () {
+    $("#datepicker, #datepicker1, #datepicker2")
+        .datepicker({
+            autoclose: true,
+            todayHighlight: true,
+        })
+        .datepicker("update", new Date());
+});
 
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
-        reader.onload = function(e) {
-            $('#imagePreview').css('background-image', 'url('+e.target.result +')');
-            $('#imagePreview').hide();
-            $('#imagePreview').fadeIn(650);
-        }
+        reader.onload = function (e) {
+            $("#imagePreview").css(
+                "background-image",
+                "url(" + e.target.result + ")"
+            );
+            $("#imagePreview").hide();
+            $("#imagePreview").fadeIn(650);
+        };
         reader.readAsDataURL(input.files[0]);
     }
 }
-$("#imageUpload").change(function() {
+$("#photo").change(function () {
     readURL(this);
 });
-$('.remove-img').on('click', function() {
+$(".remove-img").on("click", function () {
     var imageUrl = "images/no-img-avatar.png";
-    $('.avatar-preview, #imagePreview').removeAttr('style');
-    $('#imagePreview').css('background-image', 'url(' + imageUrl + ')');
+    $(".avatar-preview, #imagePreview").removeAttr("style");
+    $("#imagePreview").css("background-image", "url(" + imageUrl + ")");
 });

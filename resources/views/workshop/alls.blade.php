@@ -15,8 +15,7 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
     // $idusine = IdEncryptor::decode($idusine);
     // $nom = Usine::getNameById($conn, $idusine);
     $message = "Liste des Ateliers de l'$usine->nomusine.";
-    // $chemin = '/workshop/all-workshop/' . $params['idusine'];
-    // $_SESSION['vue'] = '/workshop/all-workshop/' . $params['idusine'];
+
 }
 
 
@@ -226,7 +225,7 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                                                         @endif
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <a href="/all-products/{{ $key['idatelier'] }}"
+                                                        <a href="{{route('product.forworkshop',$keys['id'])}}"
                                                             class="btn btn-secondary btn-sm w-100 me-2">Voir les
                                                             produits</a>
                                                     </div>
