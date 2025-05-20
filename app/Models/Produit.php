@@ -39,6 +39,6 @@ class Produit extends Model
 
     public function infofds()
     {
-        return $this->hasMany(FDS::class, 'produit_id', 'id');
+        return $this->hasOne(FDS::class, 'produit_id', 'id');
     }
 }

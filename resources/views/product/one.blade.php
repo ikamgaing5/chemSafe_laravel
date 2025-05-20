@@ -1,5 +1,5 @@
 <?php
-// dd($danger, $prod, $idusine,$atelier);
+// dd( $prod->infofds->physique);
 // die();
 // $idprod = IdEncryptor::decode($id);
 // $nomproduit = $produit->getNameById($conn, $idprod);
@@ -187,13 +187,13 @@ foreach ($prod->danger as $key) {
 
                                             <div class="d-flex">
                                                 <?php 
-                                                    // if (FDS::Exist($conn, $idprod) == 0 && $temoin == true) {
+                                                    if ($prod->infofds->count() == 0 && $temoin == true) {
                                                          ?>
                                                     <a href="/info-fds/new-info-fds/{{$prod->id}}"
                                                         class="btn btn-outline-dark me-2">Ajouter les informations de la
                                                         FDS</a>
                                                 <?php
-                                            //  } 
+                                             } 
                                              ?>
                                                 <button class="btn btn-primary">Add to Favorites</button>
                                             </div>
@@ -205,7 +205,90 @@ foreach ($prod->danger as $key) {
                     </div>
                 </div>
 
+                <div class="container-fluid mt-0">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="card shadow-lg">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Information FDS</h5>
+                                </div>
+                                <div class="card-body">
+                                    <?php if ($prod->infofds->count() == 0 && $temoin == true) { ?>
+                                        <h2 class="text-center text-danger">Vous n'avez pas ajouté les informations de la
+                                            FDS de ce produit.</strong></span></h2>
+                                    <?php } else { ?>
+                                        <?php if ($temoin) { ?>
+                                            <div class="row">
+                                                <div class="col-xl-6 col-sm-6">
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Risque Physique : </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['physique'] ?></span>
+                                                    </div>
 
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Danger pour la santé : </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['sante'] ?></span>
+                                                    </div>
+
+                                                    <!-- <div class="mb-3">
+                                                    <h6 class="text-primary">Danger pour la santé : </h6>
+                                                    <span class="text-danger fw-bold"><?= $nomdanger ?></span>
+                                                </div> -->
+
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Caractéristiques des PPT chimiques: </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['ppt'] ?></span>
+                                                    </div>
+
+
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Stabilité: </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['stabilite'] ?></span>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Conditions à éviter: </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['eviter'] ?></span>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-xl-6 col-sm-6">
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Matériaux incompatibles: </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['incompatible'] ?></span>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Réactivité : </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['reactivite'] ?></span>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Manipulation Stockage : </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['stockage'] ?></span>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">Premiers secours : </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['secours'] ?></span>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <h6 class="text-primary">EPI : </h6>
+                                                        <span class="text-danger fw-bold"><?=$prod->infofds['epi'] ?></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } else { ?>
+                                            <h2 class="text-center text-danger">Ajouter la FDS pour avoir ses
+                                                informations.</strong></span></h2>
+                                        <?php }
+                                    } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
             </div>
         </div>

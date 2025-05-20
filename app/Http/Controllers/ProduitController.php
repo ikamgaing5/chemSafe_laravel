@@ -95,11 +95,11 @@ class ProduitController extends Controller
     {
         $atelier = Atelier::with('usine')->find($idatelier);
         // $prod = Produit::find($idproduit);
-        $danger = Danger::with('produit')->where('id', [3, 2])->get();
+        // $danger = Danger::with('produit')->where('id', [3, 2])->get();
         // $danger = Danger::all();
-        $prod = Produit::with(['danger'])->where('id', $idproduit)->get();
-        $danger = DB::table('possede')->where('produit_id', $idproduit)->get();
-        $prod = Produit::with('danger')->find($idproduit);
+        // $prod = Produit::with(['danger', 'infofds'])->where('id', $idproduit)->get();
+        // $danger = DB::table('possede')->where('produit_id', $idproduit)->get();
+        $prod = Produit::with('danger', 'infofds')->find($idproduit);
 
         // $idusine = Auth::user()->usine_id;
         return view('product.one', compact('prod', 'atelier'));
