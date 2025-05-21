@@ -216,7 +216,7 @@ foreach ($AllUsine as $key) {
                                 <!-- Row -->
                                 <div class="main">
                                     <div class="scrollable-row ">
-                                        @foreach ($workshop->where('active', 'true')->sortBy('nomatelier') as $key)
+                                        @foreach ($workshop->where('active', 'true')->sortBy('nomatelier') as $keys)
                                             <div class="col-xl-3 col-lg-4 col-sm-6 px-3">
                                                 <div class=" card contact_list text-center">
 
@@ -225,7 +225,7 @@ foreach ($AllUsine as $key) {
                                                             <div class="user-info">
                                                                 <div class="user-details">
                                                                     <p style="font-weight: 700;">Atelier nommé</p>
-                                                                    <h4 class="user-name mb-0">{{ $key['nomatelier'] }}
+                                                                    <h4 class="user-name mb-0">{{ $keys['nomatelier'] }}
                                                                     </h4>
                                                                 </div>
                                                             </div>
@@ -234,13 +234,13 @@ foreach ($AllUsine as $key) {
                                                             <label style="font-weight: 700;"
                                                                 style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Nombre
                                                                 de produit:</label><span
-                                                                class="badge badge-success light">{{ $key->contenir_count }}</span>
+                                                                class="badge badge-success light">{{ $keys->contenir_count }}</span>
 
                                                             <br>
                                                             <label style="font-weight: 700;"
                                                                 style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
                                                                 sans fds: </label><span
-                                                                class="badge badge-danger light">{{ $key->produits_sans_fds_count }}</span>
+                                                                class="badge badge-danger light">{{ $keys->produits_sans_fds_count }}</span>
                                                         </div>
                                                         <div class="d-flex mb-3 justify-content-center align-items-center">
                                                             @if (Auth::user()->role != 'user')
@@ -251,7 +251,7 @@ foreach ($AllUsine as $key) {
                                                             @endif
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <a href="{{route('product.forworkshop',$key['id'])}}"
+                                                            <a href="{{route('product.forworkshop',$keys['id'])}}"
                                                                 class="btn btn-secondary btn-sm w-100 me-2">Voir les
                                                                 produits</a>
                                                         </div>

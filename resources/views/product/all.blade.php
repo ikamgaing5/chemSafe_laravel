@@ -46,6 +46,89 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
     <link rel="stylesheet" href="/css/all.css">
     <script src="/js/all.js"></script>
 
+    <style>
+    /* Styles pour le graphique et la légende */
+    .chart-container {
+        position: relative;
+        height: 400px;
+        width: 100%;
+    }
+
+    .custom-legend {
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+    }
+
+    .legend-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .legend-item:hover {
+        background-color: #e9ecef;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+
+    .legend-text {
+        font-size: 0.9rem;
+        color: #495057;
+    }
+
+    /* Styles responsifs */
+    @media (max-width: 768px) {
+        .chart-container {
+            height: 300px;
+        }
+
+        .legend-container-mobile {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .legend-item {
+            flex: 0 0 calc(50% - 8px);
+            margin-bottom: 8px;
+        }
+
+        .legend-text {
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Styles pour le tableau des dangers */
+    .has-tooltip {
+        cursor: help;
+    }
+
+    #dangersList .table th {
+        background-color: #f8f9fa;
+    }
+
+    #dangersList .table td {
+        vertical-align: middle;
+    }
+    </style>
+
 </head>
 
 <body>
@@ -69,62 +152,62 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
             <!-- container starts -->
             <div class="container-fluid">
                 <?php
-                if (isset($_SESSION['info']['type']) && $_SESSION['info']['type'] === 'deletesuccess') {
-                    $message = "Le produit <strong> " . $_SESSION['info']['nomprod'] . "</strong> et ses fichiers ont été supprimé de l'atelier <strong> " . $_SESSION['info']['nomatelier'] . "</strong>";
-                    $type = "danger";
-                    echo $package->message($message, "success");
-                    unset($_SESSION['info']);
-                } elseif (isset($_SESSION['info']['type']) && $_SESSION['info']['type'] === 'deletefailed') {
-                    $message = "Un problème est survenu lors de la suppression";
-                    echo $package->message($message, "danger");
-                    unset($_SESSION['info']);
-                } elseif (isset($_SESSION['add-success']['type']) && $_SESSION['add-success']['type'] === true) {
-                    if ($nombre > 1) {
-                        $message = "Les produits $noms ont été ajouté avec succès";
-                    } else {
-                        $message = "Le produit $noms a été ajouté avec succès";
-                    }
-                    echo $package->message($message, "success");
-                    unset($_SESSION['add-success']);
-                } elseif (isset($_SESSION['add-fds']) && $_SESSION['add-fds'] === true) {
-                    $message = "La FDS a été ajoutée avec succès";
-                    echo $package->message($message, "success");
-                    unset($_SESSION['add-fds']);
-                } elseif (isset($_SESSION['add-fds']) && $_SESSION['add-fds'] === false) {
-                    $message = "Problème lors de l'insertion de la FDS";
-                    echo $package->message($message, "danger");
-                    unset($_SESSION['add-fds']);
-                } elseif (isset($_SESSION['insertinfoFDS']) && $_SESSION['insertinfoFDS'] === true) {
-                    $message = "Les informations de la FDS ont été enregistrée";
-                    echo $package->message($message, "success");
-                    unset($_SESSION['insertinfoFDS']);
-                }
-                if (isset($_SESSION['addphoto'])) {
-                    switch ($_SESSION['addphoto']['erreur']) {
-                        case 'taille':
-                            $message = "La taille de la photo envoyée pour le produit <strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> dépasse la limite qui est de 5 Mo";
-                            $type = "danger";
-                            break;
-                        case 'nom':
-                            $message = "La photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> est déjà associée à un autre produit";
-                            $type = "danger";
-                            break;
-                        case 'extension':
-                            $message = "L'extension de la photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> n'est pas prise en charge";
-                            $type = "danger";
-                            break;
-                        case 'erreur':
-                            $message = "Une erreur est survenué lors de l'envoie de la photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong>, veuillez réesayer";
-                            $type = "danger";
-                            break;
-                        default:
-                            $message = "La photo envoyée pour le produit <strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> a été enregistrée avec succès";
-                            $type = "success";
-                            break;
-                    }
-                    echo $package->message($message, $type);
-                    unset($_SESSION['addphoto']);
-                }
+if (isset($_SESSION['info']['type']) && $_SESSION['info']['type'] === 'deletesuccess') {
+    $message = "Le produit <strong> " . $_SESSION['info']['nomprod'] . "</strong> et ses fichiers ont été supprimé de l'atelier <strong> " . $_SESSION['info']['nomatelier'] . "</strong>";
+    $type = "danger";
+    echo $package->message($message, "success");
+    unset($_SESSION['info']);
+} elseif (isset($_SESSION['info']['type']) && $_SESSION['info']['type'] === 'deletefailed') {
+    $message = "Un problème est survenu lors de la suppression";
+    echo $package->message($message, "danger");
+    unset($_SESSION['info']);
+} elseif (isset($_SESSION['add-success']['type']) && $_SESSION['add-success']['type'] === true) {
+    if ($nombre > 1) {
+        $message = "Les produits $noms ont été ajouté avec succès";
+    } else {
+        $message = "Le produit $noms a été ajouté avec succès";
+    }
+    echo $package->message($message, "success");
+    unset($_SESSION['add-success']);
+} elseif (isset($_SESSION['add-fds']) && $_SESSION['add-fds'] === true) {
+    $message = "La FDS a été ajoutée avec succès";
+    echo $package->message($message, "success");
+    unset($_SESSION['add-fds']);
+} elseif (isset($_SESSION['add-fds']) && $_SESSION['add-fds'] === false) {
+    $message = "Problème lors de l'insertion de la FDS";
+    echo $package->message($message, "danger");
+    unset($_SESSION['add-fds']);
+} elseif (isset($_SESSION['insertinfoFDS']) && $_SESSION['insertinfoFDS'] === true) {
+    $message = "Les informations de la FDS ont été enregistrée";
+    echo $package->message($message, "success");
+    unset($_SESSION['insertinfoFDS']);
+}
+if (isset($_SESSION['addphoto'])) {
+    switch ($_SESSION['addphoto']['erreur']) {
+        case 'taille':
+            $message = "La taille de la photo envoyée pour le produit <strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> dépasse la limite qui est de 5 Mo";
+            $type = "danger";
+            break;
+        case 'nom':
+            $message = "La photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> est déjà associée à un autre produit";
+            $type = "danger";
+            break;
+        case 'extension':
+            $message = "L'extension de la photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> n'est pas prise en charge";
+            $type = "danger";
+            break;
+        case 'erreur':
+            $message = "Une erreur est survenué lors de l'envoie de la photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong>, veuillez réesayer";
+            $type = "danger";
+            break;
+        default:
+            $message = "La photo envoyée pour le produit <strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> a été enregistrée avec succès";
+            $type = "success";
+            break;
+    }
+    echo $package->message($message, $type);
+    unset($_SESSION['addphoto']);
+}
                 ?>
 
 
@@ -208,7 +291,7 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                         class="btn btn-danger" value="tout supprimer">tout supprimer
                                                     </button>
                                                     <?php
-                                                    //  require_once __DIR__ . '/add-product.php'; 
+//  require_once __DIR__ . '/add-product.php'; 
                                                      ?>
                                                 </div>
                                             </li>
@@ -231,63 +314,62 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                             <th>Plus d'info</th>
                                                             <th>Médias</th>
                                                             <?php if (Auth::user()->role == 'admin') { ?>
-                                                                <th class="text-end">Action</th>
+                                                            <th class="text-end">Action</th>
                                                             <?php } ?>
 
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @if ($produits->count() <= 0)
-                                                            <tr>
-                                                                <td colspan='6'>Aucun produit enregistré. </td>
+                                                        @if ($produits->count() <= 0) <tr>
+                                                            <td colspan='6'>Aucun produit enregistré. </td>
                                                             </tr>
-                                                        @else
-                                                            @foreach ($produits as $prod )
-                                                                
-                                                            
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="trans-list">
-                                                                            <?php
-                                                                            // echo "<img src='./upload/".$row['name']."' alt='' class='avatar me-3'>";
-                                                                            ?>
-                                                                            <h4><?= $prod['nomprod'] ?></h4>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td><span
-                                                                            class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="mb-0"><?= $prod['poids'] ?></div>
-                                                                    </td>
-                                                                    <td><a href="{{route('product.one', [$atelier->id,$prod->id])}}"
-                                                                            class="btn btn-secondary shadow btn-xs sharp me-1"><i
-                                                                                class="bi bi-info-circle-fill"></i></a></td>
-                                                                    <td>
-                                                                        <div class="d-flex">
-                                                                            <?php
-                                                                                // require __DIR__ . '/photo.php';
-                                                                                // require __DIR__ . '/fds.php' 
-                                                                            ?>
-                                                                            @include('product.partials.photo')
-                                                                            @include('product.partials.fds')
-                                                                        </div>
-                                                                    </td>
-                                                                    <?php if (Auth::user()->role == 'admin') { ?>
-                                                                        <td>
-                                                                            <div class="d-flex">
-                                                                                <?php 
-                                                                                    // require __DIR__ . '/delete.php' 
-                                                                                    ?>
-                                                                            </div>
-                                                                        </td>
-                                                                    <?php } ?>
+                                                            @else
+                                                            @foreach ($produits as $prod)
 
 
-                                                                </tr>
-                                                                @endforeach
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="trans-list">
+                                                                        <?php
+                                                                // echo "<img src='./upload/".$row['name']."' alt='' class='avatar me-3'>";
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ?>
+                                                                        <h4><?= $prod['nomprod'] ?></h4>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span
+                                                                        class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mb-0"><?= $prod['poids'] ?></div>
+                                                                </td>
+                                                                <td><a href="{{route('product.one', [$atelier->id, $prod->id])}}"
+                                                                        class="btn btn-secondary shadow btn-xs sharp me-1"><i
+                                                                            class="bi bi-info-circle-fill"></i></a></td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <?php
+                                                                // require __DIR__ . '/photo.php';
+                                                                // require __DIR__ . '/fds.php' 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ?>
+                                                                        @include('product.partials.photo')
+                                                                        @include('product.partials.fds')
+                                                                    </div>
+                                                                </td>
+                                                                <?php        if (Auth::user()->role == 'admin') { ?>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <?php 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // require __DIR__ . '/delete.php' 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ?>
+                                                                    </div>
+                                                                </td>
+                                                                <?php        } ?>
 
-                                                                @endif
+
+                                                            </tr>
+                                                            @endforeach
+
+                                                            @endif
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -302,248 +384,247 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
         </div>
     </div>
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let produit = document.getElementById('produit');
+        let submitBtn = document.getElementById('submitBtn');
+        let messageProduit = document.getElementById('messageProduit');
 
-        document.addEventListener('DOMContentLoaded', function () {
-            let produit = document.getElementById('produit');
-            let submitBtn = document.getElementById('submitBtn');
-            let messageProduit = document.getElementById('messageProduit');
 
+        function validateSelection() {
+            const selectedProduit = Array.from(produit.selectedOptions).map(option => option.value);
+            const isValidProduit = selectedProduit.length > 0 && !selectedProduit.includes("none");
 
-            function validateSelection() {
-                const selectedProduit = Array.from(produit.selectedOptions).map(option => option.value);
-                const isValidProduit = selectedProduit.length > 0 && !selectedProduit.includes("none");
-
-                if (isValidProduit) {
-                    submitBtn.disabled = false;
-                    messageProduit.style.display = 'none';
-                } else {
-                    submitBtn.disabled = true;
-                    messageProduit.style.display = 'block';
-                    messageProduit.textContent = 'Veuillez sélectionner au moins un produit.';
-                }
+            if (isValidProduit) {
+                submitBtn.disabled = false;
+                messageProduit.style.display = 'none';
+            } else {
+                submitBtn.disabled = true;
+                messageProduit.style.display = 'block';
+                messageProduit.textContent = 'Veuillez sélectionner au moins un produit.';
             }
+        }
 
-            // Écouteur d'événement
-            produit.addEventListener('change', validateSelection);
+        // Écouteur d'événement
+        produit.addEventListener('change', validateSelection);
 
-            // Validation initiale au chargement
-            validateSelection();
-        });
+        // Validation initiale au chargement
+        validateSelection();
+    });
     </script>
     <script>
-        $(function () {
-            // Vérifier si l'appareil est mobile
-            const isMobile = window.innerWidth < 768;
+    $(function() {
+        // Vérifier si l'appareil est mobile
+        const isMobile = window.innerWidth < 768;
 
-            // Récupérer l'ID de l'atelier depuis la page
-            const idatelier = "<?php echo $atelier->id; ?>";
+        // Récupérer l'ID de l'atelier depuis la page
+        const idatelier = "{{ $atelier->id }}";
 
-            // Appel AJAX pour récupérer les données
-            $.ajax({
-                url: '/api/product/dangers/' + idatelier,
-                method: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    // Vérifier s'il y a au moins 3 dangers différents
-                    if (data.length >= 3) {
-                        // Afficher la ligne du graphique
-                        $('#graphRow').show();
-                        // Rendre le graphique
-                        renderDangerChart(data);
-                    } else {
-                        // Afficher la liste des dangers si moins de 3 dangers
-                        $('#dangersList').show();
-                        renderDangersList(data);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Erreur lors de la récupération des données:', error);
-                    // Afficher un message d'erreur
-                    $('<div class="alert alert-danger mt-3">Erreur lors du chargement des données</div>').insertAfter('#graphRow');
+        console.log('ID Atelier:', idatelier); // Debug
+
+        // Appel AJAX pour récupérer les données
+        $.ajax({
+            url: `/product/dangers/${idatelier}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log('Données reçues:', data); // Debug
+
+                // Vérifier s'il y a au moins 3 dangers différents
+                if (data.length >= 3) {
+                    // Afficher la ligne du graphique
+                    $('#graphRow').show();
+                    // Rendre le graphique
+                    renderDangerChart(data);
+                } else {
+                    // Afficher la liste des dangers si moins de 3 dangers
+                    $('#dangersList').show();
+                    renderDangersList(data);
                 }
-            });
-
-            // Fonction pour afficher la liste des dangers
-            function renderDangersList(data) {
-                const tableBody = $('#dangersListBody');
-                tableBody.empty();
-
-                // Trier les données par nombre de produits (décroissant)
-                data.sort((a, b) => b.count - a.count);
-
-                // Créer une ligne pour chaque danger
-                data.forEach(item => {
-                    const row = $('<tr>');
-                    const dangerCell = $('<td>').text(item.nomdanger);
-                    const countCell = $('<td class="text-center">').text(item.count);
-
-                    // Ajouter un attribut title avec la liste des produits
-                    if (item.products && item.products.length > 0) {
-                        const productsList = item.products.join(', ');
-                        row.attr('title', 'Produits: ' + productsList);
-
-                        // Ajouter une classe pour indiquer qu'il y a une info-bulle
-                        row.addClass('has-tooltip');
-
-                        // Initialiser tooltip Bootstrap si disponible
-                        if ($.fn.tooltip) {
-                            row.tooltip({
-                                placement: 'top',
-                                html: true,
-                                template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner text-start" style="max-width: 300px;"></div></div>',
-                                title: function () {
-                                    let content = '<strong>Produits concernés:</strong>';
-                                    item.products.forEach(product => {
-                                        content += `- ${product}<br>`;
-                                    });
-                                    return content;
-                                }
-                            });
-                        }
-                    }
-
-                    row.append(dangerCell);
-                    row.append(countCell);
-                    tableBody.append(row);
-                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la récupération des données:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+                // Afficher un message d'erreur
+                $('<div class="alert alert-danger mt-3">Erreur lors du chargement des données</div>')
+                    .insertAfter('#graphRow');
             }
+        });
 
-            function renderDangerChart(data) {
-                // Code du graphique identique à celui précédemment fourni
-                const labels = data.map(item => item.nomdanger);
-                const counts = data.map(item => item.count);
-                const backgroundColors = generateColors(data.length, 0.6);
-                const borderColors = generateColors(data.length, 1);
+        // Fonction pour afficher la liste des dangers
+        function renderDangersList(data) {
+            const tableBody = $('#dangersListBody');
+            tableBody.empty();
 
-                const chartData = {
-                    labels: isMobile ? labels.map(label => abbreviateLabel(label)) : labels,
-                    datasets: [{
-                        label: 'Nombre de produits',
-                        data: counts,
-                        backgroundColor: backgroundColors,
-                        borderColor: borderColors,
-                        borderWidth: 1
-                    }]
-                };
+            // Trier les données par nombre de produits (décroissant)
+            data.sort((a, b) => b.count - a.count);
 
-                const options = {
-                    responsive: true,
-                    maintainAspectRatio: !isMobile,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0,
-                                font: {
-                                    size: isMobile ? 10 : 12
-                                }
+            // Créer une ligne pour chaque danger
+            data.forEach(item => {
+                const row = $('<tr>');
+                const dangerCell = $('<td>').text(item.nomdanger);
+                const countCell = $('<td class="text-center">').text(item.count);
+
+                // Ajouter un attribut title avec la liste des produits
+                if (item.products && item.products.length > 0) {
+                    const productsList = item.products.join(', ');
+                    row.attr('title', 'Produits: ' + productsList);
+                    row.addClass('has-tooltip');
+
+                    // Initialiser tooltip Bootstrap si disponible
+                    if ($.fn.tooltip) {
+                        row.tooltip({
+                            placement: 'top',
+                            html: true,
+                            template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner text-start" style="max-width: 300px;"></div></div>',
+                            title: function() {
+                                let content = '<strong>Produits concernés:</strong><br>';
+                                item.products.forEach(product => {
+                                    content += `- ${product}<br>`;
+                                });
+                                return content;
                             }
-                        },
-                        x: {
-                            ticks: {
-                                font: {
-                                    size: isMobile ? 8 : 12
-                                },
-                                maxRotation: isMobile ? 90 : 0,
-                                minRotation: isMobile ? 45 : 0
+                        });
+                    }
+                }
+
+                row.append(dangerCell);
+                row.append(countCell);
+                tableBody.append(row);
+            });
+        }
+
+        function renderDangerChart(data) {
+            const labels = data.map(item => item.nomdanger);
+            const counts = data.map(item => item.count);
+            const backgroundColors = generateColors(data.length, 0.6);
+            const borderColors = generateColors(data.length, 1);
+
+            const chartData = {
+                labels: isMobile ? labels.map(label => abbreviateLabel(label)) : labels,
+                datasets: [{
+                    label: 'Nombre de produits',
+                    data: counts,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            };
+
+            const options = {
+                responsive: true,
+                maintainAspectRatio: !isMobile,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            font: {
+                                size: isMobile ? 10 : 12
                             }
                         }
                     },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function (context) {
-                                    return labels[context[0].dataIndex];
-                                },
-                                label: function (context) {
-                                    const dataIndex = context.dataIndex;
-                                    const danger = data[dataIndex];
+                    x: {
+                        ticks: {
+                            font: {
+                                size: isMobile ? 8 : 12
+                            },
+                            maxRotation: isMobile ? 90 : 0,
+                            minRotation: isMobile ? 45 : 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                return labels[context[0].dataIndex];
+                            },
+                            label: function(context) {
+                                const dataIndex = context.dataIndex;
+                                const danger = data[dataIndex];
 
-                                    // Afficher le nombre total de produits
-                                    const result = [`Total: ${danger.count} produit(s)`];
+                                // Afficher le nombre total de produits
+                                const result = [`Total: ${danger.count} produit(s)`];
 
-                                    // Ajouter la liste des produits
-                                    if (danger.products && danger.products.length > 0) {
-                                        result.push('');
-                                        result.push('Produits concernés:');
-                                        danger.products.forEach(product => {
-                                            result.push(`- ${product}`);
-                                        });
-                                    }
-
-                                    return result;
+                                // Ajouter la liste des produits
+                                if (danger.products && danger.products.length > 0) {
+                                    result.push('');
+                                    result.push('Produits concernés:');
+                                    danger.products.forEach(product => {
+                                        result.push(`- ${product}`);
+                                    });
                                 }
+
+                                return result;
                             }
                         }
                     }
-                };
-
-                var ctx = document.getElementById('dangerChart').getContext('2d');
-                var dangerChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: chartData,
-                    options: options
-                });
-
-                // Générer la légende personnalisée
-                generateCustomLegend(labels, backgroundColors);
-            }
-
-            // Fonction pour abréger les étiquettes sur mobile
-            function abbreviateLabel(label) {
-                if (isMobile) {
-                    if (label.length > 10) {
-                        return label.substring(0, 7) + '...';
-                    }
                 }
-                return label;
-            }
+            };
 
-            function generateColors(count, alpha) {
-                const colors = [];
-                const hueStep = 360 / count;
+            var ctx = document.getElementById('dangerChart').getContext('2d');
+            var dangerChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: options
+            });
 
-                for (let i = 0; i < count; i++) {
-                    const hue = i * hueStep;
-                    colors.push(`hsla(${hue}, 70%, 60%, ${alpha})`);
+            // Générer la légende personnalisée
+            generateCustomLegend(labels, backgroundColors);
+        }
+
+        // Fonction pour abréger les étiquettes sur mobile
+        function abbreviateLabel(label) {
+            if (isMobile) {
+                if (label.length > 10) {
+                    return label.substring(0, 7) + '...';
                 }
+            }
+            return label;
+        }
 
-                return colors;
+        function generateColors(count, alpha) {
+            const colors = [];
+            const hueStep = 360 / count;
+
+            for (let i = 0; i < count; i++) {
+                const hue = i * hueStep;
+                colors.push(`hsla(${hue}, 70%, 60%, ${alpha})`);
             }
 
-            function generateCustomLegend(labels, colors) {
-                const legendContainer = document.getElementById('customLegend');
+            return colors;
+        }
 
-                // Titre de la légende
-                legendContainer.innerHTML = '<h5 class="legend-title">Légende</h5>';
+        function generateCustomLegend(labels, colors) {
+            const legendContainer = document.getElementById('customLegend');
+            legendContainer.innerHTML = '<h5 class="legend-title">Légende</h5>';
 
-                // Sur mobile, utiliser un affichage horizontal
-                if (isMobile) {
-                    legendContainer.classList.add('mobile-legend');
-                }
-
-                // Créer les éléments de légende
-                labels.forEach((label, index) => {
-                    const legendItem = document.createElement('div');
-                    legendItem.className = 'legend-item';
-
-                    const colorBox = document.createElement('div');
-                    colorBox.className = 'legend-color';
-                    colorBox.style.backgroundColor = colors[index];
-
-                    const labelText = document.createElement('span');
-                    labelText.className = 'legend-text';
-                    labelText.textContent = label;
-
-                    legendItem.appendChild(colorBox);
-                    legendItem.appendChild(labelText);
-                    legendContainer.appendChild(legendItem);
-                });
+            if (isMobile) {
+                legendContainer.classList.add('legend-container-mobile');
             }
-        });
+
+            labels.forEach((label, index) => {
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+
+                const colorBox = document.createElement('div');
+                colorBox.className = 'legend-color';
+                colorBox.style.backgroundColor = colors[index];
+
+                const labelText = document.createElement('span');
+                labelText.className = 'legend-text';
+                labelText.textContent = label;
+
+                legendItem.appendChild(colorBox);
+                legendItem.appendChild(labelText);
+                legendContainer.appendChild(legendItem);
+            });
+        }
+    });
     </script>
 
     <script src="{{asset('vendor/global/global.min.js')}}"></script>

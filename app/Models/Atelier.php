@@ -32,10 +32,13 @@ class Atelier extends Model
         return $this->belongsTo(Usine::class, 'usine_id');
     }
 
-    public function produitsSansFds()
+    public function produitSansFds()
     {
         return $this->belongsToMany(Produit::class, 'contenir', 'atelier_id', 'produit_id')
-            ->whereNull('fds')
-            ->orWhere('fds', '');
+            ->where(function ($query) {
+                $query->whereNull('fds')->orWhere('fds', '');
+            });
     }
+
+
 }

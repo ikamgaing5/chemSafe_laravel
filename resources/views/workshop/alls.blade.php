@@ -1,33 +1,15 @@
 <?php
 use Illuminate\Support\Facades\Auth;
 
-// require_once __DIR__ . '/../../utilities/session.php';
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-// $conn = Database::getInstance()->getConnection();
 
 if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmin') {
-    // Cas du superadmin sans usine spécifique
     $message = 'Liste des Ateliers de toutes les Usines.';
-    $chemin = '/workshop/all-workshop';
-    $_SESSION['vue'] = '/workshop/all-workshop';
 } elseif (strpos($current_page, 'workshop/all-workshop/') === 0) {
-    // Cas de tout utilisateur accédant à un atelier d'une usine spécifique
-    // $idusine = IdEncryptor::decode($idusine);
-    // $nom = Usine::getNameById($conn, $idusine);
     $message = "Liste des Ateliers de l'$usine->nomusine.";
-
 }
-
-
-// die();
-
 ?>
 
-{{--
-<pre>{{ dd($allworkshop->first()->usine->nomusine) }}</pre> --}}
-<?php 
-//  die();
-?>
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="auto">
 
@@ -214,7 +196,7 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                                                         <label style="font-weight: 700;"
                                                             style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
                                                             sans fds: </label><span
-                                                            class="badge badge-danger light">{{ $keys->produitsSansFds->count() }}</span>
+                                                            class="badge badge-danger light">{{ $keys->produitSansFds()->count() }}</span>
                                                     </div>
                                                     <div class="d-flex mb-3 justify-content-center align-items-center">
                                                         @if (Auth::user()->role != 'user')
@@ -246,7 +228,7 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                                         </div>
                                     </div>
                                     @else
-                                        <div class="text-muted">Aucun atelier pour cette usine.</div>
+                                        <div class="text-muted my-3">Aucun atelier pour cette usine.</div>
                                     @endif
                                 </div>
                             </div>

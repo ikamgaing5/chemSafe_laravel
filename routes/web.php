@@ -38,6 +38,7 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::get('/info-fds/new-info-fds/', [InfofdsController::class, 'add'])->name('infofds.add');
 });
 
+Route::get('/product/dangers/{idatelier}', [App\Http\Controllers\DangerController::class, 'getDangerStatsByAtelier']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -50,3 +51,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+// require __DIR__ . '/web.php';
