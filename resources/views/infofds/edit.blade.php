@@ -1,12 +1,12 @@
 <?php
 
 $nom = "";
-$nom = $produit->nomprod;
+$nom = $fds->produit->nomprod;
 
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
-    $message = "Informations de la FDS du produit $nom.";
+if (strpos($current_page, 'info-fds/edit') === 0) {
+    $message = "Modification des informations de la FDS du produit $nom.";
 }
 
 ?>
@@ -118,7 +118,7 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
         @include('layouts.sidebar')
 
 
-        <form action="{{route('infofds.addPost', $idproduit)}}" enctype="multipart/form-data" method="POST">
+        <form action="{{route('infofds.editPost', $fds->id)}}" enctype="multipart/form-data" method="POST">
             <div class="content-body">
 
 
@@ -155,11 +155,11 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                 <!-- Colonne gauche -->
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <input type="hidden" name="produit_id" value="{{$idproduit}}">
+                                                        <input type="hidden" name="produit_id" value="{{$fds->produit->id}}">
                                                         <label class="form-label text-primary fw-bold">Danger Physique
                                                             <span class="required">*</span></label>
                                                         <textarea class="form-control" id="physique" name="physique"
-                                                            rows="6"></textarea>
+                                                         rows="6">{{$fds->physique}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageNom"
                                                             style="display: none;"></span>
                                                     </div>
@@ -167,8 +167,7 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                     <div class="mb-3">
                                                         <label class="form-label text-primary fw-bold">Danger pour la
                                                             santé <span class="required">*</span></label>
-                                                        <textarea class="form-control" id="sante" name="sante"
-                                                            rows="6"></textarea>
+                                                        <textarea class="form-control" id="sante" name="sante"  rows="6">{{$fds->sante}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>
@@ -176,17 +175,14 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                     <div class="mb-3">
                                                         <label class="form-label text-primary fw-bold">Caractéristiques
                                                             des PPT chimiques <span class="required">*</span></label>
-                                                        <textarea class="form-control" id="ppt" name="ppt"
-                                                            rows="6"></textarea>
+                                                        <textarea class="form-control" id="ppt" name="ppt" rows="6">{{$fds->ppt}}</textarea>
                                                         <span id="messageDanger" class="text-danger fw-bold"
                                                             style="display:none;"></span>
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label class="form-label text-primary fw-bold">Stabilité <span
-                                                                class="required">*</span></label>
-                                                        <textarea class="form-control" id="stabilite" name="stabilite"
-                                                            rows="6"></textarea>
+                                                        <label class="form-label text-primary fw-bold">Stabilité <span class="required">*</span></label>
+                                                        <textarea class="form-control" id="stabilite" name="stabilite" rows="6">{{$fds->stabilite}}</textarea>
                                                         <span id="messageAtelier" class="text-danger fw-bold"
                                                             style="display:none;"></span>
                                                     </div>
@@ -194,8 +190,7 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                     <div class="mb-3">
                                                         <label class="form-label text-primary fw-bold">Conditions à
                                                             éviter<span class="required">*</span></label>
-                                                        <textarea class="form-control" name="eviter" id="eviter"
-                                                            rows="6"></textarea>
+                                                        <textarea class="form-control" name="eviter" id="eviter" rows="6">{{$fds->eviter}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageRisque"
                                                             style="display: none;"></span>
                                                     </div>
@@ -206,27 +201,22 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                     <div class="mb-3">
                                                         <label class="form-label text-primary fw-bold">Matériaux
                                                             incompatibles <span class="required">*</span></label>
-                                                        <textarea class="form-control" id="incompatible"
-                                                            name="incompatible" rows="4"></textarea>
+                                                        <textarea class="form-control" id="incompatible" name="incompatible" rows="4">{{$fds->incompatible}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label class="form-label text-primary fw-bold">Réactivité <span
-                                                                class="required">*</span></label>
-                                                        <textarea class="form-control" id="reactivite" name="reactivite"
-                                                            rows="4"></textarea>
-                                                        <span class="fw-bold text-danger" id="messageUtilisation"
-                                                            style="display: none;"></span>
+                                                        <label class="form-label text-primary fw-bold">Réactivité <span class="required">*</span></label>
+                                                        <textarea class="form-control" id="reactivite" name="reactivite" rows="4">{{$fds->reactivite}}</textarea>
+                                                        <span class="fw-bold text-danger" id="messageUtilisation"  style="display: none;"></span>
                                                     </div>
 
 
                                                     <div class="mb-3">
                                                         <label class="form-label text-primary fw-bold">Manipulation /
                                                             Stockage<span class="required">*</span></label>
-                                                        <textarea class="form-control" id="manipulation"
-                                                            name="manipulation" rows="6"></textarea>
+                                                        <textarea class="form-control" id="manipulation" name="manipulation" rows="6">{{$fds->manipulation}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>
@@ -234,17 +224,14 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                     <div class="mb-3">
                                                         <label class="form-label text-primary fw-bold">Premiers
                                                             secours<span class="required">*</span></label>
-                                                        <textarea class="form-control" id="secours" name="secours"
-                                                            rows="6"></textarea>
+                                                        <textarea class="form-control" id="secours" name="secours" rows="6">{{$fds->secours}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label class="form-label text-primary fw-bold">EPI<span
-                                                                class="required">*</span></label>
-                                                        <textarea class="form-control" id="epi" name="epi"
-                                                            rows="6"></textarea>
+                                                        <label class="form-label text-primary fw-bold">EPI<span  class="required">*</span></label>
+                                                        <textarea class="form-control" id="epi" name="epi"  rows="6">{{$fds->epi}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>

@@ -240,7 +240,7 @@ foreach ($AllUsine as $key) {
                                                             <label style="font-weight: 700;"
                                                                 style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
                                                                 sans fds: </label><span
-                                                                class="badge badge-danger light">{{ $keys->produits_sans_fds_count }}</span>
+                                                                class="badge badge-danger light">{{ $keys->produitSansFds()->count() }}</span>
                                                         </div>
                                                         <div class="d-flex mb-3 justify-content-center align-items-center">
                                                             @if (Auth::user()->role != 'user')

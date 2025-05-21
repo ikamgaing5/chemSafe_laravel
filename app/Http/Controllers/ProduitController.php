@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
 class ProduitController extends Controller
@@ -43,6 +44,45 @@ class ProduitController extends Controller
         return view('product.add', compact('danger', 'ateliers'));
     }
 
+    public function files($file, $type)
+    {
+        // Définir les paramètres selon le type
+        if ($type === "fds") {
+            $maxSize = 10240 * 1024; // 10 Mo
+            $folder = "fds";
+            $allowedExtensions = ['pdf'];
+            $typeLabel = 'FDS';
+        } else {
+            $maxSize = 10240 * 512; // 5 Mo
+            $folder = "photo";
+            $allowedExtensions = ['png', 'jpg', 'jpeg'];
+            $typeLabel = 'photo';
+        }
+
+        // Vérification de la taille
+        if ($file->getSize() > $maxSize) {
+            return redirect()->back()->with('error', "Le fichier dépasse la taille maximale autorisée pour les $typeLabel.");
+        }
+
+        $fileName = $file->getClientOriginalName();
+        $storagePath = "uploads/$folder/$fileName";
+
+        // Vérification de l'existence du fichier
+        if (Storage::disk('public')->exists($storagePath)) {
+            return redirect()->back()->with('error', "Un fichier du même nom existe déjà dans $typeLabel.");
+        }
+
+        // Vérification de l’extension
+        $extension = strtolower($file->getClientOriginalExtension());
+        if (!in_array($extension, $allowedExtensions)) {
+            return redirect()->back()->with('error', "Le fichier doit être de type : " . implode(', ', $allowedExtensions) . ".");
+        }
+
+        // Tout est ok → retourner le chemin proposé (ou stocker ici si tu veux)
+        return $storagePath;
+    }
+
+
 
     public function addPost(Request $request)
     {
@@ -72,28 +112,62 @@ class ProduitController extends Controller
             'risque' => strtoupper($request->input('risque')),
         ]);
 
+        $temoinFDS = false;
+
         // Upload photo
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('uploads/photo', 'public');
-            $produit->photo = $photoPath;
+        if ($request->hasFile('photo')) {            
+            $path = $this->files($request->file('photo'), 'photo');
+            if ($path instanceof RedirectResponse) {
+                return $path; // Redirige avec message d'erreur
+            }
+            // Sinon, continue avec le stockage
+            $stored = $request->file('photo')->storeAs("uploads/photo", basename($path), 'public');
+            $produit->photo = $stored;
+        }
+        if ($request->hasFile('fds')) {
+            $path = $this->files($request->file('fds'), 'fds');
+            if ($path instanceof RedirectResponse) {
+                return $path; // Redirige avec message d'erreur
+            }
+            // Sinon, continue avec le stockage
+            $stored = $request->file('fds')->storeAs("uploads/fds", basename($path), 'public');
+            $produit->fds = $stored;
+            $temoinFDS = true;
         }
 
-        // Upload FDS (si fourni)
-        if ($request->hasFile('fds')) {
-            $fdsPath = $request->file('fds')->store('uploads/fds', 'public');
-            $produit->fds = $fdsPath;
-        }
+
+
+        
 
         $produit->save();
         $produit->danger()->sync($validated['danger']);
         $produit->atelier()->sync($validated['atelier']);
 
-        if ($request->hasFile('fds')) {
-            
+        if ($temoinFDS) {
+            return redirect()->route('infofds.add', $produit->id);
         } else {
             return redirect()->back()->with('success', 'Produit ajouté avec succès !');
         }
 
+    }
+
+    public function addFDS(Request $request, $id)
+    {
+        // Vérifie si un fichier est envoyé
+        if (!$request->hasFile('fds')) {
+            return redirect()->back()->with('error', 'Aucun fichier n’a été envoyé.');
+        }
+
+        $path = $this->files($request->file('fds'), 'fds');
+        if ($path instanceof RedirectResponse) {
+            return $path; // Redirige avec message d'erreur
+        }
+
+        // Sinon, continue avec le stockage
+        $stored = $request->file('fds')->storeAs("uploads/fds", basename($path), 'public');
+        Produit::find($id)->update(['fds' => $stored]);
+
+        return redirect()->route('infofds.add', $id);
     }
 
     public function one($idatelier, $idproduit)

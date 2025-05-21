@@ -38,13 +38,13 @@ class UsineController extends Controller
         ]);
 
         $usine = Usine::findOrFail($id);
-        $old = $request->input('oldvalue');
-        $new = $request->input('nomusine');
+        $old = strtoupper($request->input('oldvalue'));
+        $new = strtoupper($request->input('nomusine'));
 
         if ($old === $new) {
             return back()->with('samename', AlertHelper::message("Le nom n'a pas été modifié", "danger"));
         }
-        $usine->update(['nomusine' => $new]);
+        $usine->update(['nomusine' => strtoupper($new)]);
         return back()->with('updateokay', AlertHelper::message("L' <strong> $old </strong> a été modifiée en <strong> $new </strong> avec succès", "success"));
     }
 
@@ -63,7 +63,7 @@ class UsineController extends Controller
                     'nomusine.required' => 'Le nom de l\'usine est requis.',
                 ]
             ]);
-            $usine = Usine::create($validated);
+            $usine = Usine::create(['nomusine' => strtoupper($request->input('nomusine'))]);
             return back()->with('successadd', AlertHelper::message("L'usine <strong>{$validated['nomusine']}</strong> a été ajoutée avec succès.", "success"));
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($e->validator->errors()->first('nomusine') == "validation.unique" ) {

@@ -20,11 +20,10 @@ class AtelierController extends Controller
         $usine = Usine::find($idusine);
         $workshop = Atelier::withCount([
             'contenir',
-            'produitsSansFds'
-        ])->where('usine_id', $idusine)->get();
+            'produitSansFds'
+        ])->orderBy('nomatelier', 'asc')->where('usine_id', $idusine)->get();
         $AllUsine = Usine::where('active', 1)->orderBy('nomusine', 'asc')->get();
         if (Auth::user()->role == 'superadmin') {
-            // $nbreAtelier = Atelier::where('active', 'true')->count();
             $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
         } else {
             $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
@@ -63,17 +62,19 @@ class AtelierController extends Controller
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('atelier', 'nomatelier')->ignore($id),
+                Rule::unique('atelier', 'nomatelier')->ignore($id)->where(function ($query) use ($request) {
+                    return $query->where('usine_id', $request->input('usine_id'));
+                }),
             ]
         ]);
 
         $atelier = Atelier::findOrFail($id);
-        $old = $request->input('oldvalue');
-        $new = $request->input('new');
+        $old = strtoupper($request->input('oldvalue'));
+        $new = strtoupper($request->input('nomatelier'));
         if ($old === $new) {
             return back()->with('samename', AlertHelper::message("Cet atelier existe déjà", "danger"));
         }
-        $atelier->update(['nomatelier' => $new]);
+        $atelier->update(['nomatelier' => strtoupper($new)]);
         return back()->with('updateOk', AlertHelper::message("L'atelier <strong> $old </strong> a été modifié en <strong> $new </strong> avec succès", "success"));
     }
 
@@ -95,7 +96,7 @@ class AtelierController extends Controller
                 'nomatelier.unique' => 'Ce nom d\'atelier existe déjà pour cette usine.',
                 'nomatelier.required' => 'Le nom de l\'atelier est requis.',
             ]);
-            $atelier = Atelier::create($validated);
+            $atelier = Atelier::create(['nomatelier' => strtoupper($request->input('nomatelier'))]);
             return back()->with('successadd', AlertHelper::message("L'atelier <strong>{$validated['nomatelier']}</strong> a été ajoutée avec succès.", "success"));
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($e->validator->errors()->first('nomatelier') == "validation.unique") {

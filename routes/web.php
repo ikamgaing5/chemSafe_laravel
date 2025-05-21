@@ -35,7 +35,16 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::post('/factory/new/', [UsineController::class, 'add'])->name('factory.add');
 
 
-    Route::get('/info-fds/new-info-fds/', [InfofdsController::class, 'add'])->name('infofds.add');
+    Route::get('/info-fds/new-info-fds/{idproduit}', [InfofdsController::class, 'add'])->name('infofds.add');
+    Route::get('/info-fds/edit/{id}',[InfofdsController::class, 'edit'])->name('infofds.edit');
+    Route::patch('/info-fds/edit/{id}', [InfofdsController::class, 'editPost'])->name('infofds.editPost');
+
+
+    route::patch('/product/updateFDS/{idproduit}', [ProduitController::class, 'addFDS'])->name('product.addFDS');
+
+
+
+
 });
 
 Route::get('/product/dangers/{idatelier}', [App\Http\Controllers\DangerController::class, 'getDangerStatsByAtelier']);
