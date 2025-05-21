@@ -88,20 +88,18 @@ class ProduitController extends Controller
         $produit->danger()->sync($validated['danger']);
         $produit->atelier()->sync($validated['atelier']);
 
-        return redirect()->back()->with('success', 'Produit ajouté avec succès !');
+        if ($request->hasFile('fds')) {
+            
+        } else {
+            return redirect()->back()->with('success', 'Produit ajouté avec succès !');
+        }
+
     }
 
     public function one($idatelier, $idproduit)
     {
         $atelier = Atelier::with('usine')->find($idatelier);
-        // $prod = Produit::find($idproduit);
-        // $danger = Danger::with('produit')->where('id', [3, 2])->get();
-        // $danger = Danger::all();
-        // $prod = Produit::with(['danger', 'infofds'])->where('id', $idproduit)->get();
-        // $danger = DB::table('possede')->where('produit_id', $idproduit)->get();
         $prod = Produit::with('danger', 'infofds')->find($idproduit);
-
-        // $idusine = Auth::user()->usine_id;
         return view('product.one', compact('prod', 'atelier'));
     }
 

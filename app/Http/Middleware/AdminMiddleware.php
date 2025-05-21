@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
+        // Durée maximale d'inactivité en secondes (20 minutes ici)
+        protected $timeout = 1200;
+
     /**
      * Handle an incoming request.
      *
@@ -16,7 +19,24 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
+        if (!Auth::check()) {
+            return redirect()->route('start')->with('pasacces', true); // ou '/login'
+        }
+
+        if (Auth::check()) {
+            $lastActivity = session('lastActivityTime');
+
+            if ($lastActivity && (time() - $lastActivity) > $this->timeout) {
+                Auth::logout(); // Déconnecte l'utilisateur
+                session()->flush(); // Vide la session
+                return redirect()->route('start')->with('offff', true);
+            }
+
+            // Met à jour l'horodatage de la dernière activité
+            session(['lastActivityTime' => time()]);
+        }
+
+
         if (Auth::user()->role == "admin" || Auth::user()->role == "superadmin" ) {
             return $next($request);
         }

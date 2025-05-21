@@ -269,6 +269,8 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                                                 // require __DIR__ . '/photo.php';
                                                                                 // require __DIR__ . '/fds.php' 
                                                                             ?>
+                                                                            @include('product.partials.photo')
+                                                                            @include('product.partials.fds')
                                                                         </div>
                                                                     </td>
                                                                     <?php if (Auth::user()->role == 'admin') { ?>

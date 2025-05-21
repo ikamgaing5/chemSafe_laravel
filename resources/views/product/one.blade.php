@@ -1,5 +1,5 @@
 <?php
-// dd( $prod->infofds->physique);
+// dd( $prod->infofds);
 // die();
 // $idprod = IdEncryptor::decode($id);
 // $nomproduit = $produit->getNameById($conn, $idprod);
@@ -144,7 +144,7 @@ foreach ($prod->danger as $key) {
 
                                             <p class="mb-3">
                                                 <strong>Fabricant : </strong><span
-                                                    class="fw-bold text-primary">{{$prod['fabriquant']}}</span>
+                                                    class="fw-bold text-primary">{{$prod['fabricant']}}</span>
                                             </p>
 
                                             <p class="mb-3">
@@ -187,7 +187,7 @@ foreach ($prod->danger as $key) {
 
                                             <div class="d-flex">
                                                 <?php 
-                                                    if ($prod->infofds->count() == 0 && $temoin == true) {
+                                                    if ($prod->infofds == null && $temoin == true) {
                                                          ?>
                                                     <a href="/info-fds/new-info-fds/{{$prod->id}}"
                                                         class="btn btn-outline-dark me-2">Ajouter les informations de la
@@ -213,7 +213,7 @@ foreach ($prod->danger as $key) {
                                     <h5 class="mb-0">Information FDS</h5>
                                 </div>
                                 <div class="card-body">
-                                    <?php if ($prod->infofds->count() == 0 && $temoin == true) { ?>
+                                    <?php if ($prod->infofds == null && $temoin == true) { ?>
                                         <h2 class="text-center text-danger">Vous n'avez pas ajouté les informations de la
                                             FDS de ce produit.</strong></span></h2>
                                     <?php } else { ?>
