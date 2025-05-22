@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\historique_acces as Historique;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -27,6 +28,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        Historique::create([
+            'user_id' => Auth::id() ,
+            'created_at' => now()->toDateString(),
+            'action' => "Connexion",
+            'time' => now()->format('H:i:s'),
+        ]);
 
         return redirect()->intended(route('dashboards', absolute: false));
     }
@@ -36,6 +43,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        Historique::create([
+            'user_id' => Auth::id() ,
+            'created_at' => now()->toDateString(),
+            'action' => "Deconnexion",
+            'time' => now()->format('H:i:s'),
+        ]);
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

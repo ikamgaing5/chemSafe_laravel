@@ -89,7 +89,7 @@ use Illuminate\Support\Facades\Crypt;
 					</a>
 					<ul aria-expanded="false">
 						<li><a href="#">Liste des Utilisateurs</a></li>
-						<li><a href="/admin/new-user">Ajouter un etudiant</a></li>
+						<li><a href="{{route('user.add')}}">Ajouter un etudiant</a></li>
 					</ul>
 				</li>
 			@endif

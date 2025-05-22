@@ -36,4 +36,9 @@ class Usine extends Model
     {
         return $this->hasMany(Atelier::class, 'usine_id', 'id');
     }
+    public function users()
+    {
+        return $this->hasMany(User::class, 'usine_id', 'id');
+    }
+
 }

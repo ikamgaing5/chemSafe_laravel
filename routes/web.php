@@ -14,6 +14,7 @@ Route::post('/', [UserController::class, 'login'])->name('logins');
 
 Route::middleware(['auth.middle'])->group(function () {
     Route::get('/dashboards', [UserController::class, 'dashboard'])->name('dashboards');
+    Route::get('/user/new-user/', [UserController::class, 'add'])->name('user.add');
 
     Route::get('/workshop/all-products/{idatelier}',[ProduitController::class,'allByWorkshop'])->name('product.forworkshop');
     Route::get('/product/new-product', [ProduitController::class, 'add'])->name('product.add');
@@ -44,10 +45,6 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::get('/info-fds/edit/{idproduit}/{idatelier}',[InfofdsController::class, 'edit'])->name('infofds.edit');
     Route::patch('/info-fds/edits/{id}', [InfofdsController::class, 'editPost'])->name('infofds.editPost');
 
-    // Route::post('/test-fds/{id}', function ($id) {
-    //     dd('Route atteinte avec ID: ' . $id);
-    // })->name('infofds.editPost');
-    
 
 
     route::patch('/product/updateFDS/{idproduit}', [ProduitController::class, 'addFDS'])->name('product.addFDS');

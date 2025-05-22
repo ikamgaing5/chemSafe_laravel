@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\historique_acces as Historique;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
@@ -27,6 +28,14 @@ class AdminMiddleware
             $lastActivity = session('lastActivityTime');
 
             if ($lastActivity && (time() - $lastActivity) > $this->timeout) {
+
+                Historique::create([
+                    'user_id' => Auth::id() ,
+                    'created_at' => now()->toDateString(),
+                    'action' => "Inactivité",
+                    'time' => now()->format('H:i:s'),
+                ]);
+
                 Auth::logout(); // Déconnecte l'utilisateur
                 session()->flush(); // Vide la session
                 return redirect()->route('start')->with('offff', true);

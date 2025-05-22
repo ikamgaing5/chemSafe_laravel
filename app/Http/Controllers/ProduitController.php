@@ -226,6 +226,7 @@ class ProduitController extends Controller
 
         $produit = Produit::findOrFail($idproduit);
 
+
         // Vérification et traitement de la photo
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -236,9 +237,10 @@ class ProduitController extends Controller
             }
 
             // Supprime l'ancienne photo si elle existe
-            if ($produit->photo && Storage::exists('public/' . $produit->photo)) {
-                Storage::delete('public/' . $produit->photo);
+            if ($produit->photo && Storage::disk('public')->exists($produit->photo)) {
+                Storage::disk('public')->delete($produit->photo);
             }
+
 
             $photoPath = $photo->store('uploads/photo', 'public');
             $produit->photo = $photoPath;
@@ -254,9 +256,10 @@ class ProduitController extends Controller
             }
 
             // Supprime l'ancienne FDS si elle existe
-            if ($produit->fds && Storage::exists('public/' . $produit->fds)) {
-                Storage::delete('public/' . $produit->fds);
+            if ($produit->fds && Storage::disk('public')->exists($produit->fds)) {
+                Storage::disk('public')->delete($produit->fds);
             }
+
 
             $fdsPath = $fds->store('uploads/fds', 'public');
             $produit->fds = $fdsPath;
@@ -275,6 +278,7 @@ class ProduitController extends Controller
 
         // Mise à jour des dangers liés
         $produit->danger()->sync($request->input('danger'));
+        // dd($produit->photo);
 
         return redirect()->back()->with('success', 'Produit mis à jour avec succès.');
     }
