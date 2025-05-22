@@ -6,6 +6,7 @@ use App\Models\Usine;
 use App\Models\Danger;
 use App\Models\Atelier;
 use App\Models\Produit;
+use App\Helpers\AlertHelper;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,6 @@ class ProduitController extends Controller
 {
     public function allByWorkshop($idatelier)
     {
-        // $id = $idatelier;
         $produits = Produit::whereHas('atelier', function ($query) use ($idatelier) {
             $query->where('id', $idatelier);
         })->get();
@@ -30,7 +30,38 @@ class ProduitController extends Controller
 
         $atelier = Atelier::with('usine')->find($idatelier);
 
-        return view('product.all', compact('produits', 'dangers', 'atelier'));
+        $produitsSansAtelier = Produit::whereDoesntHave('atelier', function ($query) use ($idatelier) {
+            $query->where('atelier_id', $idatelier);
+        })->get();
+
+
+        return view('product.all', compact('produits', 'dangers', 'atelier', 'produitsSansAtelier'));
+    }
+
+    public function addWorkshop(Request $request, $idatelier){
+        $atelier = Atelier::findOrFail($idatelier);
+
+        $request->validate([
+            'produit' => 'required|array',
+            'produit.*' => 'exists:produit,id',
+        ]);
+
+        $produits = Produit::whereIn('id', $request->produit)->get();
+
+        $atelier->contenir()->syncWithoutDetaching($request->produit);
+
+        $nomsProduits = $produits->pluck('nomprod')->implode(', ');
+        return redirect()->back()->with('addFromWorkshop', AlertHelper::message("Le(s) produit(s) $nomsProduits ont été ajouté(s) avec succès", 'success'));
+
+    }
+
+    public function deleteFromWorkshop(Request $request, $idproduit, $idatelier){
+        $nom = $request->input('nomprod');
+        $atelier = Atelier::findOrFail($idatelier);
+
+        $atelier->contenir()->detach($idproduit);
+
+        return redirect()->back()->with('deletesuccess', AlertHelper::message("Le produit <strong>$nom</strong> a été supprimé de l'atelier <strong>$atelier->nomatelier</strong>", "success"));
     }
 
     public function add()
@@ -81,8 +112,6 @@ class ProduitController extends Controller
         // Tout est ok → retourner le chemin proposé (ou stocker ici si tu veux)
         return $storagePath;
     }
-
-
 
     public function addPost(Request $request)
     {
@@ -135,10 +164,6 @@ class ProduitController extends Controller
             $temoinFDS = true;
         }
 
-
-
-        
-
         $produit->save();
         $produit->danger()->sync($validated['danger']);
         $produit->atelier()->sync($validated['atelier']);
@@ -175,6 +200,83 @@ class ProduitController extends Controller
         $atelier = Atelier::with('usine')->find($idatelier);
         $prod = Produit::with('danger', 'infofds')->find($idproduit);
         return view('product.one', compact('prod', 'atelier'));
+    }
+
+    public function edit($idproduit){
+        $allDangers = Danger::all();
+        $infoproduit = Produit::with('danger')->findOrFail($idproduit);
+        return view('product.edit', compact('infoproduit', 'allDangers'));
+    }
+
+    public function editPost(Request $request, $idproduit)
+    {
+        $validated = $request->validate([
+            'nomprod' => ['required', 'string', 'max:255', Rule::unique('produit', 'nomprod')->ignore($idproduit)],
+            'type_emballage' => ['required', 'string', 'max:255'],
+            'poids' => ['required', 'string', 'max:255'],
+            'nature' => ['required', 'string', 'max:255'],
+            'utilisation' => ['required', 'string', 'max:255'],
+            'fabricant' => ['required', 'string', 'max:255'],
+            'photo' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,gif'],
+            'fds' => ['nullable', 'file', 'mimes:pdf'],
+            'risque' => ['required', 'string', 'max:255'],
+            'danger' => 'required|array',
+        ]);
+        // dd($validated, $request->all());
+
+        $produit = Produit::findOrFail($idproduit);
+
+        // Vérification et traitement de la photo
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+
+            // Vérifie la taille (max 8 Mo)
+            if ($photo->getSize() > 5 * 1024 * 1024) {
+                return back()->with('error', 'La photo dépasse la taille maximale autorisée (5 Mo).');
+            }
+
+            // Supprime l'ancienne photo si elle existe
+            if ($produit->photo && Storage::exists('public/' . $produit->photo)) {
+                Storage::delete('public/' . $produit->photo);
+            }
+
+            $photoPath = $photo->store('uploads/photo', 'public');
+            $produit->photo = $photoPath;
+        }
+
+        // Vérification et traitement de la FDS
+        if ($request->hasFile('fds')) {
+            $fds = $request->file('fds');
+
+            // Vérifie la taille (max 10 Mo)
+            if ($fds->getSize() > 10 * 1024 * 1024) {
+                return back()->with('error', 'Le fichier FDS dépasse la taille maximale autorisée (10 Mo).');
+            }
+
+            // Supprime l'ancienne FDS si elle existe
+            if ($produit->fds && Storage::exists('public/' . $produit->fds)) {
+                Storage::delete('public/' . $produit->fds);
+            }
+
+            $fdsPath = $fds->store('uploads/fds', 'public');
+            $produit->fds = $fdsPath;
+        }
+
+        // Mise à jour des autres champs
+        $produit->nomprod = strtoupper($request->input('nomprod'));
+        $produit->type_emballage = strtoupper($request->input('type_emballage'));
+        $produit->poids = strtoupper($request->input('poids'));
+        $produit->nature = strtoupper($request->input('nature'));
+        $produit->utilisation = strtoupper($request->input('utilisation'));
+        $produit->fabricant = strtoupper($request->input('fabricant'));
+        $produit->risque = strtoupper($request->input('risque'));
+
+        $produit->save();
+
+        // Mise à jour des dangers liés
+        $produit->danger()->sync($request->input('danger'));
+
+        return redirect()->back()->with('success', 'Produit mis à jour avec succès.');
     }
 
 }

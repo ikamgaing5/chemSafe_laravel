@@ -52,7 +52,7 @@
             <x-input-label for="usine" :value="__('Usine')" />
             <select name="usine" id="usine" class="block mt-1 w-full" required>
                 <option value="">Faites un choix</option>
-                @foreach (\App\Models\Usine::all() as $usine)
+                @foreach (\App\Models\Usine::where('active', true)->get() as $usine)
                 <option value="{{ $usine->id }}">{{ $usine->nomusine }}</option>
                 @endforeach
             </select>

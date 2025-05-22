@@ -19,6 +19,10 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::get('/product/new-product', [ProduitController::class, 'add'])->name('product.add');
     Route::post('/product/new-product', [ProduitController::class, 'addPost'])->name('product.addPost');
     Route::get('/product/more-detail/{idatelier}/{idprodit}', [ProduitController::class, 'one'])->name('product.one');
+    Route::patch('/product/add{idatelier}', [ProduitController::class, 'addWorkshop'])->name('product.addWorkshop');
+    Route::get('/product/edit/{idproduit}', [ProduitController::class, 'edit'])->name('product.edit');
+    Route::patch('/product/edit-product/{idproduit}', [ProduitController::class, 'editPost'])->name('product.editPost');
+
 
 
 
@@ -36,11 +40,18 @@ Route::middleware(['auth.middle'])->group(function () {
 
 
     Route::get('/info-fds/new-info-fds/{idproduit}', [InfofdsController::class, 'add'])->name('infofds.add');
-    Route::get('/info-fds/edit/{id}',[InfofdsController::class, 'edit'])->name('infofds.edit');
-    Route::patch('/info-fds/edit/{id}', [InfofdsController::class, 'editPost'])->name('infofds.editPost');
+    Route::post('/info-fds/new-info/{idproduit}', [InfofdsController::class, 'addPost'])->name('infofds.addPost');
+    Route::get('/info-fds/edit/{idproduit}/{idatelier}',[InfofdsController::class, 'edit'])->name('infofds.edit');
+    Route::patch('/info-fds/edits/{id}', [InfofdsController::class, 'editPost'])->name('infofds.editPost');
+
+    // Route::post('/test-fds/{id}', function ($id) {
+    //     dd('Route atteinte avec ID: ' . $id);
+    // })->name('infofds.editPost');
+    
 
 
     route::patch('/product/updateFDS/{idproduit}', [ProduitController::class, 'addFDS'])->name('product.addFDS');
+    route::delete('/product/produit/{idproduit}/atelier/{idatelier}', [ProduitController::class, 'deleteFromWorkshop'])->name('product.deleteWorkshop');
 
 
 

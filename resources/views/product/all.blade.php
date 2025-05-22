@@ -1,17 +1,15 @@
-<?php 
-
-// dd($produits); 
+@php
+// dd($produitsSansAtelier); 
 // echo "<br>";
 // dd($atelier);
 // die();
-
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 if (strpos($current_page, 'workshop/all-products/') === 0) {
     $message = "Produits de l'atelier $atelier->nomatelier";
 }
 
-?>
+@endphp 
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -209,6 +207,9 @@ if (isset($_SESSION['addphoto'])) {
     unset($_SESSION['addphoto']);
 }
                 ?>
+                @if (session('deletesuccess'))
+                    {!!session('deletesuccess')!!}
+                @endif
 
 
                 <div class="demo-view">
@@ -219,7 +220,7 @@ if (isset($_SESSION['addphoto'])) {
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5" href="/dashboard">Tableau de bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
-                                    <u><a href="/workshop/all-workshop/<?= Crypt::encrypt(Auth::user()->usine_id) ?>"
+                                    <u><a href="/workshop/all-workshop/{{Crypt::encrypt(Auth::user()->usine_id)}} "
                                             class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
                                     <span class="card-title fw-bold fs-5">
@@ -237,7 +238,7 @@ if (isset($_SESSION['addphoto'])) {
                             </div>
                         </div>
 
-                        <div class="row" id="graphRow" style="display: none;">
+                        <div class="row" data-idatelier="{{ $atelier->id }}" id="graphRow" style="display: none;">
                             <div class="col-xl-8 col-md-8 col-sm-12">
                                 <div class="card">
                                     <div class="card-body">
@@ -252,7 +253,6 @@ if (isset($_SESSION['addphoto'])) {
                                 </div>
                             </div>
                         </div>
-
 
                         <div id="dangersList" style="display: none;" class="card mt-3">
                             <div class="card-body">
@@ -283,16 +283,14 @@ if (isset($_SESSION['addphoto'])) {
                                     </div>
                                     <div class="d-flex">
                                         <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
-
+                                            
                                             <li class="nav-item " role="presentation">
 
                                                 <div class="d-flex">
                                                     <button type="submit" name="supprimeretudiant"
                                                         class="btn btn-danger" value="tout supprimer">tout supprimer
                                                     </button>
-                                                    <?php
-//  require_once __DIR__ . '/add-product.php'; 
-                                                     ?>
+                                                     @include('product.partials.add')
                                                 </div>
                                             </li>
                                         </ul>
@@ -313,63 +311,51 @@ if (isset($_SESSION['addphoto'])) {
                                                             <th>Vol/Poids</th>
                                                             <th>Plus d'info</th>
                                                             <th>Médias</th>
-                                                            <?php if (Auth::user()->role == 'admin') { ?>
-                                                            <th class="text-end">Action</th>
-                                                            <?php } ?>
-
+                                                            @if (Auth::user()->role != 'user')
+                                                                <th class="text-end">Action</th>
+                                                            @endif
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @if ($produits->count() <= 0) <tr>
-                                                            <td colspan='6'>Aucun produit enregistré. </td>
-                                                            </tr>
-                                                            @else
-                                                            @foreach ($produits as $prod)
-
-
+                                                        @if ($produits->count() <= 0) 
                                                             <tr>
-                                                                <td>
-                                                                    <div class="trans-list">
-                                                                        <?php
-                                                                // echo "<img src='./upload/".$row['name']."' alt='' class='avatar me-3'>";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ?>
-                                                                        <h4><?= $prod['nomprod'] ?></h4>
-                                                                    </div>
-                                                                </td>
-                                                                <td><span
-                                                                        class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="mb-0"><?= $prod['poids'] ?></div>
-                                                                </td>
-                                                                <td><a href="{{route('product.one', [$atelier->id, $prod->id])}}"
-                                                                        class="btn btn-secondary shadow btn-xs sharp me-1"><i
-                                                                            class="bi bi-info-circle-fill"></i></a></td>
-                                                                <td>
-                                                                    <div class="d-flex">
-                                                                        <?php
-                                                                // require __DIR__ . '/photo.php';
-                                                                // require __DIR__ . '/fds.php' 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ?>
-                                                                        @include('product.partials.photo')
-                                                                        @include('product.partials.fds')
-                                                                    </div>
-                                                                </td>
-                                                                <?php        if (Auth::user()->role == 'admin') { ?>
-                                                                <td>
-                                                                    <div class="d-flex">
-                                                                        <?php 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // require __DIR__ . '/delete.php' 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ?>
-                                                                    </div>
-                                                                </td>
-                                                                <?php        } ?>
-
-
+                                                                <td colspan='6'>Aucun produit enregistré. </td>
                                                             </tr>
-                                                            @endforeach
+                                                        @else
+                                                            @foreach ($produits as $prod)
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="trans-list">
+                                                                            <h4>{{$prod->nomprod}}</h4>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><span
+                                                                            class="text-primary font-w600">{{$prod->type_emballage}}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="mb-0">{{$prod->poids}}</div>
+                                                                    </td>
+                                                                    <td><a href="{{route('product.one', [$atelier->id, $prod->id])}}"
+                                                                            class="btn btn-secondary shadow btn-xs sharp me-1"><i
+                                                                                class="bi bi-info-circle-fill"></i></a></td>
+                                                                    <td>
+                                                                        <div class="d-flex">
+                                                                            @include('product.partials.photo')
+                                                                            @include('product.partials.fds')
+                                                                        </div>
+                                                                    </td>
+                                                                    @if (Auth::user()->role != 'user')
+                                                                        <td>
+                                                                            <div class="d-flex">
 
-                                                            @endif
+                                                                                @include('product.partials.delete')
+                                                                            </div>
+                                                                        </td>
+                                                                    @endif
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -411,224 +397,8 @@ if (isset($_SESSION['addphoto'])) {
         validateSelection();
     });
     </script>
-    <script>
-    $(function() {
-        // Vérifier si l'appareil est mobile
-        const isMobile = window.innerWidth < 768;
-
-        // Récupérer l'ID de l'atelier depuis la page
-        const idatelier = "{{ $atelier->id }}";
-
-        console.log('ID Atelier:', idatelier); // Debug
-
-        // Appel AJAX pour récupérer les données
-        $.ajax({
-            url: `/product/dangers/${idatelier}`,
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                console.log('Données reçues:', data); // Debug
-
-                // Vérifier s'il y a au moins 3 dangers différents
-                if (data.length >= 3) {
-                    // Afficher la ligne du graphique
-                    $('#graphRow').show();
-                    // Rendre le graphique
-                    renderDangerChart(data);
-                } else {
-                    // Afficher la liste des dangers si moins de 3 dangers
-                    $('#dangersList').show();
-                    renderDangersList(data);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Erreur lors de la récupération des données:', error);
-                console.error('Status:', status);
-                console.error('Response:', xhr.responseText);
-                // Afficher un message d'erreur
-                $('<div class="alert alert-danger mt-3">Erreur lors du chargement des données</div>')
-                    .insertAfter('#graphRow');
-            }
-        });
-
-        // Fonction pour afficher la liste des dangers
-        function renderDangersList(data) {
-            const tableBody = $('#dangersListBody');
-            tableBody.empty();
-
-            // Trier les données par nombre de produits (décroissant)
-            data.sort((a, b) => b.count - a.count);
-
-            // Créer une ligne pour chaque danger
-            data.forEach(item => {
-                const row = $('<tr>');
-                const dangerCell = $('<td>').text(item.nomdanger);
-                const countCell = $('<td class="text-center">').text(item.count);
-
-                // Ajouter un attribut title avec la liste des produits
-                if (item.products && item.products.length > 0) {
-                    const productsList = item.products.join(', ');
-                    row.attr('title', 'Produits: ' + productsList);
-                    row.addClass('has-tooltip');
-
-                    // Initialiser tooltip Bootstrap si disponible
-                    if ($.fn.tooltip) {
-                        row.tooltip({
-                            placement: 'top',
-                            html: true,
-                            template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner text-start" style="max-width: 300px;"></div></div>',
-                            title: function() {
-                                let content = '<strong>Produits concernés:</strong><br>';
-                                item.products.forEach(product => {
-                                    content += `- ${product}<br>`;
-                                });
-                                return content;
-                            }
-                        });
-                    }
-                }
-
-                row.append(dangerCell);
-                row.append(countCell);
-                tableBody.append(row);
-            });
-        }
-
-        function renderDangerChart(data) {
-            const labels = data.map(item => item.nomdanger);
-            const counts = data.map(item => item.count);
-            const backgroundColors = generateColors(data.length, 0.6);
-            const borderColors = generateColors(data.length, 1);
-
-            const chartData = {
-                labels: isMobile ? labels.map(label => abbreviateLabel(label)) : labels,
-                datasets: [{
-                    label: 'Nombre de produits',
-                    data: counts,
-                    backgroundColor: backgroundColors,
-                    borderColor: borderColors,
-                    borderWidth: 1
-                }]
-            };
-
-            const options = {
-                responsive: true,
-                maintainAspectRatio: !isMobile,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0,
-                            font: {
-                                size: isMobile ? 10 : 12
-                            }
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: isMobile ? 8 : 12
-                            },
-                            maxRotation: isMobile ? 90 : 0,
-                            minRotation: isMobile ? 45 : 0
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            title: function(context) {
-                                return labels[context[0].dataIndex];
-                            },
-                            label: function(context) {
-                                const dataIndex = context.dataIndex;
-                                const danger = data[dataIndex];
-
-                                // Afficher le nombre total de produits
-                                const result = [`Total: ${danger.count} produit(s)`];
-
-                                // Ajouter la liste des produits
-                                if (danger.products && danger.products.length > 0) {
-                                    result.push('');
-                                    result.push('Produits concernés:');
-                                    danger.products.forEach(product => {
-                                        result.push(`- ${product}`);
-                                    });
-                                }
-
-                                return result;
-                            }
-                        }
-                    }
-                }
-            };
-
-            var ctx = document.getElementById('dangerChart').getContext('2d');
-            var dangerChart = new Chart(ctx, {
-                type: 'bar',
-                data: chartData,
-                options: options
-            });
-
-            // Générer la légende personnalisée
-            generateCustomLegend(labels, backgroundColors);
-        }
-
-        // Fonction pour abréger les étiquettes sur mobile
-        function abbreviateLabel(label) {
-            if (isMobile) {
-                if (label.length > 10) {
-                    return label.substring(0, 7) + '...';
-                }
-            }
-            return label;
-        }
-
-        function generateColors(count, alpha) {
-            const colors = [];
-            const hueStep = 360 / count;
-
-            for (let i = 0; i < count; i++) {
-                const hue = i * hueStep;
-                colors.push(`hsla(${hue}, 70%, 60%, ${alpha})`);
-            }
-
-            return colors;
-        }
-
-        function generateCustomLegend(labels, colors) {
-            const legendContainer = document.getElementById('customLegend');
-            legendContainer.innerHTML = '<h5 class="legend-title">Légende</h5>';
-
-            if (isMobile) {
-                legendContainer.classList.add('legend-container-mobile');
-            }
-
-            labels.forEach((label, index) => {
-                const legendItem = document.createElement('div');
-                legendItem.className = 'legend-item';
-
-                const colorBox = document.createElement('div');
-                colorBox.className = 'legend-color';
-                colorBox.style.backgroundColor = colors[index];
-
-                const labelText = document.createElement('span');
-                labelText.className = 'legend-text';
-                labelText.textContent = label;
-
-                legendItem.appendChild(colorBox);
-                legendItem.appendChild(labelText);
-                legendContainer.appendChild(legendItem);
-            });
-        }
-    });
-    </script>
-
-    <script src="{{asset('vendor/global/global.min.js')}}"></script>
     <script src="{{asset('vendor/chart.js/Chart.bundle.min.js')}}"></script>
+    <script src="{{asset('vendor/global/global.min.js')}}"></script>
     <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
     <script src="{{asset('vendor/apexchart/apexchart.js')}}"></script>
     <script src="{{asset('vendor/peity/jquery.peity.min.js')}}"></script>
@@ -645,6 +415,7 @@ if (isset($_SESSION['addphoto'])) {
     <script src="{{asset('js/custom.min.js')}}"></script>
     <script src="{{asset('js/demo.js')}}"></script>
     <script src="{{asset('js/all.js')}}"></script>
+    @include('product.partials.graphe')
 </body>
 
 </html>

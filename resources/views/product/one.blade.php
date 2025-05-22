@@ -80,7 +80,10 @@ foreach ($prod->danger as $key) {
             @include('layouts.sidebar')
 
             <div class="content-body">
-                <div class="container-fluid mt-4">
+                <div class="container-fluid">
+                    @if (session('updateInfoFDS'))
+                    {!!session('updateInfoFDS')!!}
+                @endif
                     <div class="row justify-content-center">
                         <div class="col-xl-12">
                             <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
@@ -126,7 +129,7 @@ foreach ($prod->danger as $key) {
                                         <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
                                             <li class="nav-item " role="presentation">
                                                 <div class="d-flex">
-                                                    <a href="" class="btn btn-primary">Modifier le produit</a>
+                                                    <a href="{{route('product.edit', $prod->id)}}" class="btn btn-primary">Modifier le produit</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -144,7 +147,7 @@ foreach ($prod->danger as $key) {
                                             <div class="mb-3">
                                                 <h6>Danger : </h6>
                                                 @php
-                                                if ($nomdanger == "AUCUN DANGER") {
+                                                if (trim($nomdanger) == "AUCUN DANGER,") {
                                                 $color = "success";
                                                 }else{
                                                 $color = "danger";
@@ -221,7 +224,7 @@ foreach ($prod->danger as $key) {
                     <div class="row justify-content-center">
                         <div class="col-xl-12 col-lg-12">
                             <div class="card shadow-lg">
-                                <div class="card-header flex-wrap px-3">
+                                <div class="card-header flex-wrap py-2 px-3">
                                     <div>
                                         <h6 class="card-title">Détail du produit</h6>
                                     </div>
@@ -230,7 +233,7 @@ foreach ($prod->danger as $key) {
                                             <li class="nav-item " role="presentation">
                                                 <?php if ($prod->infofds != null && $temoin == true) { ?>
                                                 <div class="d-flex">
-                                                    <a href="{{route('infofds.edit', $prod->infofds->id)}}" class="btn btn-warning">Modifier les informations</a>
+                                                    <a href="{{route('infofds.edit', ['idproduit' => $prod->infofds->id, 'idatelier' => $atelier->id])}}" class="btn btn-warning">Modifier les informations</a>
                                                 </div>
                                                 <?php } ?>
                                             </li>

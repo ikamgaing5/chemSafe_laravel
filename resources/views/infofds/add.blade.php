@@ -119,10 +119,14 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
 
 
         <form action="{{route('infofds.addPost', $idproduit)}}" enctype="multipart/form-data" method="POST">
+            @csrf
             <div class="content-body">
 
 
                 <div class="container-fluid">
+                    @if (session('addFDSSuccess'))
+                        {!!session('addFDSSuccess')!!}
+                    @endif
                     <div class="row">
                         <?php
                         if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] === "insertfalse") {
@@ -213,8 +217,7 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label class="form-label text-primary fw-bold">Réactivité <span
-                                                                class="required">*</span></label>
+                                                        <label class="form-label text-primary fw-bold">Réactivité <span class="required">*</span></label>
                                                         <textarea class="form-control" id="reactivite" name="reactivite"
                                                             rows="4"></textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
@@ -226,7 +229,7 @@ if (strpos($current_page, 'info-fds/new-info-fds') === 0) {
                                                         <label class="form-label text-primary fw-bold">Manipulation /
                                                             Stockage<span class="required">*</span></label>
                                                         <textarea class="form-control" id="manipulation"
-                                                            name="manipulation" rows="6"></textarea>
+                                                            name="stockage" rows="6"></textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>

@@ -117,31 +117,16 @@ if (strpos($current_page, 'info-fds/edit') === 0) {
         @include('layouts.navbar')
         @include('layouts.sidebar')
 
-
+        @if (session('updateSuccess'))
+            {{session('updateSuccess')}}
+        @endif
+        
         <form action="{{route('infofds.editPost', $fds->id)}}" enctype="multipart/form-data" method="POST">
+            @csrf
+            @method('PATCH')
             <div class="content-body">
-
-
                 <div class="container-fluid">
                     <div class="row">
-                        <?php
-                        if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] === "insertfalse") {
-                            $message = "Problème lors de l'insertion";
-                            echo $package->message($message, "danger");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] === "insertok") {
-                            $message = "Le produit a été ajoutée";
-                            echo $package->message($message, "success");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] === "doublonProduit") {
-                            $message = "Ce Produit existe déjà ";
-                            echo $package->message($message, "danger");
-                            // 
-                            // echo $package -> message($message,$type);
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] === true) {
-                            $message = "La FDS a bien été enregistrée, veuillez enregistrer ses informations";
-                            echo $package->message($message, "success");
-                        }
-                        ?>
-
                         <div class="col-xl-12">
                             <div class="shadow-lg card">
                                 <div class="card-header">
@@ -155,7 +140,7 @@ if (strpos($current_page, 'info-fds/edit') === 0) {
                                                 <!-- Colonne gauche -->
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <input type="hidden" name="produit_id" value="{{$fds->produit->id}}">
+                                                        <input type="hidden" name="idatelier" value="{{$idatelier}}">
                                                         <label class="form-label text-primary fw-bold">Danger Physique
                                                             <span class="required">*</span></label>
                                                         <textarea class="form-control" id="physique" name="physique"
@@ -165,8 +150,7 @@ if (strpos($current_page, 'info-fds/edit') === 0) {
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label class="form-label text-primary fw-bold">Danger pour la
-                                                            santé <span class="required">*</span></label>
+                                                        <label class="form-label text-primary fw-bold">Danger pour la santé <span class="required">*</span></label>
                                                         <textarea class="form-control" id="sante" name="sante"  rows="6">{{$fds->sante}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
@@ -216,7 +200,7 @@ if (strpos($current_page, 'info-fds/edit') === 0) {
                                                     <div class="mb-3">
                                                         <label class="form-label text-primary fw-bold">Manipulation /
                                                             Stockage<span class="required">*</span></label>
-                                                        <textarea class="form-control" id="manipulation" name="manipulation" rows="6">{{$fds->manipulation}}</textarea>
+                                                        <textarea class="form-control" id="manipulation" name="stockage" rows="6">{{$fds->stockage}}</textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>
@@ -254,8 +238,6 @@ if (strpos($current_page, 'info-fds/edit') === 0) {
         </form>
 
     </div>
-    <?php unset($_SESSION['insert']); ?>
-
 
     <script src="{{asset('vendor/global/global.min.js')}}"></script>
     <script src="{{asset('vendor/chart.js/Chart.bundle.min.js')}}"></script>
