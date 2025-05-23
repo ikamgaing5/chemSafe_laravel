@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Crypt;
 <div class="dlabnav" style="background-color: rgb(28, 39, 43);">
 	<div class="dlabnav-scroll">
 		<ul class="metismenu" id="menu">
-			<li> <a href="/dashboards">
+			<li> <a href="{{route('dashboard')}}">
 					<i class="bi bi-house-door-fill"></i> <span class="nav-text">Tableau de Bord</span>
 				</a>
 			</li>

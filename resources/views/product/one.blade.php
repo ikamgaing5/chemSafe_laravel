@@ -91,7 +91,7 @@ foreach ($prod->danger as $key) {
                                 <div
                                     style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                     <div>
-                                        <u><a class="text-primary fw-bold fs-5" href="/dashboard">Tableau de
+                                        <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de
                                                 bord</a></u>
                                         <i class="bi bi-caret-right-fill"></i>
                                         <u><a href="/workshop/all-workshop/{{$atelier->usine->id}}"

@@ -1,101 +1,118 @@
-// let nomuser = document.getElementById('nomuser');
-// let mdp = document.getElementById('password');
-// let role = document.getElementById('role');
-// let messageNom = document.getElementById('messageNom');
-// let messageMdp = document.getElementById('messageMdp');
-// let messageRole = document.getElementById('messageRole');
-// let submitBtn = document.getElementById('submitBtn');
-
-// const validationStates = {
-//     temoinNom: false,
-//     temoinMdp: false,
-//     temoinRole: false
-// };
-
-
-// function checkValidation() {
-// // Validation du nom
-// if (nomuser.value.trim() !== "") {
-//     validationStates.temoinNom = true;
-//     messageNom.style.display = 'none';
-// } else {
-//     validationStates.temoinNom = false;
-//     messageNom.style.display = 'block';
-//     messageNom.textContent = 'Ce champ est obligatoire.';
-// }
-
-// if (mdp.value.trim() !== "") {
-//     validationStates.temoinMdp = true;
-//     messageMdp.style.display = "none";
-// }else if(mdp.value.trim() == ""){
-//     validationStates.temoinMdp = false;
-//     messageMdp.style.display = "block";
-//     messageMdp.textContent = "Ce champ est obligatoire.";
-// }
-// const selectedRole = Array.from(role.selectedOptions).map(option => option.value);
-// const isValidRole = selectedRole.length > 0 && !selectedRole.includes("none");
-
-// if (isValidRole) {
-//     validationStates.temoinRole = true;
-//     messageRole.style.display = 'none';
-// } else {
-//     validationStates.temoinDanger = false;
-//     messageRole.style.display = 'block';
-//     messageRole.textContent = 'Veuillez sélectionner un role.';
-// }
-
-// if (submitBtn) {
-//     submitBtn.disabled = !Object.values(validationStates).every(Boolean);
-// }
-
-
-// }
-
-// nomuser.addEventListener('input', function () { checkValidation(); });
-// mdp.addEventListener('input', function () { checkValidation(); })
-// role.addEventListener('change', function () { checkValidation(); });
-
-// checkValidation();
-
 function validForm() {
-    let nomuser = document.getElementById('nomuser').value.trim();
-    let mdp = document.getElementById('password').value.trim();
-    let role = document.getElementById('role').value.trim();
+    // Récupération des champs
+    const username = document.getElementById("nomuser").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const role = document.getElementById("role").value;
+    const usine = document.getElementById("usine").value;
+    const password = document
+        .querySelector('input[name="password"]')
+        .value.trim();
+    const passwordConfirmation = document
+        .querySelector('input[name="password_confirmation"]')
+        .value.trim();
 
-    if (nomuser == "" && mdp == "" && role == "none") {
-        document.getElementById('messageNom').innerText = "Ce champ est obligatoire.";
-        document.getElementById('messageRole').innerText = "Ce champ est obligatoire.";
-        document.getElementById('messageMdp').innerText = "Ce champ est obligatoire.";
-        console.log('tous les chammps');
-        return false;
-    }else if(nomuser == "" && mdp == ""){
-        document.getElementById('messageNom').innerText = "Ce champ est obligatoire.";
-        document.getElementById('messageMdp').innerText = "Ce champ est obligatoire.";
-        console.log('nom et mdp');
-        return false;
-    }else if (role == "none" && mdp == "") {
-        document.getElementById('messageRole').innerText = "Ce champ est obligatoire.";
-        document.getElementById('messageMdp').innerText = "Ce champ est obligatoire.";
-        console.log('role et mdp');
-        return false;
-    }else if (nom == "" && role == "none") {
-        document.getElementById('messageRole').innerText = "Ce champ est obligatoire.";
-        document.getElementById('messageNom').innerText = "Ce champ est obligatoire.";
-        console.log('role et nom');
-        return false;
-    }else if ( mdp == "") {
-        document.getElementById('messageMdp').innerText = "Ce champ est obligatoire.";
-        console.log('mdp');
-        return false;
-    }else if (role == "none") {
-        document.getElementById('messageRole').innerText = "Ce champ est obligatoire.";
-        console.log('role');
-        return false;
-    }else if (nom == "") {
-        document.getElementById('messageNom').innerText = "Ce champ est obligatoire.";
-        console.log('nom');
-        return false;
-    }else{
-        return true;
+    // Réinitialisation des messages d'erreur
+    document
+        .querySelectorAll(".text-danger")
+        .forEach((span) => (span.textContent = ""));
+
+    let isValid = true;
+
+    // Validation du nom d'utilisateur
+    if (username === "") {
+        document.getElementById("messageNom").textContent =
+            "Le nom d'utilisateur est requis";
+        isValid = false;
     }
+
+    // Validation du nom/prénom
+    if (name === "") {
+        document.getElementById("messageMdp").textContent =
+            "Le nom ou prénom est requis";
+        isValid = false;
+    }
+
+    // Validation du rôle
+    if (role === "none") {
+        document.getElementById("messageRole").textContent =
+            "Veuillez sélectionner un rôle";
+        isValid = false;
+    }
+
+    // Validation de l'usine
+    if (usine === "none") {
+        document.getElementById("messageUsine").textContent =
+            "Veuillez sélectionner une usine";
+        isValid = false;
+    }
+
+    // Validation du mot de passe
+    if (password === "") {
+        document.querySelector(
+            'input[name="password"]'
+        ).nextElementSibling.textContent = "Le mot de passe est requis";
+        isValid = false;
+    }
+
+    // Validation de la confirmation du mot de passe
+    if (passwordConfirmation === "") {
+        document.querySelector(
+            'input[name="password_confirmation"]'
+        ).nextElementSibling.textContent =
+            "La confirmation du mot de passe est requise";
+        isValid = false;
+    }
+
+    // Vérification de la correspondance des mots de passe
+    if (password !== passwordConfirmation) {
+        document.querySelector(
+            'input[name="password_confirmation"]'
+        ).nextElementSibling.textContent =
+            "Les mots de passe ne correspondent pas";
+        isValid = false;
+    }
+
+    // Vérification des exigences de mot de passe Laravel 12
+    const passwordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+        document.querySelector(
+            'input[name="password"]'
+        ).nextElementSibling.textContent =
+            "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial";
+        isValid = false;
+    }
+
+    return isValid;
 }
+
+// Ajout des écouteurs d'événements pour la validation en temps réel
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const inputs = form.querySelectorAll("input, select");
+
+    // Validation en temps réel pour l'usine
+    const usineSelect = document.getElementById("usine");
+    if (usineSelect) {
+        usineSelect.addEventListener("change", function () {
+            const errorSpan = document.getElementById("messageUsine");
+            if (errorSpan) {
+                if (this.value === "none") {
+                    errorSpan.textContent = "Veuillez sélectionner une usine";
+                } else {
+                    errorSpan.textContent = "";
+                }
+            }
+        });
+    }
+
+    // Validation en temps réel pour les autres champs
+    inputs.forEach((input) => {
+        input.addEventListener("input", function () {
+            const errorSpan = this.nextElementSibling;
+            if (errorSpan && errorSpan.classList.contains("text-danger")) {
+                errorSpan.textContent = "";
+            }
+        });
+    });
+});

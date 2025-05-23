@@ -110,7 +110,7 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <div>
-                                    <u><a class="text-primary fw-bold fs-5" href="/dashboard">Tableau de bord</a></u>
+                                    <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     @if (Auth::user()->role == 'superadmin')
                                     <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
                                     <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos

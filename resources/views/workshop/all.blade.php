@@ -102,35 +102,6 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
                 @endif
                 <!-- Row -->
                 <div class="row">
-                    <?php
-// echo $message_succes;
-if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
-    $message = "L'atelier <strong> " . $_SESSION['error']['data']['nom'] . "</strong>  existe déjà";
-    $type = "danger";
-    echo $package->message($message, $type);
-    unset($_SESSION['error']);
-} elseif (isset($_SESSION['error']['success']) && $_SESSION['error']['success'] == true) {
-    $message = "L'atelier " . $_SESSION['error']['data']['oldvalue'] . " a été remplacé par  <strong>" . $_SESSION['error']['data']['nom'] . "</strong> ";
-    echo $package->message($message, "success");
-    unset($_SESSION['error']);
-} elseif (isset($_SESSION['error']['errorInsert']) && $_SESSION['error']['errorInsert'] == true) {
-    $message = "L'atelier " . $_SESSION['error']['data']['oldvalue'] . " a été remplacé par  <strong>" . $_SESSION['error']['data']['nom'] . "</strong> ";
-    echo $package->message($message, "success");
-    unset($_SESSION['error']);
-} elseif (isset($_SESSION['delete']['errorDelete'])) {
-    $message = "L'atelier <strong>" . $_SESSION['delete']['data']['nom'] . "</strong> contient au moins un produit et ne peut être suprrimé ";
-    echo $package->message($message, "danger");
-    unset($_SESSION['delete']);
-} elseif (isset($_SESSION['delete']['deleteok'])) {
-    $message = "L'atelier <strong>" . $_SESSION['delete']['data']['nom'] . "</strong> a bien été suprrimé ";
-    echo $package->message($message, "success");
-    unset($_SESSION['delete']);
-} elseif (isset($_SESSION['insertok'])) {
-    $message = "L'atelier <strong>" . mb_strtoupper($_SESSION['insertok']['data']['nom']) . "</strong> a été bien ajouté ";
-    echo $package->message($message, "success");
-    unset($_SESSION['insertok']);
-}
-					?>
                     @if (session('deleteok'))
                         
                     @endif
@@ -140,7 +111,7 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <div>
-                                    <u><a class="text-primary fw-bold fs-5" href="/dashboard">Tableau de bord</a></u>
+                                    <u><a class="text-primary fw-bold fs-5"href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     @if (Auth::user()->role == 'superadmin')
                                         <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
                                         <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos

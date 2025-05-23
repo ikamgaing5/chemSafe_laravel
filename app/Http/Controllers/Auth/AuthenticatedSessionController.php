@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
             'time' => now()->format('H:i:s'),
         ]);
 
-        return redirect()->intended(route('dashboards', absolute: false));
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

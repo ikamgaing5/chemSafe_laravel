@@ -44,7 +44,7 @@
             <select name="role" id="role" class="block mt-1 w-full" required>
                 <option value="">Faites un choix</option>
                 <option value="admin">Administrateur</option>
-                <option value="invite">Invite</option>
+                <option value="user">Invite</option>
             </select>
         </div>
 

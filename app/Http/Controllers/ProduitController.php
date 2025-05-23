@@ -9,6 +9,7 @@ use App\Models\Produit;
 use App\Helpers\AlertHelper;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -111,6 +112,65 @@ class ProduitController extends Controller
 
         // Tout est ok → retourner le chemin proposé (ou stocker ici si tu veux)
         return $storagePath;
+    }
+
+    public function getDangerDatas()
+    {
+        if (Auth::user()->role == 'superadmin') {
+            $result = $this->getDangerData();
+        } else {
+            $result = $this->getDangerDatass(Auth::user()->idusine);
+        }
+        echo $result;
+    }
+
+    public function getDangerDatass($idusine)
+    {
+        try {
+            $results = DB::table('danger as d')
+                ->leftJoin('possede as pos', 'd.id', '=', 'pos.danger_id')
+                ->leftJoin('produit as p', 'pos.produit_id', '=', 'p.id')
+                ->leftJoin('contenir as c', 'p.id', '=', 'c.produit_id')
+                ->leftJoin('atelier as a', 'c.atelier_id', '=', 'a.id')
+                ->where('a.usine_id', $idusine)
+                ->select(
+                    'd.id',
+                    'd.nomdanger as nom_danger',
+                    DB::raw('COUNT(DISTINCT p.idprod) as total_produits')
+                )
+                ->groupBy('d.id', 'd.nomdanger')
+                ->orderByDesc('total_produits')
+                ->get();
+
+            return response()->json($results);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Erreur de base de données : ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getDangerData()
+    {
+        try {
+            $results = DB::table('danger as d')
+                ->leftJoin('possede as pos', 'd.id', '=', 'pos.danger_id')
+                ->leftJoin('produit as p', 'pos.produit_id', '=', 'p.id')
+                ->select('d.id', 'd.nomdanger as nom_danger', DB::raw('COUNT(p.id) as total_produits'))
+                ->groupBy('d.id', 'd.nomdanger')
+                ->orderByDesc('total_produits')
+                ->get();
+
+            return response()->json($results);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Erreur de base de données : ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function addPost(Request $request)

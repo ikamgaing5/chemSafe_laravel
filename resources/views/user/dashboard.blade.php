@@ -1,7 +1,8 @@
 <?php
+
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-if ($current_page == 'dashboards') {
+if ($current_page == 'dashboard') {
     $message = 'Tableau de bord.';
 }?>
 <!DOCTYPE html>
@@ -108,7 +109,55 @@ if ($current_page == 'dashboards') {
                                 </div>
                             </div>
                         </div>
-  
+                        <div class="row mb-3">
+                            <div class="col-xl-12 wow fadeInUp" data-wow-delay="2s">
+                                <div class="shadow-lg card">
+                                    <div class="card-header border-0 ">
+                                        <h4 class="heading fs-4">Maintenez le curseur sur une zone du graphe pour
+                                            afficher ses informations.</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 mb-3 mb-lg-0  wow fadeInUp" data-wow-delay="2s">
+                                <div class="shadow-lg card">
+                                    <div class="card-header border-0 ">
+                                        <h4 class="heading m-0"><?php if (Auth::user()->role == 'superadmin') { ?>Les
+                                            Ateliers de ChemSafe<?php } else { ?>
+                                            Atelier de l'{{$usine->nomusine}}
+                                            <?php } ?>
+                                        </h4>
+
+                                    </div>
+                                    <div class="container">
+                                        <div class="row" id="graphRow">
+                                            <div class="col-12">
+                                                <div class="card-body">
+                                                    <canvas id="atelierChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-6 p-0 wow fadeInUp" data-wow-delay="2s">
+                                <div class="container" style="margin-top: 0px;">
+                                    <div class="row" id="graphRow">
+                                        <div class="col-md-12">
+                                            <div class="card shadow-sm">
+                                                <div class="card-header border-0">
+                                                    <h6 class="mb-0">Répartition des dangers des produits</h6>
+                                                </div>
+
+                                                <div class="chart-container">
+                                                    <canvas id="dangerChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
@@ -121,21 +170,42 @@ if ($current_page == 'dashboards') {
 
 
 
-<script src="{{asset('vendor/global/global.min.js')}}"></script>
-<script src="{{asset('vendor/chart.js/Chart.bundle.min.js')}}"></script>
-<script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
-<script src="{{asset('vendor/apexchart/apexchart.js')}}"></script>
-<script src="{{asset('vendor/peity/jquery.peity.min.js')}}"></script>
-<script src="{{asset('vendor/jquery-nice-select/js/jquery.nice-select.min.js')}}"></script>
-<script src="{{asset('vendor/swiper/js/swiper-bundle.min.js')}}"></script>
-<script src="{{asset('vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('js/plugins-init/datatables.init.js')}}"></script>
-<script src="{{asset('js/dashboard/dashboard-1.js')}}"></script>
-<script src="{{asset('vendor/wow-master/dist/wow.min.js')}}"></script>
-<script src="{{asset('vendor/bootstrap-datetimepicker/js/moment.js')}}"></script>
-<script src="{{asset('vendor/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-<script src="{{asset('vendor/bootstrap-select-country/js/bootstrap-select-country.min.js')}}"></script>
-<script src="{{asset('js/dlabnav-init.js')}}"></script>
-<script src="{{asset('js/custom.min.js')}}"></script>
-<script src="{{asset('js/demo.js')}}"></script>
-<script src="{{asset('js/all.js')}}"></script>
+
+                        <script src="{{asset('vendor/global/global.min.js')}}"></script>
+                        <script src="{{asset('vendor/chart.js/Chart.bundle.min.js')}}"></script>
+                        <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
+                        <script src="{{asset('vendor/apexchart/apexchart.js')}}"></script>
+                        <script src="{{asset('vendor/peity/jquery.peity.min.js')}}"></script>
+                        <script src="{{asset('vendor/jquery-nice-select/js/jquery.nice-select.min.js')}}"></script>
+                        <script src="{{asset('vendor/swiper/js/swiper-bundle.min.js')}}"></script>
+                        <script src="{{asset('vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
+                        <script src="{{asset('js/plugins-init/datatables.init.js')}}"></script>
+                        <script src="{{asset('js/dashboard/dashboard-1.js')}}"></script>
+                        <script src="{{asset('vendor/wow-master/dist/wow.min.js')}}"></script>
+                        <script src="{{asset('vendor/bootstrap-datetimepicker/js/moment.js')}}"></script>
+                        <script src="{{asset('vendor/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+                        <script src="{{asset('vendor/bootstrap-select-country/js/bootstrap-select-country.min.js')}}">
+                        </script>
+                        <script src="{{asset('js/dlabnav-init.js')}}"></script>
+                        <script src="{{asset('js/custom.min.js')}}"></script>
+                        <script src="{{asset('js/demo.js')}}"></script>
+                        <script src="{{asset('js/all.js')}}"></script>
+
+                        @php
+                        if (Auth::user()->role == 'superadmin') {
+                            $isSuperAdmin = true;
+                        } else {
+                        // require_once __DIR__ . '/../utilities/grapheDanger.php';
+                        // require_once __DIR__ . '/../utilities/graphedashoboard.php';
+                            $isSuperAdmin = false;
+                        }
+                        @endphp
+                        @if (Auth::user()->role == 'superadmin')
+                        @include('product.partials.grapheSuper')
+                        @include('user.partials.grapheAtelierSuper')
+                        <script src="{{asset('js/dangerChart.js')}}"></script>
+                        @else
+                        @include('product.partials.grapheOther')
+                        @include('user.partials.grapheAtelier')
+
+                        @endif

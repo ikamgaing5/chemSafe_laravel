@@ -60,24 +60,27 @@ if ($current_page == 'user/new-user') {
         @include('layouts.sidebar')
 
 
-        <form onsubmit="return validForm()" action="{{ route('register') }}" method="POST">
+        <form onsubmit="return validForm()" action="{{ route('users.store') }}" method="POST">
             @csrf
             <div class="content-body">
                 <div class="container-fluid">
+                    @if (session('createSuccess'))
+                    {!!session('createSuccess')!!}
+                    @endif
                     <?php
-                    $nomuser = "";
-                    if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == 1) {
-                        $message = "L'utilisateur <strong>" . $_SESSION['insert']['info']['nom'] . "</strong> a été ajouté avec succès";
-                        echo $package->message($message, "success");
-                    } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == 0) {
-                        $message = "L'utilisateur <strong>" . $_SESSION['insert']['info']['nom'] . "</strong> existe déjà";
-                        $nomuser = $_SESSION['insert']['info']['nom'];
-                        echo $package->message($message, "danger");
-                    } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == -1) {
-                        $message = "Problème lors de l'insertion";
-                        $nomuser = $_SESSION['insert']['info']['nom'];
-                        echo $package->message($message, "danger");
-                    }
+$nomuser = "";
+if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == 1) {
+    $message = "L'utilisateur <strong>" . $_SESSION['insert']['info']['nom'] . "</strong> a été ajouté avec succès";
+    echo $package->message($message, "success");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == 0) {
+    $message = "L'utilisateur <strong>" . $_SESSION['insert']['info']['nom'] . "</strong> existe déjà";
+    $nomuser = $_SESSION['insert']['info']['nom'];
+    echo $package->message($message, "danger");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == -1) {
+    $message = "Problème lors de l'insertion";
+    $nomuser = $_SESSION['insert']['info']['nom'];
+    echo $package->message($message, "danger");
+}
                     ?>
                     <div class="col-xl-12">
                         <div class="shadow-lg card">
@@ -85,14 +88,23 @@ if ($current_page == 'user/new-user') {
                                 <h5 class="mb-0">Details de l'Utilisateur</h5>
                             </div>
                             <div class="card-body">
+                                @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                @endif
                                 <div class="row">
                                     <div class="col-xl-6 col-sm-6">
                                         <div class="mb-3">
                                             <label style="font-weight: 700;" for="exampleFormControlInput8"
                                                 class="form-label text-primary">Nom d'utilisateur<span
                                                     class="required">*</span></label>
-                                            <input type="text" class="form-control" id="nomuser" name="username"
-                                                placeholder="Entrez le nom d'utilisateur" >
+                                            <input :value="old('username')" type="text" class="form-control"
+                                                id="nomuser" name="username" placeholder="Entrez le nom d'utilisateur">
                                             <span id="messageNom" class="fw-bold text-danger"></span>
                                         </div>
 
@@ -111,13 +123,13 @@ if ($current_page == 'user/new-user') {
                                             <label style="font-weight: 700;" for="exampleFormControlInput1"
                                                 class="form-label text-primary">Usine<span
                                                     class="required">*</span></label>
-                                            <select class="default-select form-control wide " name="usine" id="role">
+                                            <select class="default-select form-control wide " name="usine" id="usine">
                                                 <option value="none">Faites un choix</option>
                                                 @foreach ($usinesSansUtilisateur as $key)
-                                                    <option value="{{$key->id}}">{{$key->nomusine}}</option>
+                                                <option value="{{$key->id}}">{{$key->nomusine}}</option>
                                                 @endforeach
                                             </select>
-                                            <span id="messageRole" class="fw-bold text-danger"></span>
+                                            <span id="messageUsine" class="fw-bold text-danger"></span>
                                         </div>
                                     </div>
 
@@ -136,8 +148,8 @@ if ($current_page == 'user/new-user') {
                                             <label style="font-weight: 700;" for="exampleFormControlInput8"
                                                 class="form-label text-primary">Mot de passe<span
                                                     class="required">*</span></label>
-                                            <input type="text" class="form-control" id="password" name="password"
-                                                placeholder="Entrez le mot de passe">
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                autocomplete="new-password" placeholder="Entrez le mot de passe">
                                             <span id="messageMdp" class="fw-bold text-danger"></span>
                                         </div>
 
@@ -145,7 +157,8 @@ if ($current_page == 'user/new-user') {
                                             <label style="font-weight: 700;" for="exampleFormControlInput8"
                                                 class="form-label text-primary">Confirmez le mot de passe<span
                                                     class="required">*</span></label>
-                                            <input type="text" class="form-control" id="password" name="password_confirmation"
+                                            <input type="text" class="form-control" id="password"
+                                                name="password_confirmation" autocomplete="new-password"
                                                 placeholder="Confirmez le mot de passe">
                                             <span id="messageMail" class="fw-bold text-danger"></span>
                                         </div>
@@ -165,14 +178,14 @@ if ($current_page == 'user/new-user') {
             </div>
         </form>
     </div>
-    <script src="/js/new-user.js"></script>
-<script src="{{asset('vendor/global/global.min.js')}}"></script>
-<script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
-<script src="{{asset('vendor/jquery-nice-select/js/jquery.nice-select.min.js')}}"></script>
-<script src="{{asset('vendor/swiper/js/swiper-bundle.min.js')}}"></script>
-<script src="{{asset('js/dashboard/dashboard-1.js')}}"></script>
-<script src="{{asset('vendor/bootstrap-select-country/js/bootstrap-select-country.min.js')}}"></script>
-<script src="{{asset('js/dlabnav-init.js')}}"></script>
-<script src="{{asset('js/custom.min.js')}}"></script>
-<script src="{{asset('js/demo.js')}}"></script>
-<script src="{{asset('js/all.js')}}"></script>
+    <script src="{{asset('js/new-user.js')}}"></script>
+    <script src="{{asset('vendor/global/global.min.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
+    <script src="{{asset('vendor/jquery-nice-select/js/jquery.nice-select.min.js')}}"></script>
+    <script src="{{asset('vendor/swiper/js/swiper-bundle.min.js')}}"></script>
+    <script src="{{asset('js/dashboard/dashboard-1.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap-select-country/js/bootstrap-select-country.min.js')}}"></script>
+    <script src="{{asset('js/dlabnav-init.js')}}"></script>
+    <script src="{{asset('js/custom.min.js')}}"></script>
+    <script src="{{asset('js/demo.js')}}"></script>
+    <script src="{{asset('js/all.js')}}"></script>

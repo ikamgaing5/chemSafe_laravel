@@ -130,7 +130,7 @@ if ($current_page == 'factory/all-factory') {
                                     <div
                                         style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                         <div>
-                                            <u><a class="text-primary fw-bold fs-5" href="/dashboard">Tableau de
+                                            <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de
                                                     bord</a></u>
                                             <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
                                             <span class="card-title fw-bold fs-5">Nos Usines</span>

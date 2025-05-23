@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\AlertHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -47,8 +48,9 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
+        
 
-        return redirect(route('dashboards', absolute: false));
+        return redirect()->back()->with('createSuccess', AlertHelper::message('Utilisateur crée avec succès', 'success'));
     }
 }
