@@ -32,6 +32,10 @@ class User extends Authenticatable
         return $this->belongsTo(Usine::class, 'usine_id');
     }
 
+    public function historique_acces(){
+        return $this->hasMany(historique_acces::class, 'user_id', 'id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

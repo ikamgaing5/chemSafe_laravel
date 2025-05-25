@@ -6,6 +6,7 @@ use App\Models\Usine;
 use App\Models\Atelier;
 use Illuminate\Http\Request;
 use App\Helpers\AlertHelper;
+use App\Helpers\IdEncryptor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -18,13 +19,13 @@ class AtelierController extends Controller
 {
     public function all($idusine)
     {
-        $idusine = Crypt::decrypt($idusine);
+        $idusine = IdEncryptor::decode($idusine);
         $usine = Usine::find($idusine);
         $workshop = Atelier::withCount([
             'contenir',
             'produitSansFds'
         ])->orderBy('nomatelier', 'asc')->where('usine_id', $idusine)->get();
-        $AllUsine = Usine::where('active', 1)->orderBy('nomusine', 'asc')->get();
+        $AllUsine = Usine::where('active', operator: 'true')->orderBy('nomusine', 'asc')->get();
         if (Auth::user()->role == 'superadmin') {
             $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
         } else {
@@ -35,7 +36,7 @@ class AtelierController extends Controller
 
     public function alls()
     {
-        $AllUsine = Usine::where('active', true)->orderBy('nomusine', 'asc')->get();
+        $AllUsine = Usine::where('active', 'true')->orderBy('nomusine', 'asc')->get();
 
         return view('workshop.alls', compact('AllUsine'));
     }
@@ -98,7 +99,10 @@ class AtelierController extends Controller
                 'nomatelier.unique' => 'Ce nom d\'atelier existe déjà pour cette usine.',
                 'nomatelier.required' => 'Le nom de l\'atelier est requis.',
             ]);
-            $atelier = Atelier::create(['nomatelier' => strtoupper($request->input('nomatelier'))]);
+            $atelier = Atelier::create([
+                'nomatelier' => strtoupper($request->input('nomatelier')),
+                'usine_id' => $request->usine_id,
+            ]);
             return back()->with('successadd', AlertHelper::message("L'atelier <strong>{$validated['nomatelier']}</strong> a été ajoutée avec succès.", "success"));
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($e->validator->errors()->first('nomatelier') == "validation.unique") {

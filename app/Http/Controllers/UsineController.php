@@ -12,7 +12,7 @@ class UsineController extends Controller
 {
     public function all()
     {
-        $AllUsine = Usine::where('active', true)->with('ateliers')->orderBy('nomusine', 'asc')->get();
+        $AllUsine = Usine::where('active', 'true')->with('ateliers')->orderBy('nomusine', 'asc')->get();
         // $AllUsine = Atelier::where('active', 'true')->get();
         return view('factory.all', compact('AllUsine'));
     }
@@ -63,11 +63,13 @@ class UsineController extends Controller
                     'nomusine.required' => 'Le nom de l\'usine est requis.',
                 ]
             ]);
-            $usine = Usine::create(['nomusine' => strtoupper($request->input('nomusine'))]);
-            return back()->with('successadd', AlertHelper::message("L'usine <strong>{$validated['nomusine']}</strong> a été ajoutée avec succès.", "success"));
+            Usine::create(['nomusine' => strtoupper($request->input('nomusine'))]);
+            $nomUsine = strtoupper($validated['nomusine']);
+            return back()->with('successadd', AlertHelper::message("L'<strong>{$nomUsine}</strong> a été ajoutée avec succès.", "success"));
         } catch (\Illuminate\Validation\ValidationException $e) {
+            $nomUsine = strtoupper($validated['nomusine']);
             if ($e->validator->errors()->first('nomusine') == "validation.unique" ) {
-                $message = "L'{$request->input('nomusine')} existe déjà";
+                $message = "L'{$nomUsine} existe déjà";
             }
             return back()
                 ->withErrors($e->validator)

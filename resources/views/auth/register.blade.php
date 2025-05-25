@@ -50,9 +50,9 @@
 
         <div class="mt-4">
             <x-input-label for="usine" :value="__('Usine')" />
-            <select name="usine" id="usine" class="block mt-1 w-full" required>
+            <select name="usine" id="usine" class="block mt-1 w-full" >
                 <option value="">Faites un choix</option>
-                @foreach (\App\Models\Usine::where('active', true)->get() as $usine)
+                @foreach (\App\Models\Usine::where('active', 'true')->get() as $usine)
                 <option value="{{ $usine->id }}">{{ $usine->nomusine }}</option>
                 @endforeach
             </select>

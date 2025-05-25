@@ -1,30 +1,20 @@
 <?php
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\IdEncryptor;
 
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmin') {
     // Cas du superadmin sans usine spécifique
     $message = 'Liste des Ateliers de toutes les Usines.';
-    $chemin = '/workshop/all-workshop';
-    $_SESSION['vue'] = '/workshop/all-workshop';
 } elseif (strpos($current_page, 'workshop/all-workshop/') === 0 && isset($usine)) {
-    $message = "Liste des Ateliers de l'usine " . $usine->nomusine;
+    $message = "Liste des Ateliers de l'" . $usine->nomusine;
 } else {
     $message = "Liste des Ateliers";
 }
-// dd($idusine);
-
-
-// die();
-
+// dd($usine, $AllUsine);
 ?>
 
-{{--
-<pre>{{ dd($allworkshop->first()->usine->nomusine) }}</pre> --}}
-<?php 
-//  die();
-?>
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="auto">
 
@@ -114,8 +104,7 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
                                     <u><a class="text-primary fw-bold fs-5"href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     @if (Auth::user()->role == 'superadmin')
                                         <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
-                                        <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos
-                                                Usines</a></u>
+                                        <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos  Usines</a></u>
                                     @endif
 
                                     <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
@@ -137,19 +126,19 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
 
                     <?php
 foreach ($AllUsine as $key) {
-    $idusines = $key['id'];
+    // $idusines = $key['id'];
 
-    // Cas pour l'admin : on vérifie si c'est bien l'usine de l'admin
-    if ((Auth::user()->role === 'admin' || Auth::user()->role === 'user') && $idusines != ($idusine)) {
-        continue; // On saute les usines qui ne correspondent pas
-    }
+    // // Cas pour l'admin : on vérifie si c'est bien l'usine de l'admin
+    // if ((Auth::user()->role === 'admin' || Auth::user()->role === 'user') && $idusines != ($idusine)) {
+    //     continue; // On saute les usines qui ne correspondent pas
+    // }
 
 
-    if (isset($idusine)) {
-        if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)) {
-            continue; // On saute les usines qui ne correspondent pas
-        }
-    }
+    // if (isset($idusine)) {
+    //     if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)) {
+    //         continue; // On saute les usines qui ne correspondent pas
+    //     }
+    // }
     // $allAtelier = $atelier->AllAtelier($conn, $idusine);
     ?>
                     <div class="col-xl-12">
@@ -180,9 +169,6 @@ foreach ($AllUsine as $key) {
                     <div class="col-xl-12">
                         <!-- Row -->
                         <div class="row">
-                            <?php
-    // echo $message_succes;
-								?>
                             <div class="col-xl-12">
                                 <!-- Row -->
                                 <div class="main">
@@ -196,7 +182,7 @@ foreach ($AllUsine as $key) {
                                                             <div class="user-info">
                                                                 <div class="user-details">
                                                                     <p style="font-weight: 700;">Atelier nommé</p>
-                                                                    <h4 class="user-name mb-0">{{ $keys['nomatelier'] }}
+                                                                    <h4 class="user-name mb-0">{{ $keys->nomatelier }}
                                                                     </h4>
                                                                 </div>
                                                             </div>
@@ -222,7 +208,7 @@ foreach ($AllUsine as $key) {
                                                             @endif
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <a href="{{route('product.forworkshop',$keys['id'])}}"
+                                                            <a href="{{route('product.forworkshop',IdEncryptor::encode($keys->id))}}"
                                                                 class="btn btn-secondary btn-sm w-100 me-2">Voir les
                                                                 produits</a>
                                                         </div>
@@ -248,14 +234,9 @@ foreach ($AllUsine as $key) {
                     </div>
 
                     <?php
-    if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
-        break;
-    }
-
-    // if (Auth::user()->role === 'superadmin' && $idusine == IdEncryptor::decode($idusine)) {
-    // 	break; 
+    // if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
+    //     break;
     // }
-
 
 }
 					?>
@@ -265,19 +246,7 @@ foreach ($AllUsine as $key) {
 
 
         <script src="{{ asset('vendor/global/global.min.js') }}"></script>
-        <!-- <script src="/vendor/chart.js/Chart.bundle.min.js"></script> -->
         <script src="{{ asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
-        <!-- <script src="/vendor/apexchart/apexchart.js"></script> -->
-        <!-- <script src="/vendor/peity/jquery.peity.min.js"></script> -->
-        <!-- <script src="/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script> -->
-        <!-- <script src="/vendor/swiper/js/swiper-bundle.min.js"></script> -->
-        <!-- <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script> -->
-        <!-- <script src="/js/plugins-init/datatables.init.js"></script> -->
-        <!-- <script src="/js/dashboard/dashboard-1.js"></script> -->
-        <!-- <script src="/vendor/wow-master/dist/wow.min.js"></script> -->
-        <!-- <script src="/vendor/bootstrap-datetimepicker/js/moment.js"></script> -->
-        <!-- <script src="/vendor/datepicker/js/bootstrap-datepicker.min.js"></script> -->
-        <!-- <script src="/vendor/bootstrap-select-country/js/bootstrap-select-country.min.js"></script> -->
         <script src="{{ asset('js/dlabnav-init.js') }}"></script>
         <script src="{{ asset('js/all-workshop.js') }}"></script>
         <script src="{{ asset('js/custom.min.js') }}"></script>

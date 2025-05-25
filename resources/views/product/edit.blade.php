@@ -53,7 +53,9 @@ if (strpos($current_page, 'product/edit') === 0) {
 
         @include('layouts.navbar')
         @include('layouts.sidebar')
-
+        @if (session('successEdit'))
+            {!!session('successEdit')!!}
+        @endif
 
         <form action="{{route('product.editPost', $infoproduit->id)}}" enctype="multipart/form-data" method="POST">
             @csrf
@@ -70,8 +72,8 @@ if (strpos($current_page, 'product/edit') === 0) {
                                     <div class="row">
                                         <div class="col-xl-3 col-lg-4">
                                             <?php
-$photoPath = "{{ asset('storage/' . $infoproduit->photo) }}";
-$pdfPath = "{{ asset('storage/' . $infoproduit->photo) }}";
+                                                $photoPath = "{{ asset('storage/' . $infoproduit->photo) }}";
+                                                $pdfPath = "{{ asset('storage/' . $infoproduit->photo) }}";
                                             ?>
                                             <label style="font-weight: 700;" class="form-label text-primary">Photo<span
                                                     class="required">*</span></label>

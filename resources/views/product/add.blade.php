@@ -78,6 +78,9 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
             <div class="content-body">
                 <div class="container-fluid">
                     <div class="row">
+                        @if (session('success'))
+                            {!!session('success')!!}
+                        @endif
                         <?php
                         if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insertfalse") {
                             $message = "Problème lors de l'insertion";

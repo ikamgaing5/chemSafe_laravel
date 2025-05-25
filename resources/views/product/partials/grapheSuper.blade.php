@@ -99,8 +99,8 @@ $(function() {
                             const danger = data[ctx.dataIndex];
                             let result = [`Total: ${danger.count} produit(s)`];
                             if (danger.products?.length) {
-                                result.push('', 'Produits concernés:');
-                                result.push(...danger.products.map(p => `- ${p}`));
+                                // result.push('', 'Produits concernés:');
+                                // result.push(...danger.products.map(p => `- ${p}`));
                             }
                             return result;
                         }
@@ -114,8 +114,31 @@ $(function() {
                 y: {
                     display: false
                 }
+            },
+       
+
+
+        // **Nouvelle option onClick ici **
+        onClick: (evt, activeEls) => {
+            if (activeEls.length > 0) {
+                // index du segment cliqué
+                const idx = activeEls[0].index;
+                // danger cliqué
+                const danger = data[idx];
+
+                // par exemple, on construit une URL vers /product/dangers/{nomdanger}
+                // const safeName = encodeURIComponent(danger.nomdanger);
+                const url = `/product/dangers/${danger.id}`;
+
+                // ouvre dans la même fenêtre
+                window.location.href = url;
+
+                // ou pour nouvelle fenêtre :
+                // window.open(url, '_blank');
             }
-        };
+        }
+    };
+
 
         // Détruire le graphique précédent
         if (dangerChart) {

@@ -159,18 +159,6 @@ if ($current_page == 'dashboard') {
                             </div>
                         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
                         <script src="{{asset('vendor/global/global.min.js')}}"></script>
                         <script src="{{asset('vendor/chart.js/Chart.bundle.min.js')}}"></script>
                         <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
@@ -195,15 +183,13 @@ if ($current_page == 'dashboard') {
                         if (Auth::user()->role == 'superadmin') {
                             $isSuperAdmin = true;
                         } else {
-                        // require_once __DIR__ . '/../utilities/grapheDanger.php';
-                        // require_once __DIR__ . '/../utilities/graphedashoboard.php';
                             $isSuperAdmin = false;
                         }
                         @endphp
                         @if (Auth::user()->role == 'superadmin')
                         @include('product.partials.grapheSuper')
                         @include('user.partials.grapheAtelierSuper')
-                        <script src="{{asset('js/dangerChart.js')}}"></script>
+                        {{-- <script src="{{asset('js/dangerChart.js')}}"></script> --}}
                         @else
                         @include('product.partials.grapheOther')
                         @include('user.partials.grapheAtelier')

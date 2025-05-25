@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Helpers;
-
+use DateTime;
 class AlertHelper
 {
     public static function message($message, $type)
@@ -23,4 +23,30 @@ class AlertHelper
                     </div>
                 </div>";
     }
+
+
+    public function afficheDate($dates)
+    {
+        $date = new DateTime($dates);
+        $mois_fr = [
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre'
+        ];
+        $jour = (int) $date->format('j');
+        $mois = (int) $date->format('n');
+        $annee = $date->format('Y');
+        $jour_formate = ($jour === 1) ? '1er' : $jour;
+        return $formattedDate = "{$jour_formate} {$mois_fr[$mois]} {$annee}";
+    }
+
 }

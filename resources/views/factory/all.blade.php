@@ -191,7 +191,7 @@ if ($current_page == 'factory/all-factory') {
 
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <a href="{{route('oneworkshop', Crypt::encrypt($keys->id))}}"
+                                                        <a href="{{route('oneworkshop', (\App\Helpers\IdEncryptor::encode($keys->id)))}}"
                                                             class="btn btn-secondary btn-sm w-100 me-2">Voir les
                                                             ateliers</a>
                                                     </div>

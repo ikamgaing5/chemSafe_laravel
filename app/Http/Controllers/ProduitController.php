@@ -7,6 +7,7 @@ use App\Models\Danger;
 use App\Models\Atelier;
 use App\Models\Produit;
 use App\Helpers\AlertHelper;
+use App\Helpers\IdEncryptor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +20,7 @@ class ProduitController extends Controller
 {
     public function allByWorkshop($idatelier)
     {
+        $idatelier = IdEncryptor::decode($idatelier);
         $produits = Produit::whereHas('atelier', function ($query) use ($idatelier) {
             $query->where('id', $idatelier);
         })->get();
@@ -39,7 +41,8 @@ class ProduitController extends Controller
         return view('product.all', compact('produits', 'dangers', 'atelier', 'produitsSansAtelier'));
     }
 
-    public function addWorkshop(Request $request, $idatelier){
+    public function addWorkshop(Request $request, $idatelier)
+    {
         $atelier = Atelier::findOrFail($idatelier);
 
         $request->validate([
@@ -56,7 +59,8 @@ class ProduitController extends Controller
 
     }
 
-    public function deleteFromWorkshop(Request $request, $idproduit, $idatelier){
+    public function deleteFromWorkshop(Request $request, $idproduit, $idatelier)
+    {
         $nom = $request->input('nomprod');
         $atelier = Atelier::findOrFail($idatelier);
 
@@ -188,6 +192,7 @@ class ProduitController extends Controller
             'danger' => 'required|array',
             'atelier' => 'required|array',
         ]);
+        // dd($validated);
 
         $produit = Produit::create([
             'nomprod' => strtoupper($request->input('nomprod')),
@@ -204,7 +209,7 @@ class ProduitController extends Controller
         $temoinFDS = false;
 
         // Upload photo
-        if ($request->hasFile('photo')) {            
+        if ($request->hasFile('photo')) {
             $path = $this->files($request->file('photo'), 'photo');
             if ($path instanceof RedirectResponse) {
                 return $path; // Redirige avec message d'erreur
@@ -231,7 +236,7 @@ class ProduitController extends Controller
         if ($temoinFDS) {
             return redirect()->route('infofds.add', $produit->id);
         } else {
-            return redirect()->back()->with('success', 'Produit ajouté avec succès !');
+            return redirect()->back()->with('success', AlertHelper::message("Le produit $request->nomprod a bien été enregistré", "success"));
         }
 
     }
@@ -262,7 +267,8 @@ class ProduitController extends Controller
         return view('product.one', compact('prod', 'atelier'));
     }
 
-    public function edit($idproduit){
+    public function edit($idproduit)
+    {
         $allDangers = Danger::all();
         $infoproduit = Produit::with('danger')->findOrFail($idproduit);
         return view('product.edit', compact('infoproduit', 'allDangers'));
@@ -340,7 +346,7 @@ class ProduitController extends Controller
         $produit->danger()->sync($request->input('danger'));
         // dd($produit->photo);
 
-        return redirect()->back()->with('success', 'Produit mis à jour avec succès.');
+        return redirect()->back()->with('successEdit', AlertHelper::message("Le produit $request->nomprod a bien été modifié", "success"));
     }
 
 }

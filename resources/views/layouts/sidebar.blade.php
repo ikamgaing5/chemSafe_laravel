@@ -1,7 +1,3 @@
-<?php
-use Illuminate\Support\Facades\Crypt;
-
-?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=science" />
@@ -32,7 +28,7 @@ use Illuminate\Support\Facades\Crypt;
 			@endif
 			@if ((Auth::user()->role === 'admin' || Auth::user()->role == 'user') && isset(Auth::user()->usine_id))
 				<li>
-					<a href="{{route('oneworkshop', Crypt::encrypt(Auth::user()->usine_id))}}">
+					<a href="{{route('oneworkshop', \App\Helpers\IdEncryptor::encode(Auth::user()->usine_id))}}">
 						<i class="bi bi-building-fill-gear"></i>
 						<span class="nav-text">Liste des Ateliers</span>
 					</a>
@@ -89,7 +85,7 @@ use Illuminate\Support\Facades\Crypt;
 					</a>
 					<ul aria-expanded="false">
 						<li><a href="#">Liste des Utilisateurs</a></li>
-						<li><a href="{{route('user.add')}}">Ajouter un etudiant</a></li>
+						<li><a href="{{route('user.add')}}">Ajouter un utilisateur</a></li>
 					</ul>
 				</li>
 			@endif

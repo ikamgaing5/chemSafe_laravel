@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AdminMiddleware
 {
         // Durée maximale d'inactivité en secondes (20 minutes ici)
-        protected $timeout = 1200;
+        protected $timeout = 2400;
 
     /**
      * Handle an incoming request.

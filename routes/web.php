@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsineController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DangerController;
+use App\Http\Controllers\HistoryController;
 
 // Route::get('/', function () { return view('index');});
 Route::get('/', [UserController::class, 'home'])->name('start');
@@ -27,7 +28,7 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::patch('/product/edit-product/{idproduit}', [ProduitController::class, 'editPost'])->name('product.editPost');
 
     Route::get('/getDangerData', [ProduitController::class, 'getDangerDatas']);
-
+    Route::get('/api/product/dangers/{idatelier}', [DangerController::class, 'getDangerStatsByAtelier']);
 
 
 
@@ -51,10 +52,10 @@ Route::middleware(['auth.middle'])->group(function () {
 
 
 
-    route::patch('/product/updateFDS/{idproduit}', [ProduitController::class, 'addFDS'])->name('product.addFDS');
+    Route::patch('/product/updateFDS/{idproduit}', [ProduitController::class, 'addFDS'])->name('product.addFDS');
     route::delete('/product/produit/{idproduit}/atelier/{idatelier}', [ProduitController::class, 'deleteFromWorkshop'])->name('product.deleteWorkshop');
 
-
+    Route::get('/history/user', [HistoryController::class, 'all']);
 
 
 });

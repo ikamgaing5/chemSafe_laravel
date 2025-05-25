@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\IdEncryptor;
 
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
@@ -8,6 +9,7 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
 } elseif (strpos($current_page, 'workshop/all-workshop/') === 0) {
     $message = "Liste des Ateliers de l'$usine->nomusine.";
 }
+// dd($usine);
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +60,7 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
 
     <div id="main-wrapper">
 
-        @include ('layouts.navbar')
+        @include('layouts.navbar')
         @include('layouts.sidebar')
 
 
@@ -135,10 +137,7 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                     </div>
 
                     
-@foreach ($AllUsine as $key) 
-
-    {{-- $allAtelier = $atelier->AllAtelier($conn, $idusine); --}}
-    
+                @foreach ($AllUsine as $key) 
                     <div class="col-xl-12">
                         <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
                             <!-- Ajout des classes de visibilité -->
@@ -207,7 +206,7 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                                                         @endif
                                                     </div>
                                                     <div class="d-flex align-items-center">
-                                                        <a href="{{route('product.forworkshop',$keys['id'])}}"
+                                                        <a href="{{route('product.forworkshop',IdEncryptor::encode($keys->id))}}"
                                                             class="btn btn-secondary btn-sm w-100 me-2">Voir les
                                                             produits</a>
                                                     </div>
@@ -234,42 +233,17 @@ if (isset($_SESSION['error']['inbd']) && $_SESSION['error']['inbd'] == true) {
                             </div>
                         </div>
                     </div>
-@endforeach
-                    <?php
-                        // if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
-                        //     break;
-                        // }
-
-    // if (Auth::user()->role === 'superadmin' && $idusine == IdEncryptor::decode($idusine)) {
-    // 	break; 
-    // }
-
-
-
-					?>
+                @endforeach
                 </div>
             </div>
         </div>
 
 
         <script src="{{ asset('vendor/global/global.min.js') }}"></script>
-        <!-- <script src="/vendor/chart.js/Chart.bundle.min.js"></script> -->
         <script src="{{ asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
-        <!-- <script src="/vendor/apexchart/apexchart.js"></script> -->
-        <!-- <script src="/vendor/peity/jquery.peity.min.js"></script> -->
-        <!-- <script src="/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script> -->
-        <!-- <script src="/vendor/swiper/js/swiper-bundle.min.js"></script> -->
-        <!-- <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script> -->
-        <!-- <script src="/js/plugins-init/datatables.init.js"></script> -->
-        <!-- <script src="/js/dashboard/dashboard-1.js"></script> -->
-        <!-- <script src="/vendor/wow-master/dist/wow.min.js"></script> -->
-        <!-- <script src="/vendor/bootstrap-datetimepicker/js/moment.js"></script> -->
-        <!-- <script src="/vendor/datepicker/js/bootstrap-datepicker.min.js"></script> -->
-        <!-- <script src="/vendor/bootstrap-select-country/js/bootstrap-select-country.min.js"></script> -->
         <script src="{{ asset('js/dlabnav-init.js') }}"></script>
         <script src="{{ asset('js/all-workshop.js') }}"></script>
         <script src="{{ asset('js/custom.min.js') }}"></script>
-        <!-- <script src="/js/demo.js"></script> -->
 
 
 

@@ -1,22 +1,14 @@
 <?php
-// dd( $prod->infofds);
+use App\Helpers\IdEncryptor;
+// dd( $prod->danger);
 // die();
 // $idprod = IdEncryptor::decode($id);
-// $nomproduit = $produit->getNameById($conn, $idprod);
-// $infoFDS = $fds->getInfoByProd($conn, $idprod);
+
 
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 if (strpos($current_page, 'product/more-detail') === 0) {
     $message = "Informations du produit $prod->nomprod.";
-}
-// $_SESSION['idatelier'] = IdEncryptor::encode($idatelier);
-
-if (isset($_SESSION['idatelier'])) {
-    // $idatelier = IdEncryptor::decode($_SESSION['idatelier']);
-    $nomatelier = $atelier->getName($conn, $idatelier);
-    $infoAtelierss = $atelier->getAtelierById($conn, $idatelier);
-    $idusinebyatlier = $infoAtelierss['idusine'];
 }
 
 $nomdanger = "";
@@ -24,10 +16,6 @@ $nomdanger = "";
 foreach ($prod->danger as $key) {
     $nomdanger .= $key->nomdanger . ", ";
 }
-// die();
-// var_dump($prod);
-// var_dump(IdEncryptor::encode($idusinebyatlier));
-// die();
 
 ?>
 <!DOCTYPE html>
@@ -82,24 +70,25 @@ foreach ($prod->danger as $key) {
             <div class="content-body">
                 <div class="container-fluid">
                     @if (session('updateInfoFDS'))
-                    {!!session('updateInfoFDS')!!}
-                @endif
+                        {!!session('updateInfoFDS')!!}
+                    @elseif (session('successEdit'))
+                        {!!session('successEdit')!!}
+                    @endif
                     <div class="row justify-content-center">
                         <div class="col-xl-12">
                             <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
-                                <!-- Ajout des classes de visibilité -->
                                 <div
                                     style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                     <div>
                                         <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de
                                                 bord</a></u>
                                         <i class="bi bi-caret-right-fill"></i>
-                                        <u><a href="/workshop/all-workshop/{{$atelier->usine->id}}"
+                                        <u><a href="/workshop/all-workshop/{{IdEncryptor::encode($atelier->usine->id)}}"
                                                 class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}</a></u>
 
                                         <i class="bi bi-caret-right-fill"></i>
                                         <u><a class="text-primary fw-bold fs-5"
-                                                href="{{route('product.forworkshop',$atelier->id)}}">
+                                                href="{{route('product.forworkshop',IdEncryptor::encode($atelier->usine->id))}}">
                                                 {{$atelier->nomatelier}}
                                             </a>
                                         </u>
@@ -112,7 +101,7 @@ foreach ($prod->danger as $key) {
 
                             <div class="shadow-lg page-title d-xl-none text-center py-2">
 
-                                <u><a href="/all-products/{{$atelier->id}}" class="text-primary fw-bold fs-5"><i
+                                <u><a href="/all-products/{{IdEncryptor::encode($atelier->usine->id)}}" class="text-primary fw-bold fs-5"><i
                                             class="bi bi-caret-right-fill"></i>
                                         {{$atelier->nomatelier}}
                                     </a></u>
@@ -129,7 +118,7 @@ foreach ($prod->danger as $key) {
                                         <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
                                             <li class="nav-item " role="presentation">
                                                 <div class="d-flex">
-                                                    <a href="{{route('product.edit', $prod->id)}}" class="btn btn-primary">Modifier le produit</a>
+                                                    <a href="{{route('product.edit', IdEncryptor::encode($prod->id))}}" class="btn btn-primary">Modifier le produit</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -201,16 +190,11 @@ foreach ($prod->danger as $key) {
                                             </div>
 
                                             <div class="d-flex">
-                                                <?php 
-                                                    if ($prod->infofds == null && $temoin == true) {
-                                                         ?>
-                                                <a href="/info-fds/new-info-fds/{{$prod->id}}"
-                                                    class="btn btn-outline-dark me-2">Ajouter les informations de la
-                                                    FDS</a>
-                                                <?php
-                                             } 
-                                             ?>
-                                                <button class="btn btn-primary">Add to Favorites</button>
+                                                @if ($prod->infofds == null && $temoin == true)
+                                                    <a href="/info-fds/new-info-fds/{{IdEncryptor::encode($prod->id)}}" class="btn btn-outline-dark me-2">
+                                                        Ajouter les informations de la FDS
+                                                    </a>
+                                               @endif
                                             </div>
                                         </div>
                                     </div>
@@ -231,32 +215,31 @@ foreach ($prod->danger as $key) {
                                     <div class="d-flex">
                                         <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
                                             <li class="nav-item " role="presentation">
-                                                <?php if ($prod->infofds != null && $temoin == true) { ?>
-                                                <div class="d-flex">
-                                                    <a href="{{route('infofds.edit', ['idproduit' => $prod->infofds->id, 'idatelier' => $atelier->id])}}" class="btn btn-warning">Modifier les informations</a>
-                                                </div>
-                                                <?php } ?>
+                                                @if ($prod->infofds != null && $temoin == true)
+                                                    <div class="d-flex">
+                                                        <a href="{{route('infofds.edit', ['idproduit' => IdEncryptor::encode($prod->infofds->id), 'idatelier' => IdEncryptor::encode($atelier->id)])}}" class="btn btn-warning">Modifier les informations</a>
+                                                    </div>
+                                                @endif
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <?php if ($prod->infofds == null && $temoin == true) { ?>
+                                    @if ($prod->infofds == null && $temoin == true)
                                     <h2 class="text-center text-danger">Vous n'avez pas ajouté les informations de la
                                         FDS de ce produit.</strong></span></h2>
-                                    <?php } else { ?>
-                                    <?php if ($temoin) { ?>
+                                    @if ($temoin)
                                     <div class="row">
                                         <div class="col-xl-6 col-sm-6">
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Risque Physique : </h6>
                                                 <span
-                                                    class="text-danger fw-bold"><?=$prod->infofds['physique'] ?></span>
+                                                    class="text-danger fw-bold">{{$prod->infofds->physique}}</span>
                                             </div>
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Danger pour la santé : </h6>
-                                                <span class="text-danger fw-bold"><?=$prod->infofds['sante'] ?></span>
+                                                <span class="text-danger fw-bold">{{$prod->infofds->sante}}</span>
                                             </div>
 
                                             <!-- <div class="mb-3">
@@ -266,19 +249,19 @@ foreach ($prod->danger as $key) {
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Caractéristiques des PPT chimiques: </h6>
-                                                <span class="text-danger fw-bold"><?=$prod->infofds['ppt'] ?></span>
+                                                <span class="text-danger fw-bold">{{$prod->infofds->ppt}}</span>
                                             </div>
 
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Stabilité: </h6>
                                                 <span
-                                                    class="text-danger fw-bold"><?=$prod->infofds['stabilite'] ?></span>
+                                                    class="text-danger fw-bold">{{$prod->infofds->stabilite}}</span>
                                             </div>
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Conditions à éviter: </h6>
-                                                <span class="text-danger fw-bold"><?=$prod->infofds['eviter'] ?></span>
+                                                <span class="text-danger fw-bold">{{$prod->infofds->eviter}}</span>
                                             </div>
 
                                         </div>
@@ -286,37 +269,37 @@ foreach ($prod->danger as $key) {
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Matériaux incompatibles: </h6>
                                                 <span
-                                                    class="text-danger fw-bold"><?=$prod->infofds['incompatible'] ?></span>
+                                                    class="text-danger fw-bold">{{$prod->infofds->incompatible}}</span>
                                             </div>
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Réactivité : </h6>
                                                 <span
-                                                    class="text-danger fw-bold"><?=$prod->infofds['reactivite'] ?></span>
+                                                    class="text-danger fw-bold">{{$prod->infofdsreactivite}}</span>
                                             </div>
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Manipulation Stockage : </h6>
                                                 <span
-                                                    class="text-danger fw-bold"><?=$prod->infofds['stockage'] ?></span>
+                                                    class="text-danger fw-bold">{{$prod->infofds->stockage}}</span>
                                             </div>
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Premiers secours : </h6>
-                                                <span class="text-danger fw-bold"><?=$prod->infofds['secours'] ?></span>
+                                                <span class="text-danger fw-bold">{{$prod->infofds->secours}}</span>
                                             </div>
 
                                             <div class="mb-3">
                                                 <h6 class="text-primary">EPI : </h6>
-                                                <span class="text-danger fw-bold"><?=$prod->infofds['epi'] ?></span>
+                                                <span class="text-danger fw-bold">{{$prod->infofds->epi}}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <?php } else { ?>
+                                    @else
                                     <h2 class="text-center text-danger">Ajouter la FDS pour avoir ses
                                         informations.</strong></span></h2>
-                                    <?php }
-                                    } ?>
+                                    @endif
+                                    @endif
                                 </div>
                             </div>
                         </div>

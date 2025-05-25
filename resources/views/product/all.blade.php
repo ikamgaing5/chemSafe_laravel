@@ -8,7 +8,6 @@ $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 if (strpos($current_page, 'workshop/all-products/') === 0) {
     $message = "Produits de l'atelier $atelier->nomatelier";
 }
-
 @endphp 
 
 <!DOCTYPE html>
