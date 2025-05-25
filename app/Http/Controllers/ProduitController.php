@@ -10,6 +10,7 @@ use App\Helpers\AlertHelper;
 use App\Helpers\IdEncryptor;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+// use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,25 @@ class ProduitController extends Controller
 
 
         return view('product.all', compact('produits', 'dangers', 'atelier', 'produitsSansAtelier'));
+    }
+
+    public function alls()
+    {       
+        
+        if (Auth::user()->role != "superadmin") {
+            $idusine = Auth::user()->usine_id;
+            $usine = Usine::findOrFail($idusine);
+            $message = "Liste des produits de $usine->nomusine.";
+            $all = Produit::whereHas('ateliers', function ($query) use ($idusine) {
+                $query->whereHas('usine', function ($q) use ($idusine) {
+                    $q->where('id', $idusine);
+                });
+            })->get();
+        }else{
+            $message = "Liste des produits de ChemSafe.";
+            $all = Produit::all();
+        }
+        return view('product.alls', compact('all','message'));
     }
 
     public function addWorkshop(Request $request, $idatelier)

@@ -154,13 +154,21 @@ class DangerController extends Controller
     }
 
     public function getProductByDanger($iddanger){
-        // dd($iddanger);
         $iddanger = IdEncryptor::decode($iddanger);
-        // dd($iddanger);
         $danger = Danger::where('id', $iddanger)->with('produit')->first();
-        // dd($danger);
-        $message = "Liste des $danger->nomdanger";
+        if($danger->nomdanger == "AUCUN DANGER"){
+            $message = "Liste des produits sans danger.";
+        }else{
+            $message = "Liste des $danger->nomdanger.";
+        }
+        
         return view('danger.all', compact('danger', 'message'));
 
+    }
+
+    public function all(){
+        $danger = Danger::withCount('produit')->orderBy('nomdanger')->get();
+        $message = "Liste des Dangers";
+        return view('danger.alls', compact('danger', 'message'));
     }
 }

@@ -56,7 +56,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
-    protected $timeout = 20; // 20 minutes
+    protected $timeout = 2400; // 20 minutes
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -68,8 +68,11 @@ class AdminMiddleware
             $lastActivity = session('lastActivityTime');
 
             if ($lastActivity && (time() - $lastActivity) > $this->timeout) {
-                redirect()->setIntendedUrl($request->fullUrl());
+                // Stocker l'URL actuelle dans un cookie qui persistera après la déconnexion
+                $currentUrl = $request->fullUrl();
+                cookie()->queue('last_visited_url', $currentUrl, 60); // Le cookie expire après 60 minutes
 
+                // Créer l'historique
                 Historique::create([
                     'user_id' => Auth::id(),
                     'created_at' => now()->toDateString(),
@@ -77,6 +80,7 @@ class AdminMiddleware
                     'time' => now()->format('H:i:s'),
                 ]);
 
+                // Déconnexion
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
@@ -84,16 +88,8 @@ class AdminMiddleware
                 return redirect()->route('start')->with('offff', true);
             }
 
-
-            // Met à jour le temps d'activité et mémorise l'URL actuelle
+            // Mettre à jour le temps d'activité
             session(['lastActivityTime' => time()]);
-            if (
-                $request->method() === 'GET' &&
-                !$request->ajax() &&
-                !in_array($request->route()->getName(), ['login', 'logout'])
-            ) {
-                session(['url.intended' => $request->fullUrl()]);
-            }
         }
 
         if (Auth::user()->role == "admin" || Auth::user()->role == "superadmin") {

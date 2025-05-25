@@ -27,10 +27,12 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::get('/product/edit/{idproduit}', [ProduitController::class, 'edit'])->name('product.edit');
     Route::patch('/product/edit-product/{idproduit}', [ProduitController::class, 'editPost'])->name('product.editPost');
     Route::get('/getDangerData', [ProduitController::class, 'getDangerDatas']);
+    Route::get('/product/all-product', [ProduitController::class, 'alls'])->name('product.alls');
     
     
     Route::get('/api/product/dangers/{idatelier}', [DangerController::class, 'getDangerStatsByAtelier']);
     Route::get('/dangers/product/{iddanger}', [DangerController::class, 'getProductByDanger'])->name('danger.product');
+    Route::get('/dangers/all', [DangerController::class, 'all'])->name('dangers.all');
 
 
 

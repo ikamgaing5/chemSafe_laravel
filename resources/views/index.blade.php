@@ -125,9 +125,7 @@ if (isset($_SESSION['login_failed']['type'])) {
                                                     <line x1="12" y1="9" x2="12" y2="13"></line>
                                                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                                 </svg>
-                                                <strong>Inactivité!</strong> Vous avez été déconnecté pour inactivité. Après
-                                                votre reconnexion, vous serez automatiquement redirigé vers la page sur
-                                                laquelle vous étiez.
+                                                <strong>Inactivité!</strong> Vous avez été déconnecté pour inactivité.
                                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                     aria-label="btn-close">
                                                 </button>

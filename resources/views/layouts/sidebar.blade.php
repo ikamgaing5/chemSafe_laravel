@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet"
-	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=science" />
+
 
 <style>
 	.material-symbols-outlined {
@@ -42,6 +41,19 @@
 					</a>
 				</li>
 			@endif
+
+			
+
+			<li>
+				<a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+					<i class="bi bi-radioactive"></i>
+					<span class="nav-text">Dangers</span>
+				</a>
+				<ul aria-expanded="false">
+					<li><a href="">Liste des Dangers</a></li>
+					<li><a href="#">Produits</a></li>
+				</ul>
+			</li>
 
 
 			@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')

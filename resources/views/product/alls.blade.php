@@ -1,10 +1,7 @@
 @php
 use App\Helpers\IdEncryptor;
-$current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-if (strpos($current_page, 'workshop/all-products/') === 0) {
-    $message = "Produits de l'atelier $atelier->nomatelier";
-}
+// dd($all);
 @endphp 
 
 <!DOCTYPE html>
@@ -159,56 +156,17 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
-                                    <u><a href="/workshop/all-workshop/{{IdEncryptor::encode($atelier->usine->id)}} "
-                                            class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}</a></u>
-                                    <i class="bi bi-caret-right-fill"></i>
-                                    <span class="card-title fw-bold fs-5">
-                                        {{$atelier->nomatelier}}
-                                    </span>
+                                    
+                                    
                                 </div>
                             </div>
 
                             <div class="shadow-lg page-title d-xl-none text-center py-2">
 
-                                <u><a href="/workshop/all-workshop" class="text-primary fw-bold fs-5"><i
+                                <u><a href="{{route('dashboard')}}" class="text-primary fw-bold fs-5"><i
                                             class="bi bi-caret-right-fill"></i>
-                                        Nos Ateliers
+                                        Tableau de bord
                                     </a></u>
-                            </div>
-                        </div>
-
-                        <div class="row" data-idatelier="{{ $atelier->id }}" id="graphRow" style="display: none;">
-                            <div class="col-xl-8 col-md-8 col-sm-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Répartition Des Dangers Par Produit</h4>
-                                        <canvas id="dangerChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-4 col-sm-12 mt-sm-3 mt-md-0">
-                                <div class="content-box">
-                                    <div id="customLegend" class="custom-legend"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="dangersList" style="display: none;" class="card mt-3">
-                            <div class="card-body">
-                                <h4 class="card-title">Liste des dangers et nombre de produits concernés</h4>
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Danger</th>
-                                                <th class="text-center">Nombre de Produits</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="dangersListBody">
-
-                                        </tbody>
-                                    </table>
-                                </div>
                             </div>
                         </div>
 
@@ -218,7 +176,7 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                     <div>
                                         <h6 class="card-title">Produits / Liste des Produits</h6>
                                         <p class="m-0 subtitle">Ici vous pouvez voir tous les produits enregistrés dans
-                                            l'atelier <strong>{{$atelier->nomatelier}}</strong></p>
+                                            l'atelier <strong></strong></p>
                                     </div>
                                     <div class="d-flex">
                                         <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
@@ -229,7 +187,7 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                     <button type="submit" name="supprimeretudiant"
                                                         class="btn btn-danger" value="tout supprimer">tout supprimer
                                                     </button>
-                                                     @include('product.partials.add')
+                                                     
                                                 </div>
                                             </li>
                                         </ul>
@@ -256,12 +214,12 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @if ($produits->count() <= 0) 
+                                                        @if ($all->count() <= 0) 
                                                             <tr>
                                                                 <td colspan='6'>Aucun produit enregistré. </td>
                                                             </tr>
                                                         @else
-                                                            @foreach ($produits as $prod)
+                                                            @foreach ($all as $prod)
                                                                 <tr>
                                                                     <td>
                                                                         <div class="trans-list">
@@ -275,7 +233,7 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                                     <td>
                                                                         <div class="mb-0">{{$prod->poids}}</div>
                                                                     </td>
-                                                                    <td><a href="{{route('product.one', [IdEncryptor::encode($prod->id)])}}"
+                                                                    <td><a href="{{route('product.one', IdEncryptor::encode($prod->id))}}"
                                                                             class="btn btn-secondary shadow btn-xs sharp me-1"><i
                                                                                 class="bi bi-info-circle-fill"></i></a></td>
                                                                     <td>
@@ -288,7 +246,7 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                                         <td>
                                                                             <div class="d-flex">
 
-                                                                                @include('product.partials.delete')
+                                                                                {{-- @include('product.partials.delete') --}}
                                                                             </div>
                                                                         </td>
                                                                     @endif
@@ -354,7 +312,7 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
     <script src="{{asset('js/custom.min.js')}}"></script>
     <script src="{{asset('js/demo.js')}}"></script>
     <script src="{{asset('js/all.js')}}"></script>
-    @include('product.partials.graphe')
+    {{-- @include('product.partials.graphe') --}}
 </body>
 
 </html>

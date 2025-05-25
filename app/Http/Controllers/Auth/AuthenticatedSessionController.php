@@ -35,10 +35,11 @@ class AuthenticatedSessionController extends Controller
             'time' => now()->format('H:i:s'),
         ]);
 
-        // Vérifier s'il y a une URL de redirection sauvegardée
-        if ($redirectUrl = session('redirect_after_login')) {
-            session()->forget('redirect_after_login');
-            return redirect($redirectUrl);
+        // Vérifier s'il y a une URL de dernière visite dans le cookie
+        if ($lastUrl = $request->cookie('last_visited_url')) {
+            // Supprimer le cookie après l'avoir utilisé
+            cookie()->queue(cookie()->forget('last_visited_url'));
+            return redirect($lastUrl);
         }
 
         return redirect()->intended(route('dashboard', absolute: false));
