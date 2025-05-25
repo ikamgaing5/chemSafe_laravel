@@ -125,22 +125,19 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
                     </div>
 
                     <?php
-foreach ($AllUsine as $key) {
-    // $idusines = $key['id'];
+                        foreach ($AllUsine as $key) {
+                            $idusines = $key->id;
 
-    // // Cas pour l'admin : on vérifie si c'est bien l'usine de l'admin
-    // if ((Auth::user()->role === 'admin' || Auth::user()->role === 'user') && $idusines != ($idusine)) {
-    //     continue; // On saute les usines qui ne correspondent pas
-    // }
-
-
-    // if (isset($idusine)) {
-    //     if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)) {
-    //         continue; // On saute les usines qui ne correspondent pas
-    //     }
-    // }
-    // $allAtelier = $atelier->AllAtelier($conn, $idusine);
-    ?>
+                            // Cas pour l'admin : on vérifie si c'est bien l'usine de l'admin
+                            if ((Auth::user()->role === 'admin' || Auth::user()->role === 'user') && $idusines != ($idusine)) {
+                                continue; // On saute les usines qui ne correspondent pas
+                            }
+                            if (isset($idusine)) {
+                                if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)) {
+                                    continue; // On saute les usines qui ne correspondent pas
+                                }
+                            }
+                    ?>
                     <div class="col-xl-12">
                         <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
                             <!-- Ajout des classes de visibilité -->
@@ -232,19 +229,17 @@ foreach ($AllUsine as $key) {
                             </div>
                         </div>
                     </div>
-
                     <?php
-    // if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
-    //     break;
-    // }
+                            if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
+                                break;
+                            }
 
-}
+                        }
 					?>
                 </div>
             </div>
         </div>
-
-
+        
         <script src="{{ asset('vendor/global/global.min.js') }}"></script>
         <script src="{{ asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('js/dlabnav-init.js') }}"></script>

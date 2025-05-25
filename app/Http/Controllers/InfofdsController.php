@@ -48,10 +48,10 @@ class InfofdsController extends Controller
 
        }
 
-       public function edit($id, $idatelier)
+       public function edit($id)
        {
               $fds = FDS::with('produit')->findOrFail($id);
-              return view('infofds.edit', compact('fds', 'idatelier'));
+              return view('infofds.edit', compact('fds'));
        }
 
        public function editPost(Request $request, $id)
@@ -70,7 +70,7 @@ class InfofdsController extends Controller
               ]);
               // dd($validated);
               $infofds = FDS::findOrFail($id);
-              $idatelier = $request->input('idatelier');
+              // $idatelier = $request->input('idatelier');
 
               $infofds->update([
                      'sante' => strtoupper($request->input('sante')),
@@ -85,6 +85,6 @@ class InfofdsController extends Controller
                      'epi' => strtoupper($request->input('epi')),
               ]);
 
-              return redirect()->route('product.one', [$idatelier, $infofds->produit_id])->with('updateInfoFDS', AlertHelper::message("Les informations de la FDS ont bien été modifiées", "success"));
+              return redirect()->route('product.one', [$infofds->produit_id])->with('updateInfoFDS', AlertHelper::message("Les informations de la FDS ont bien été modifiées", "success"));
        }
 }

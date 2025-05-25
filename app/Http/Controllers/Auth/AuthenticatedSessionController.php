@@ -29,11 +29,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         Historique::create([
-            'user_id' => Auth::id() ,
+            'user_id' => Auth::id(),
             'created_at' => now()->toDateString(),
             'action' => "Connexion",
             'time' => now()->format('H:i:s'),
         ]);
+
+        // Vérifier s'il y a une URL de redirection sauvegardée
+        if ($redirectUrl = session('redirect_after_login')) {
+            session()->forget('redirect_after_login');
+            return redirect($redirectUrl);
+        }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
@@ -44,7 +50,7 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Historique::create([
-            'user_id' => Auth::id() ,
+            'user_id' => Auth::id(),
             'created_at' => now()->toDateString(),
             'action' => "Deconnexion",
             'time' => now()->format('H:i:s'),

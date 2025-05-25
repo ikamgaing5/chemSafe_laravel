@@ -83,29 +83,35 @@ foreach ($prod->danger as $key) {
                                         <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de
                                                 bord</a></u>
                                         <i class="bi bi-caret-right-fill"></i>
-                                        <u><a href="/workshop/all-workshop/{{IdEncryptor::encode($atelier->usine->id)}}"
-                                                class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}</a></u>
+                                        {{-- @if ($atelier != null)
+                                            <u>
+                                                <a href="/workshop/all-workshop/{{IdEncryptor::encode($atelier->usine->id)}}" class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}
+                                                </a>
+                                            </u>
 
-                                        <i class="bi bi-caret-right-fill"></i>
-                                        <u><a class="text-primary fw-bold fs-5"
-                                                href="{{route('product.forworkshop',IdEncryptor::encode($atelier->usine->id))}}">
-                                                {{$atelier->nomatelier}}
-                                            </a>
-                                        </u>
-
+                                            <i class="bi bi-caret-right-fill"></i>
+                                            <u>
+                                                <a class="text-primary fw-bold fs-5" href="{{route('product.forworkshop',IdEncryptor::encode($atelier->usine->id))}}">
+                                                    {{$atelier->nomatelier}}
+                                                </a>
+                                            </u>
+                                        @endif --}}
                                         <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
                                         <span class="card-title fw-bold fs-5">Plus d'informations</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="shadow-lg page-title d-xl-none text-center py-2">
-
-                                <u><a href="/all-products/{{IdEncryptor::encode($atelier->usine->id)}}" class="text-primary fw-bold fs-5"><i
-                                            class="bi bi-caret-right-fill"></i>
-                                        {{$atelier->nomatelier}}
-                                    </a></u>
-                            </div>
+                            {{-- @if ($atelier != null)
+                                <div class="shadow-lg page-title d-xl-none text-center py-2">
+                                    <u>
+                                        <a href="/all-products/{{IdEncryptor::encode($atelier->usine->id)}}" class="text-primary fw-bold fs-5"><i
+                                                class="bi bi-caret-right-fill"></i>
+                                            {{$atelier->nomatelier}}
+                                        </a>
+                                    </u>
+                                </div>
+                            @endif --}}
                         </div>
                         <div class="col-xl-12 col-lg-12">
                             <div class="card shadow-lg">
@@ -118,7 +124,11 @@ foreach ($prod->danger as $key) {
                                         <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
                                             <li class="nav-item " role="presentation">
                                                 <div class="d-flex">
-                                                    <a href="{{route('product.edit', IdEncryptor::encode($prod->id))}}" class="btn btn-primary">Modifier le produit</a>
+                                                   
+                                                        <a href="{{route('product.edit', IdEncryptor::encode($prod->id))}}" class="btn btn-primary">
+                                                            Modifier le produit
+                                                        </a>
+                                                    
                                                 </div>
                                             </li>
                                         </ul>
@@ -171,7 +181,7 @@ foreach ($prod->danger as $key) {
                                             <p><strong>Vol/Poids : </strong><span
                                                     class="fw-bold text-primary">{{$prod['poids']}}</span></p>
                                             @php
-                                                if($prod['fds'] != NULL){
+                                                if($prod->fds != NULL && $prod->infofds != null){
                                                     $temoin = true;
                                                     $color = "success";
                                                     $message = "✔ Disponible";
@@ -217,7 +227,11 @@ foreach ($prod->danger as $key) {
                                             <li class="nav-item " role="presentation">
                                                 @if ($prod->infofds != null && $temoin == true)
                                                     <div class="d-flex">
-                                                        <a href="{{route('infofds.edit', ['idproduit' => IdEncryptor::encode($prod->infofds->id), 'idatelier' => IdEncryptor::encode($atelier->id)])}}" class="btn btn-warning">Modifier les informations</a>
+                                                        
+                                                            <a href="{{route('infofds.edit', ['idproduit' => IdEncryptor::encode($prod->infofds->id)])}}" class="btn btn-warning">
+                                                                Modifier les informations
+                                                            </a>
+                                                       
                                                     </div>
                                                 @endif
                                             </li>
@@ -225,10 +239,10 @@ foreach ($prod->danger as $key) {
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    @if ($prod->infofds == null && $temoin == true)
+                                    @if ($prod->infofds == null && $prod->fds != null)
                                     <h2 class="text-center text-danger">Vous n'avez pas ajouté les informations de la
                                         FDS de ce produit.</strong></span></h2>
-                                    @if ($temoin)
+                                    @if ($temoin && $prod->infofds != null)
                                     <div class="row">
                                         <div class="col-xl-6 col-sm-6">
                                             <div class="mb-3">

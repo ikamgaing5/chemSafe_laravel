@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Danger;
 use App\Models\Atelier;
+use App\Helpers\IdEncryptor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -86,6 +87,7 @@ class DangerController extends Controller
             ->map(function ($group) {
                 return [
                     'id' => $group->first()->id,
+                    'encrypted_id' => IdEncryptor::encode($group->first()->id),
                     'nomdanger' => $group->first()->nomdanger,
                     'products' => array_unique($group->pluck('nomprod')->toArray())
                 ];
@@ -96,8 +98,12 @@ class DangerController extends Controller
             $stat->products = isset($productsByDanger[$stat->id])
                 ? $productsByDanger[$stat->id]['products']
                 : [];
+            $stat->encrypted_id = isset($productsByDanger[$stat->id])
+                ? $productsByDanger[$stat->id]['encrypted_id']
+                : null;
             return $stat;
         });
+
 
         return response()->json($dangerStats);
     }
@@ -145,5 +151,16 @@ class DangerController extends Controller
         });
 
         return response()->json($dangerStats);
+    }
+
+    public function getProductByDanger($iddanger){
+        // dd($iddanger);
+        $iddanger = IdEncryptor::decode($iddanger);
+        // dd($iddanger);
+        $danger = Danger::where('id', $iddanger)->with('produit')->first();
+        // dd($danger);
+        $message = "Liste des $danger->nomdanger";
+        return view('danger.all', compact('danger', 'message'));
+
     }
 }

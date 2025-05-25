@@ -22,13 +22,15 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::get('/workshop/all-products/{idatelier}', [ProduitController::class, 'allByWorkshop'])->name('product.forworkshop');
     Route::get('/product/new-product', [ProduitController::class, 'add'])->name('product.add');
     Route::post('/product/new-product', [ProduitController::class, 'addPost'])->name('product.addPost');
-    Route::get('/product/more-detail/{idatelier}/{idprodit}', [ProduitController::class, 'one'])->name('product.one');
+    Route::get('/product/more-detail/{idprodit}', [ProduitController::class, 'one'])->name('product.one');
     Route::patch('/product/add{idatelier}', [ProduitController::class, 'addWorkshop'])->name('product.addWorkshop');
     Route::get('/product/edit/{idproduit}', [ProduitController::class, 'edit'])->name('product.edit');
     Route::patch('/product/edit-product/{idproduit}', [ProduitController::class, 'editPost'])->name('product.editPost');
-
     Route::get('/getDangerData', [ProduitController::class, 'getDangerDatas']);
+    
+    
     Route::get('/api/product/dangers/{idatelier}', [DangerController::class, 'getDangerStatsByAtelier']);
+    Route::get('/dangers/product/{iddanger}', [DangerController::class, 'getProductByDanger'])->name('danger.product');
 
 
 
@@ -47,7 +49,7 @@ Route::middleware(['auth.middle'])->group(function () {
 
     Route::get('/info-fds/new-info-fds/{idproduit}', [InfofdsController::class, 'add'])->name('infofds.add');
     Route::post('/info-fds/new-info/{idproduit}', [InfofdsController::class, 'addPost'])->name('infofds.addPost');
-    Route::get('/info-fds/edit/{idproduit}/{idatelier}', [InfofdsController::class, 'edit'])->name('infofds.edit');
+    Route::get('/info-fds/edit/{idproduit}', [InfofdsController::class, 'edit'])->name('infofds.edit');
     Route::patch('/info-fds/edits/{id}', [InfofdsController::class, 'editPost'])->name('infofds.editPost');
 
 
@@ -55,6 +57,8 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::patch('/product/updateFDS/{idproduit}', [ProduitController::class, 'addFDS'])->name('product.addFDS');
     route::delete('/product/produit/{idproduit}/atelier/{idatelier}', [ProduitController::class, 'deleteFromWorkshop'])->name('product.deleteWorkshop');
 
+    
+    
     Route::get('/history/user', [HistoryController::class, 'all']);
 
 

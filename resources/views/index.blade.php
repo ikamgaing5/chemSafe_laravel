@@ -7,7 +7,7 @@ $alerterror = "";
 
 
 if (isset($_SESSION['login_failed']['type'])) {
-	$alerterror = '<div class="mx-3 alert alert-secondary alert-dismissible fade show">
+    $alerterror = '<div class="mx-3 alert alert-secondary alert-dismissible fade show">
 						<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
 						<strong>Une erreur est survenue!</strong> nom d\'utilisateur ou mot de passe incorrect.
 						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
@@ -42,7 +42,8 @@ if (isset($_SESSION['login_failed']['type'])) {
 <!-- Pour navigateur Microsoft (optionnel) -->
 <meta name="msapplication-TileImage" content={{asset('images/favicon.png')}}>
 
-{{-- <link href="/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet"> --}}
+{{--
+<link href="/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet"> --}}
 <link rel="stylesheet" href="{{asset('css/style.css')}}">
 <link rel="stylesheet" href="{{asset('vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}">
 
@@ -73,60 +74,82 @@ if (isset($_SESSION['login_failed']['type'])) {
                                     <div class="text-center mb-4">
 
                                         <?php if (isset($_SESSION['login_failed']['type'])) {
-											echo $alerterror;
-										} ?>
+    echo $alerterror;
+} ?>
 
 
 
 
                                         @if (session('logout'))
 
-                                        <div class="alert alert-success alert-dismissible fade show">
-                                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                                                stroke-width="2" fill="none" stroke-linecap="round"
-                                                stroke-linejoin="round" class="me-2">
-                                                <polyline points="9 11 12 14 22 4"></polyline>
-                                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11">
-                                                </path>
-                                            </svg>
-                                            <strong>Succès!</strong> Vous êtes maintenant deconnecté! Veuillez vous
-                                            reconnecter pour continuer à utiliser ChemSafe
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="btn-close">
-                                            </button>
-                                        </div>
+                                            <div class="alert alert-success alert-dismissible fade show">
+                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                                    stroke-width="2" fill="none" stroke-linecap="round"
+                                                    stroke-linejoin="round" class="me-2">
+                                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11">
+                                                    </path>
+                                                </svg>
+                                                <strong>Succès!</strong> Vous êtes maintenant deconnecté! Veuillez vous
+                                                reconnecter pour continuer à utiliser ChemSafe
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="btn-close">
+                                                </button>
+                                            </div>
                                         @endif
                                         @if(session('pasacces'))
-                                        <div class="alert alert-danger alert-dismissible fade show">
-                                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                                                stroke-width="2" fill="none" stroke-linecap="round"
-                                                stroke-linejoin="round" class="me-2">
-                                                <polyline points="9 11 12 14 22 4"></polyline>
-                                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11">
-                                                </path>
-                                            </svg>
-                                            <strong>Alerte!</strong> Vous avez essayé d'avoir accès à une page sans vous identifier! Connectez-vous ChemSafe
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="btn-close">
-                                            </button>
-                                        </div>
+                                            <div class="alert alert-danger alert-dismissible fade show">
+                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                                    stroke-width="2" fill="none" stroke-linecap="round"
+                                                    stroke-linejoin="round" class="me-2">
+                                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11">
+                                                    </path>
+                                                </svg>
+                                                <strong>Alerte!</strong> Vous avez essayé d'avoir accès à une page sans vous
+                                                identifier! Connectez-vous ChemSafe
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="btn-close">
+                                                </button>
+                                            </div>
                                         @endif
-                                        @if (session('offff')) 
+                                        @if (session('offff'))
 
-										<div class="alert alert-danger alert-dismissible fade show">
-                                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                                            <strong>Inactivité!</strong> Vous avez été deconnecté! Veuillez vous reconnecter pour continuer à  utiliser ChemSafe
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
-                                            </button>
-								        </div>
-										@endif
+                                            <div class="alert alert-danger alert-dismissible fade show">
+                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                                    stroke-width="2" fill="none" stroke-linecap="round"
+                                                    stroke-linejoin="round" class="me-2">
+                                                    <path
+                                                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                                                    </path>
+                                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                                </svg>
+                                                <strong>Inactivité!</strong> Vous avez été déconnecté pour inactivité. Après
+                                                votre reconnexion, vous serez automatiquement redirigé vers la page sur
+                                                laquelle vous étiez.
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="btn-close">
+                                                </button>
+                                            </div>
+                                        @endif
                                         @if (session('login_error'))
                                             <div class="mx-3 alert alert-secondary alert-dismissible fade show">
-                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                                                <strong>Une erreur est survenue!</strong> Nom d'utilisateur ou mot de passe incorrect.
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                                    stroke-width="2" fill="none" stroke-linecap="round"
+                                                    stroke-linejoin="round" class="me-2">
+                                                    <path
+                                                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                                                    </path>
+                                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                                </svg>
+                                                <strong>Une erreur est survenue!</strong> Nom d'utilisateur ou mot de passe
+                                                incorrect.
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="btn-close">
                                                 </button>
-                                            </div> 
+                                            </div>
                                         @endif
 
                                         <h3 class="text-center mb-2 text-black">Se connecter</h3>
@@ -138,7 +161,8 @@ if (isset($_SESSION['login_failed']['type'])) {
                                         <label style="font-weight: 700;" for="username"
                                             class="form-label mb-2 fs-13 label-color font-w500">Nom
                                             d'utilisateur</label>
-                                        <input type="text" class="form-control" name="username" id="username" value="{{ old('username') }}" required autofocus autocomplete="username">
+                                        <input type="text" class="form-control" name="username" id="username"
+                                            value="{{ old('username') }}" required autofocus autocomplete="username">
 
                                     </div>
                                     <div class="mb-3 mx-3">
@@ -166,15 +190,17 @@ if (isset($_SESSION['login_failed']['type'])) {
     </div>
 
     <script>
-    function OnSubmit() {
+        function OnSubmit() {
 
-    }
+        }
     </script>
 
 
 
-    {{-- <script src="/vendor/global/global.min.js"></script> --}}
-    {{-- <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}"> --}}
+    {{--
+    <script src="/vendor/global/global.min.js"></script> --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}"> --}}
     <script src="{{asset('vendor/global/global.min.js')}}"></script>
     <script src="{{asset('js/custom.min.js')}}"></script>
     <script src="{{asset('js/dlabnav-init.js')}}"></script>

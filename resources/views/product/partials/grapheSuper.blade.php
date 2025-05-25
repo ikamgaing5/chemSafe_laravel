@@ -1,3 +1,8 @@
+@php
+// use App\Helpers\IdEncryptor;
+    // $encryptedId = IdEncryptor::encode($danger->id);
+@endphp
+
 <script>
 console.log('Js Présent');
 
@@ -128,7 +133,7 @@ $(function() {
 
                 // par exemple, on construit une URL vers /product/dangers/{nomdanger}
                 // const safeName = encodeURIComponent(danger.nomdanger);
-                const url = `/product/dangers/${danger.id}`;
+                const url = `/dangers/product/${danger.encrypted_id}`;
 
                 // ouvre dans la même fenêtre
                 window.location.href = url;

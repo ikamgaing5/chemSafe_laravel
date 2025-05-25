@@ -26,11 +26,7 @@ class AtelierController extends Controller
             'produitSansFds'
         ])->orderBy('nomatelier', 'asc')->where('usine_id', $idusine)->get();
         $AllUsine = Usine::where('active', operator: 'true')->orderBy('nomusine', 'asc')->get();
-        if (Auth::user()->role == 'superadmin') {
-            $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
-        } else {
-            $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
-        }
+        $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
         return view('workshop.all', compact('workshop', 'nbreAtelier', 'AllUsine', 'usine', 'idusine'));
     }
 

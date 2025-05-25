@@ -1,8 +1,5 @@
 @php
-// dd($produitsSansAtelier); 
-// echo "<br>";
-// dd($atelier);
-// die();
+use App\Helpers\IdEncryptor;
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 if (strpos($current_page, 'workshop/all-products/') === 0) {
@@ -148,64 +145,7 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
         <div class="content-body">
             <!-- container starts -->
             <div class="container-fluid">
-                <?php
-if (isset($_SESSION['info']['type']) && $_SESSION['info']['type'] === 'deletesuccess') {
-    $message = "Le produit <strong> " . $_SESSION['info']['nomprod'] . "</strong> et ses fichiers ont été supprimé de l'atelier <strong> " . $_SESSION['info']['nomatelier'] . "</strong>";
-    $type = "danger";
-    echo $package->message($message, "success");
-    unset($_SESSION['info']);
-} elseif (isset($_SESSION['info']['type']) && $_SESSION['info']['type'] === 'deletefailed') {
-    $message = "Un problème est survenu lors de la suppression";
-    echo $package->message($message, "danger");
-    unset($_SESSION['info']);
-} elseif (isset($_SESSION['add-success']['type']) && $_SESSION['add-success']['type'] === true) {
-    if ($nombre > 1) {
-        $message = "Les produits $noms ont été ajouté avec succès";
-    } else {
-        $message = "Le produit $noms a été ajouté avec succès";
-    }
-    echo $package->message($message, "success");
-    unset($_SESSION['add-success']);
-} elseif (isset($_SESSION['add-fds']) && $_SESSION['add-fds'] === true) {
-    $message = "La FDS a été ajoutée avec succès";
-    echo $package->message($message, "success");
-    unset($_SESSION['add-fds']);
-} elseif (isset($_SESSION['add-fds']) && $_SESSION['add-fds'] === false) {
-    $message = "Problème lors de l'insertion de la FDS";
-    echo $package->message($message, "danger");
-    unset($_SESSION['add-fds']);
-} elseif (isset($_SESSION['insertinfoFDS']) && $_SESSION['insertinfoFDS'] === true) {
-    $message = "Les informations de la FDS ont été enregistrée";
-    echo $package->message($message, "success");
-    unset($_SESSION['insertinfoFDS']);
-}
-if (isset($_SESSION['addphoto'])) {
-    switch ($_SESSION['addphoto']['erreur']) {
-        case 'taille':
-            $message = "La taille de la photo envoyée pour le produit <strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> dépasse la limite qui est de 5 Mo";
-            $type = "danger";
-            break;
-        case 'nom':
-            $message = "La photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> est déjà associée à un autre produit";
-            $type = "danger";
-            break;
-        case 'extension':
-            $message = "L'extension de la photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> n'est pas prise en charge";
-            $type = "danger";
-            break;
-        case 'erreur':
-            $message = "Une erreur est survenué lors de l'envoie de la photo envoyée pour le produit<strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong>, veuillez réesayer";
-            $type = "danger";
-            break;
-        default:
-            $message = "La photo envoyée pour le produit <strong>" . $_SESSION['addphoto']['nomproduit'] . "</strong> a été enregistrée avec succès";
-            $type = "success";
-            break;
-    }
-    echo $package->message($message, $type);
-    unset($_SESSION['addphoto']);
-}
-                ?>
+
                 @if (session('deletesuccess'))
                     {!!session('deletesuccess')!!}
                 @endif
@@ -219,7 +159,7 @@ if (isset($_SESSION['addphoto'])) {
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
-                                    <u><a href="/workshop/all-workshop/{{Crypt::encrypt(Auth::user()->usine_id)}} "
+                                    <u><a href="/workshop/all-workshop/{{IdEncryptor::encode($atelier->usine->id)}} "
                                             class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
                                     <span class="card-title fw-bold fs-5">

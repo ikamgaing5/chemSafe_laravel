@@ -260,11 +260,11 @@ class ProduitController extends Controller
         return redirect()->route('infofds.add', $id);
     }
 
-    public function one($idatelier, $idproduit)
+    public function one($idproduit)
     {
-        $atelier = Atelier::with('usine')->find($idatelier);
+        $idproduit = IdEncryptor::decode($idproduit);
         $prod = Produit::with('danger', 'infofds')->find($idproduit);
-        return view('product.one', compact('prod', 'atelier'));
+        return view('product.one', compact('prod'));
     }
 
     public function edit($idproduit)

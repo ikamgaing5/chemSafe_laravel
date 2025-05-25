@@ -19,6 +19,10 @@ class Danger extends Model
     ];
     public $timestamps = false;
     public function produit(){
-        return $this->belongsToMany(Produit::class, 'possede','danger_id', 'produit_id');
+        return $this->belongsToMany(Produit::class, 'possede','danger_id', 'produit_id')->orderBy('nomprod');
+    }
+    public function produits()
+    {
+        return $this->hasMany(Produit::class)->orderBy('nomproduit');
     }
 }

@@ -140,7 +140,7 @@ if (strpos($current_page, 'info-fds/edit') === 0) {
                                                 <!-- Colonne gauche -->
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <input type="hidden" name="idatelier" value="{{$idatelier}}">
+                                                        {{-- <input type="hidden" name="idatelier" value="{{$idatelier}}"> --}}
                                                         <label class="form-label text-primary fw-bold">Danger Physique
                                                             <span class="required">*</span></label>
                                                         <textarea class="form-control" id="physique" name="physique"
