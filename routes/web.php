@@ -61,7 +61,7 @@ Route::middleware(['auth.middle'])->group(function () {
 
     
     
-    Route::get('/history/user', [HistoryController::class, 'all']);
+    Route::get('/history/user', [HistoryController::class, 'all'])->name('history.user');
 
 
 });

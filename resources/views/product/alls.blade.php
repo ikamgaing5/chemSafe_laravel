@@ -1,8 +1,26 @@
 @php
-use App\Helpers\IdEncryptor;
+// use App\Helpers\IdEncryptor;
+// dd($ateliers);
 
-// dd($all);
-@endphp 
+// Récupérer tous les produits de tous les ateliers
+    $allProduits = collect();
+    foreach ($ateliers as $atelier) {
+        $allProduits = $allProduits->concat($atelier->contenir);
+    }
+
+    // dd($allProduits);
+    // Grouper par identifiant de produit
+    $grouped = $allProduits->groupBy('id');
+    // Garder seulement les groupes de taille > 1 (produits dans plusieurs ateliers)
+    $produitsPartages = $grouped->filter(fn($group) => $group->count() > 1)->map(fn($group) => $group->first());
+
+    $ateliersConcernes = $produitsPartages->flatMap->atelier->unique('id');
+    $nomsAteliers = $ateliersConcernes->pluck('nomatelier')->implode(', ');
+
+    $produitsUniques = $atelier->contenir->filter(fn($p) => $p->atelier->count() === 1);
+@endphp
+
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -170,34 +188,20 @@ use App\Helpers\IdEncryptor;
                             </div>
                         </div>
 
+
+
                         <div class="container-fluid pt-0 ps-0  pe-0">
                             <div class="shadow-lg card" id="accordion-one">
                                 <div class="card-header flex-wrap px-3">
                                     <div>
                                         <h6 class="card-title">Produits / Liste des Produits</h6>
                                         <p class="m-0 subtitle">Ici vous pouvez voir tous les produits enregistrés dans
-                                            l'atelier <strong></strong></p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
-                                            
-                                            <li class="nav-item " role="presentation">
-
-                                                <div class="d-flex">
-                                                    <button type="submit" name="supprimeretudiant"
-                                                        class="btn btn-danger" value="tout supprimer">tout supprimer
-                                                    </button>
-                                                     
-                                                </div>
-                                            </li>
-                                        </ul>
+                                            plusieurs ateliers </p>
                                     </div>
                                 </div>
-                                <!--tab-content-->
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="Preview" role="tabpanel"
-                                        aria-labelledby="home-tab">
-                                        <div class="shadow-lg card-body p-0">
+                                    <div class="container-fluid pt-0 ps-0 pe-0">
+                                        <div class="shadow-lg card" id="accordion-one">
                                             <div class="table-responsive">
                                                 <table id="basic-btn" class="display table table-striped"
                                                     style="min-width: 845px">
@@ -208,51 +212,53 @@ use App\Helpers\IdEncryptor;
                                                             <th>Vol/Poids</th>
                                                             <th>Plus d'info</th>
                                                             <th>Médias</th>
-                                                            @if (Auth::user()->role != 'user')
+                                                            <th>Ateliers</th>
+                                                            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
                                                                 <th class="text-end">Action</th>
                                                             @endif
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @if ($all->count() <= 0) 
+                                                        @foreach ($produitsPartages as $prod)
                                                             <tr>
-                                                                <td colspan='6'>Aucun produit enregistré. </td>
-                                                            </tr>
-                                                        @else
-                                                            @foreach ($all as $prod)
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="trans-list">
-                                                                            <h4>{{$prod->nomprod}}</h4>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td><span
-                                                                            class="text-primary font-w600">{{$prod->type_emballage}}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="mb-0">{{$prod->poids}}</div>
-                                                                    </td>
-                                                                    <td><a href="{{route('product.one', IdEncryptor::encode($prod->id))}}"
-                                                                            class="btn btn-secondary shadow btn-xs sharp me-1"><i
-                                                                                class="bi bi-info-circle-fill"></i></a></td>
+                                                                <td>
+                                                                    <div class="trans-list">
+                                                                        
+                                                                        <h4><?= $prod['nomprod'] ?></h4>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span
+                                                                        class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mb-0"><?= $prod['poids'] ?></div>
+                                                                </td>
+
+                                                                <td>
+                                                                    plus d'info
+                                                                </td>
+
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        medias
+                                                                    </div>
+                                                                </td>
+                                                                <td><span
+                                                                        class="text-primary font-w600">{{ $prod->atelier->pluck('nomatelier')->implode(', ') }}</span>
+                                                                </td>
+                                                                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
                                                                     <td>
                                                                         <div class="d-flex">
-                                                                            @include('product.partials.photo')
-                                                                            @include('product.partials.fds')
+                                                                            <a href=""
+                                                                                class="btn btn-primary shadow btn-xs sharp me-1">
+                                                                                <i class="bi bi-pencil-square"></i>
+                                                                            </a>
+                                                                            delete
                                                                         </div>
                                                                     </td>
-                                                                    @if (Auth::user()->role != 'user')
-                                                                        <td>
-                                                                            <div class="d-flex">
-
-                                                                                {{-- @include('product.partials.delete') --}}
-                                                                            </div>
-                                                                        </td>
-                                                                    @endif
-                                                                </tr>
-                                                            @endforeach
-                                                        @endif
+                                                                @endif
+                                                            </tr>
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -261,39 +267,106 @@ use App\Helpers\IdEncryptor;
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Carte pour chaque atelier (produits uniques) --}}
+                        @foreach ($ateliers as $atelier)
+                            @php
+                            // Filtrer les produits uniques à cet atelier
+                                $produitsUniques = $atelier->contenir->filter(fn($p) => $p->atelier->count() === 1);
+                            @endphp
+                            <div class="container-fluid pt-0 ps-0 pe-0">
+                                <div class="shadow-lg card" id="accordion-one">
+                                    <div class="card-header flex-wrap ">
+                                        <div>
+                                            <h6 class="card-title">Produits / Liste des Produits</h6>
+                                            <p class="m-0 subtitle">Ici vous pouvez voir tous les produits enregistrés dans
+                                                l'atelier <strong>{{ $atelier->nomatelier }} de {{$atelier->usine->nomusine}}</strong></p>
+                                        </div>
+                                        <div class="d-flex">
+                                            <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
+                                                <li class="nav-item " role="presentation">
+                                                    <div class="d-flex">
+
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!--tab-content-->
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="Preview" role="tabpanel"
+                                            aria-labelledby="home-tab">
+                                            <div class="shadow-lg card-body p-0">
+                                                <div class="table-responsive">
+                                                    <table id="basic-btn" class="display table table-striped"
+                                                        style="min-width: 845px">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Nom du produit</th>
+                                                                <th>Type d'emballage</th>
+                                                                <th>Vol/Poids</th>
+                                                                <th>Plus d'info</th>
+                                                                <th>Médias</th>
+                                                                @if (Auth::user()->role == 'admin')
+                                                                    <th class="text-end">Action</th>
+                                                                @endif
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($produitsUniques as $prod)
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="trans-list">
+                                                                            <h4><?= $prod['nomprod'] ?></h4>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td><span
+                                                                            class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="mb-0"><?= $prod['poids'] ?></div>
+                                                                    </td>
+                                                                    <td><a href=""
+                                                                            class="btn btn-secondary shadow btn-xs sharp me-1"><i
+                                                                                class="bi bi-info-circle-fill"></i></a></td>
+                                                                    <td>
+                                                                        <div class="d-flex">
+                                                                            media
+                                                                        </div>
+                                                                    </td>
+                                                                    @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
+                                                                        <td class="d-flex">
+                                                                            <a href=""
+                                                                                class="btn btn-primary shadow btn-xs sharp me-1">
+                                                                                <i class="bi bi-pencil-square"></i>
+                                                                            </a>
+                                                                            deleteall
+
+                                                                        </td>
+                                                                    @endif
+
+
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+@endforeach
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let produit = document.getElementById('produit');
-        let submitBtn = document.getElementById('submitBtn');
-        let messageProduit = document.getElementById('messageProduit');
 
-
-        function validateSelection() {
-            const selectedProduit = Array.from(produit.selectedOptions).map(option => option.value);
-            const isValidProduit = selectedProduit.length > 0 && !selectedProduit.includes("none");
-
-            if (isValidProduit) {
-                submitBtn.disabled = false;
-                messageProduit.style.display = 'none';
-            } else {
-                submitBtn.disabled = true;
-                messageProduit.style.display = 'block';
-                messageProduit.textContent = 'Veuillez sélectionner au moins un produit.';
-            }
-        }
-
-        // Écouteur d'événement
-        produit.addEventListener('change', validateSelection);
-
-        // Validation initiale au chargement
-        validateSelection();
-    });
-    </script>
     <script src="{{asset('vendor/chart.js/Chart.bundle.min.js')}}"></script>
     <script src="{{asset('vendor/global/global.min.js')}}"></script>
     <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
@@ -312,7 +385,6 @@ use App\Helpers\IdEncryptor;
     <script src="{{asset('js/custom.min.js')}}"></script>
     <script src="{{asset('js/demo.js')}}"></script>
     <script src="{{asset('js/all.js')}}"></script>
-    {{-- @include('product.partials.graphe') --}}
 </body>
 
 </html>

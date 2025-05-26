@@ -42,17 +42,11 @@
 				</li>
 			@endif
 
-			
-
 			<li>
-				<a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+				<a href="{{route('dangers.all')}}">
 					<i class="bi bi-radioactive"></i>
-					<span class="nav-text">Dangers</span>
+					<span class="nav-text">Les Dangers</span>
 				</a>
-				<ul aria-expanded="false">
-					<li><a href="">Liste des Dangers</a></li>
-					<li><a href="#">Produits</a></li>
-				</ul>
 			</li>
 
 
@@ -65,7 +59,7 @@
 					</a>
 					<ul aria-expanded="false">
 						<li><a href="/history/workshop">Atelier</a></li>
-						<li><a href="/history/user">Utilisateurs</a></li>
+						<li><a href="{{route('history.user')}}">Utilisateurs</a></li>
 						<li><a href="#">Produits</a></li>
 					</ul>
 				</li>

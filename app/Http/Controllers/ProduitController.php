@@ -49,16 +49,15 @@ class ProduitController extends Controller
             $idusine = Auth::user()->usine_id;
             $usine = Usine::findOrFail($idusine);
             $message = "Liste des produits de $usine->nomusine.";
-            $all = Produit::whereHas('ateliers', function ($query) use ($idusine) {
-                $query->whereHas('usine', function ($q) use ($idusine) {
-                    $q->where('id', $idusine);
-                });
-            })->get();
+            // Récupérer les ateliers avec leurs produits
+            $ateliers = Atelier::where('active', 'true')->whereHas('usine', function ($q) use ($idusine) {
+                $q->where('id', $idusine);
+            })->with(['contenir.atelier', 'usine'])->get();
         }else{
             $message = "Liste des produits de ChemSafe.";
-            $all = Produit::all();
+            $ateliers = Atelier::with('contenir','usine')->where('active', 'true')->get();
         }
-        return view('product.alls', compact('all','message'));
+        return view('product.alls', compact('message', 'ateliers'));
     }
 
     public function addWorkshop(Request $request, $idatelier)
