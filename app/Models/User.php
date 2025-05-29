@@ -36,6 +36,21 @@ class User extends Authenticatable
         return $this->hasMany(historique_acces::class, 'user_id', 'id');
     }
 
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'superadmin';
+    }
+
+    public function canManageProducts()
+    {
+        return in_array($this->role, ['admin', 'superadmin']);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

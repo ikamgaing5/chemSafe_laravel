@@ -6,6 +6,7 @@ use App\Http\Controllers\AtelierController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsineController;
+use App\Http\Controllers\Prod;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DangerController;
 use App\Http\Controllers\HistoryController;
@@ -28,6 +29,7 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::patch('/product/edit-product/{idproduit}', [ProduitController::class, 'editPost'])->name('product.editPost');
     Route::get('/getDangerData', [ProduitController::class, 'getDangerDatas']);
     Route::get('/product/all-product', [ProduitController::class, 'alls'])->name('product.alls');
+    // Route::get('/produit/index', [Prod::class, 'index'])->name('products.index');
     
     
     Route::get('/api/product/dangers/{idatelier}', [DangerController::class, 'getDangerStatsByAtelier']);
@@ -63,6 +65,7 @@ Route::middleware(['auth.middle'])->group(function () {
     
     Route::get('/history/user', [HistoryController::class, 'all'])->name('history.user');
 
+    
 
 });
 

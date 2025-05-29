@@ -3,21 +3,21 @@
 // dd($ateliers);
 
 // Récupérer tous les produits de tous les ateliers
-    $allProduits = collect();
-    foreach ($ateliers as $atelier) {
-        $allProduits = $allProduits->concat($atelier->contenir);
-    }
+$allProduits = collect();
+foreach ($ateliers as $atelier) {
+$allProduits = $allProduits->concat($atelier->contenir);
+}
 
-    // dd($allProduits);
-    // Grouper par identifiant de produit
-    $grouped = $allProduits->groupBy('id');
-    // Garder seulement les groupes de taille > 1 (produits dans plusieurs ateliers)
-    $produitsPartages = $grouped->filter(fn($group) => $group->count() > 1)->map(fn($group) => $group->first());
+// dd($allProduits);
+// Grouper par identifiant de produit
+$grouped = $allProduits->groupBy('id');
+// Garder seulement les groupes de taille > 1 (produits dans plusieurs ateliers)
+$produitsPartages = $grouped->filter(fn($group) => $group->count() > 1)->map(fn($group) => $group->first());
 
-    $ateliersConcernes = $produitsPartages->flatMap->atelier->unique('id');
-    $nomsAteliers = $ateliersConcernes->pluck('nomatelier')->implode(', ');
+$ateliersConcernes = $produitsPartages->flatMap->atelier->unique('id');
+$nomsAteliers = $ateliersConcernes->pluck('nomatelier')->implode(', ');
 
-    $produitsUniques = $atelier->contenir->filter(fn($p) => $p->atelier->count() === 1);
+$produitsUniques = $atelier->contenir->filter(fn($p) => $p->atelier->count() === 1);
 @endphp
 
 
@@ -162,7 +162,7 @@
             <div class="container-fluid">
 
                 @if (session('deletesuccess'))
-                    {!!session('deletesuccess')!!}
+                {!!session('deletesuccess')!!}
                 @endif
 
 
@@ -172,10 +172,11 @@
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <div>
-                                    <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de bord</a></u>
+                                    <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de
+                                            bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
-                                    
-                                    
+
+
                                 </div>
                             </div>
 
@@ -213,51 +214,53 @@
                                                             <th>Plus d'info</th>
                                                             <th>Médias</th>
                                                             <th>Ateliers</th>
-                                                            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
-                                                                <th class="text-end">Action</th>
+                                                            @if (Auth::user()->role == 'admin' || Auth::user()->role ==
+                                                            'superadmin')
+                                                            <th class="text-end">Action</th>
                                                             @endif
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($produitsPartages as $prod)
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="trans-list">
-                                                                        
-                                                                        <h4><?= $prod['nomprod'] ?></h4>
-                                                                    </div>
-                                                                </td>
-                                                                <td><span
-                                                                        class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="mb-0"><?= $prod['poids'] ?></div>
-                                                                </td>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="trans-list">
 
-                                                                <td>
-                                                                    plus d'info
-                                                                </td>
+                                                                    <h4><?= $prod['nomprod'] ?></h4>
+                                                                </div>
+                                                            </td>
+                                                            <td><span
+                                                                    class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="mb-0"><?= $prod['poids'] ?></div>
+                                                            </td>
 
-                                                                <td>
-                                                                    <div class="d-flex">
-                                                                        medias
-                                                                    </div>
-                                                                </td>
-                                                                <td><span
-                                                                        class="text-primary font-w600">{{ $prod->atelier->pluck('nomatelier')->implode(', ') }}</span>
-                                                                </td>
-                                                                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
-                                                                    <td>
-                                                                        <div class="d-flex">
-                                                                            <a href=""
-                                                                                class="btn btn-primary shadow btn-xs sharp me-1">
-                                                                                <i class="bi bi-pencil-square"></i>
-                                                                            </a>
-                                                                            delete
-                                                                        </div>
-                                                                    </td>
-                                                                @endif
-                                                            </tr>
+                                                            <td>
+                                                                plus d'info
+                                                            </td>
+
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    medias
+                                                                </div>
+                                                            </td>
+                                                            <td><span
+                                                                    class="text-primary font-w600">{{ $prod->atelier->pluck('nomatelier')->implode(', ') }}</span>
+                                                            </td>
+                                                            @if (Auth::user()->role == 'admin' || Auth::user()->role ==
+                                                            'superadmin')
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <a href=""
+                                                                        class="btn btn-primary shadow btn-xs sharp me-1">
+                                                                        <i class="bi bi-pencil-square"></i>
+                                                                    </a>
+                                                                    delete
+                                                                </div>
+                                                            </td>
+                                                            @endif
+                                                        </tr>
                                                         @endforeach
                                                     </tbody>
                                                 </table>
@@ -270,95 +273,97 @@
 
                         {{-- Carte pour chaque atelier (produits uniques) --}}
                         @foreach ($ateliers as $atelier)
-                            @php
-                            // Filtrer les produits uniques à cet atelier
-                                $produitsUniques = $atelier->contenir->filter(fn($p) => $p->atelier->count() === 1);
-                            @endphp
-                            <div class="container-fluid pt-0 ps-0 pe-0">
-                                <div class="shadow-lg card" id="accordion-one">
-                                    <div class="card-header flex-wrap ">
-                                        <div>
-                                            <h6 class="card-title">Produits / Liste des Produits</h6>
-                                            <p class="m-0 subtitle">Ici vous pouvez voir tous les produits enregistrés dans
-                                                l'atelier <strong>{{ $atelier->nomatelier }} de {{$atelier->usine->nomusine}}</strong></p>
-                                        </div>
-                                        <div class="d-flex">
-                                            <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
-                                                <li class="nav-item " role="presentation">
-                                                    <div class="d-flex">
-
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
+                        @php
+                        // Filtrer les produits uniques à cet atelier
+                        $produitsUniques = $atelier->contenir->filter(fn($p) => $p->atelier->count() === 1);
+                        @endphp
+                        <div class="container-fluid pt-0 ps-0 pe-0">
+                            <div class="shadow-lg card" id="accordion-one">
+                                <div class="card-header flex-wrap ">
+                                    <div>
+                                        <h6 class="card-title">Produits / Liste des Produits</h6>
+                                        <p class="m-0 subtitle">Ici vous pouvez voir tous les produits enregistrés dans
+                                            l'atelier <strong>{{ $atelier->nomatelier }} de
+                                                {{$atelier->usine->nomusine}}</strong></p>
                                     </div>
-                                    <!--tab-content-->
-                                    <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="Preview" role="tabpanel"
-                                            aria-labelledby="home-tab">
-                                            <div class="shadow-lg card-body p-0">
-                                                <div class="table-responsive">
-                                                    <table id="basic-btn" class="display table table-striped"
-                                                        style="min-width: 845px">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Nom du produit</th>
-                                                                <th>Type d'emballage</th>
-                                                                <th>Vol/Poids</th>
-                                                                <th>Plus d'info</th>
-                                                                <th>Médias</th>
-                                                                @if (Auth::user()->role == 'admin')
-                                                                    <th class="text-end">Action</th>
-                                                                @endif
+                                    <div class="d-flex">
+                                        <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
+                                            <li class="nav-item " role="presentation">
+                                                <div class="d-flex">
 
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($produitsUniques as $prod)
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="trans-list">
-                                                                            <h4><?= $prod['nomprod'] ?></h4>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td><span
-                                                                            class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div class="mb-0"><?= $prod['poids'] ?></div>
-                                                                    </td>
-                                                                    <td><a href=""
-                                                                            class="btn btn-secondary shadow btn-xs sharp me-1"><i
-                                                                                class="bi bi-info-circle-fill"></i></a></td>
-                                                                    <td>
-                                                                        <div class="d-flex">
-                                                                            media
-                                                                        </div>
-                                                                    </td>
-                                                                    @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') 
-                                                                        <td class="d-flex">
-                                                                            <a href=""
-                                                                                class="btn btn-primary shadow btn-xs sharp me-1">
-                                                                                <i class="bi bi-pencil-square"></i>
-                                                                            </a>
-                                                                            deleteall
-
-                                                                        </td>
-                                                                    @endif
-
-
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
                                                 </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!--tab-content-->
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="Preview" role="tabpanel"
+                                        aria-labelledby="home-tab">
+                                        <div class="shadow-lg card-body p-0">
+                                            <div class="table-responsive">
+                                                <table id="basic-btn" class="display table table-striped"
+                                                    style="min-width: 845px">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nom du produit</th>
+                                                            <th>Type d'emballage</th>
+                                                            <th>Vol/Poids</th>
+                                                            <th>Plus d'info</th>
+                                                            <th>Médias</th>
+                                                            @if (Auth::user()->role == 'admin')
+                                                            <th class="text-end">Action</th>
+                                                            @endif
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($produitsUniques as $prod)
+                                                        <tr>
+                                                            <td>
+                                                                <div class="trans-list">
+                                                                    <h4><?= $prod['nomprod'] ?></h4>
+                                                                </div>
+                                                            </td>
+                                                            <td><span
+                                                                    class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="mb-0"><?= $prod['poids'] ?></div>
+                                                            </td>
+                                                            <td><a href=""
+                                                                    class="btn btn-secondary shadow btn-xs sharp me-1"><i
+                                                                        class="bi bi-info-circle-fill"></i></a></td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    media
+                                                                </div>
+                                                            </td>
+                                                            @if (Auth::user()->role == 'admin' || Auth::user()->role ==
+                                                            'superadmin')
+                                                            <td class="d-flex">
+                                                                <a href=""
+                                                                    class="btn btn-primary shadow btn-xs sharp me-1">
+                                                                    <i class="bi bi-pencil-square"></i>
+                                                                </a>
+                                                                deleteall
+
+                                                            </td>
+                                                            @endif
+
+
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
+
                             </div>
-@endforeach
+                        </div>
+                        @endforeach
 
 
                     </div>

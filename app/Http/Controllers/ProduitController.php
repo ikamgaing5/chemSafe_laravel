@@ -42,9 +42,9 @@ class ProduitController extends Controller
         return view('product.all', compact('produits', 'dangers', 'atelier', 'produitsSansAtelier'));
     }
 
-    public function alls()
-    {       
-        
+    public function allss()
+    {
+
         if (Auth::user()->role != "superadmin") {
             $idusine = Auth::user()->usine_id;
             $usine = Usine::findOrFail($idusine);
@@ -53,11 +53,93 @@ class ProduitController extends Controller
             $ateliers = Atelier::where('active', 'true')->whereHas('usine', function ($q) use ($idusine) {
                 $q->where('id', $idusine);
             })->with(['contenir.atelier', 'usine'])->get();
-        }else{
+        } else {
             $message = "Liste des produits de ChemSafe.";
-            $ateliers = Atelier::with('contenir','usine')->where('active', 'true')->get();
+            $ateliers = Atelier::with('contenir', 'usine')->where('active', 'true')->get();
         }
         return view('product.alls', compact('message', 'ateliers'));
+    }
+
+    public function alls(Request $request)
+    {
+        $user = Auth::user();
+        $search = $request->get('search', '');
+        $page = $request->get('page', 1);
+        $limit = 30;
+
+        // Déterminer l'ID usine selon le rôle
+        $idusine = $user->role == "superadmin" ? null : $user->usine_id;
+
+        // Construction de la requête
+        $query = Produit::withWorkshopDetails($idusine);
+
+        if (!empty($search)) {
+            $query->search($search);
+        }
+
+        // Pagination
+
+        $produits = $query->paginate($limit, ['*'], 'page', $page);
+        $produits->appends($request->query());
+        $total_pages = $produits->lastPage();
+        $current_page = $produits->currentPage();
+
+        // Traitement des données selon le rôle
+        $data = [
+            'produits' => $produits,
+            'search' => $search,
+            'user' => $user,
+        ];
+
+        if ($user->role == "superadmin") {
+            // Grouper par usine pour superadmin
+            $data['produitsParUsine'] = $this->groupByUsine($produits->items());
+        } else {
+            // Séparer produits communs et par atelier pour admin
+            $usine = Usine::findOrFail($user->usine_id);
+            $data = array_merge($data, $this->separateByWorkshop($produits->items()));
+        }
+
+        $message = $user->role == "superadmin" ? "Liste des produits de ChemSafe" : "Liste des produits de $usine->nomusine";
+        $IdEncryptor = IdEncryptor::class;
+
+        return view('product.index', $data, compact('message', 'IdEncryptor'));
+    }
+
+
+    private function groupByUsine($produits)
+    {
+        $produitsParUsine = [];
+        foreach ($produits as $produit) {
+            $usine = $produit->nom_usine;
+            if (!isset($produitsParUsine[$usine])) {
+                $produitsParUsine[$usine] = [];
+            }
+            $produitsParUsine[$usine][] = $produit;
+        }
+        return $produitsParUsine;
+    }
+    private function separateByWorkshop($produits)
+    {
+        $parAtelier = [];
+        $communs = [];
+
+        foreach ($produits as $produit) {
+            if ($produit->nb_ateliers > 1) {
+                $communs[] = $produit;
+            } else {
+                $ateliers = $produit->ateliers;
+                if (!isset($parAtelier[$ateliers])) {
+                    $parAtelier[$ateliers] = [];
+                }
+                $parAtelier[$ateliers][] = $produit;
+            }
+        }
+
+        return [
+            'parAtelier' => $parAtelier,
+            'communs' => $communs
+        ];
     }
 
     public function addWorkshop(Request $request, $idatelier)
@@ -290,7 +372,11 @@ class ProduitController extends Controller
     {
         $allDangers = Danger::all();
         $infoproduit = Produit::with('danger')->findOrFail($idproduit);
-        return view('product.edit', compact('infoproduit', 'allDangers'));
+        $message = "<span class='fs-4'> Modificaion du Produit " . $infoproduit->nomprod . "</span>";
+        $linkedDangers = $infoproduit->danger;
+        // On extrait les IDs avec pluck
+        $selectedIds = $linkedDangers->pluck('id')->toArray();
+        return view('product.edit', compact('infoproduit', 'allDangers', 'message', 'linkedDangers', 'selectedIds'));
     }
 
     public function editPost(Request $request, $idproduit)

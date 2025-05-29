@@ -1,19 +1,3 @@
-<?php
-$linkedDangers = $infoproduit->danger;
-
-// On extrait les IDs avec pluck
-$selectedIds = $linkedDangers->pluck('id')->toArray();
-
-$current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
-if (strpos($current_page, 'product/edit') === 0) {
-    $message = "<span class='fs-4'> Modificaion du Produit " . $infoproduit->nomprod . "</span>";
-}
-
-// die();
-?>
-
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -139,17 +123,18 @@ if (strpos($current_page, 'product/edit') === 0) {
                                                                 class="required">*</span></label>
                                                         <div class="mb-3">
                                                             <select multiple name="danger[]" class="form-control">
-                                                                <?php foreach ($allDangers as $danger): ?>
-                                                                <?php    if (in_array($danger['id'], $selectedIds)) { ?>
-                                                                <option value="<?= $danger['id'] ?>" selected>
-                                                                    <?= htmlspecialchars($danger['nomdanger']) ?>
+                                                                    @foreach ($allDangers as $danger):
+                                                                   @if (in_array($danger->id, $selectedIds)):
+                                                                
+                                                                <option value="{{$danger->id}}" selected>
+                                                                    {{$danger->nomdanger}}
                                                                 </option>
-                                                                <?php    } else { ?>
-                                                                <option value="<?= $danger['id'] ?>">
-                                                                    <?= htmlspecialchars($danger['nomdanger']) ?>
+                                                                @else
+                                                                <option value="{{$danger->id}}">
+                                                                    {{$danger->nomdanger}}
                                                                 </option>
-                                                                <?php    } ?>
-                                                                <?php endforeach; ?>
+                                                                @endif
+                                                                @endforeach
                                                             </select>
                                                             <span id="messageDanger" class="text-danger fw-bold"
                                                                 style="display:none;"></span>
@@ -224,22 +209,20 @@ if (strpos($current_page, 'product/edit') === 0) {
 
                                                     <div class="mb-3" id="FDSDisplay">
 
-                                                        <label style="font-weight: 700;"
-                                                            class="form-label text-primary">Fichier PDF <span
-                                                                class="required">*</span></label>
+                                                        <label style="font-weight: 700;" class="form-label text-primary">Fichier PDF <span class="required">*</span></label>
                                                         <div class="pdf-upload">
                                                             <div class="pdf-preview mt-2" id="pdfPreview">
-                                                                <?php if (!empty($infoproduit['fds'])): ?>
-                                                                <div class="mt-3">
-                                                                    <object id="pdfViewer"
-                                                                        data="{{ asset('storage/' . $infoproduit->fds) }}"
-                                                                        type="application/pdf" width="100%"
-                                                                        height="400px" style="border: 1px solid #ccc;">
-                                                                    </object>
-                                                                </div>
-                                                                <?php else: ?>
-                                                                <p class="text-danger">Aucun fichier PDF disponible</p>
-                                                                <?php endif; ?>
+                                                                @if (!empty($infoproduit->fds)):
+                                                                    <div class="mt-3">
+                                                                        <object id="pdfViewer"
+                                                                            data="{{ asset('storage/' . $infoproduit->fds) }}"
+                                                                            type="application/pdf" width="100%"
+                                                                            height="400px" style="border: 1px solid #ccc;">
+                                                                        </object>
+                                                                    </div>
+                                                                @else:
+                                                                    <p class="text-danger">Aucun fichier PDF disponible</p>
+                                                                @endif
                                                             </div>
 
                                                             <input type="file" name="fds" class="form-control d-none"
