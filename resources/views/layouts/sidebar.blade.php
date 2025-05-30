@@ -58,7 +58,7 @@
 						<span class="nav-text">Historique</span>
 					</a>
 					<ul aria-expanded="false">
-						<li><a href="/history/workshop">Atelier</a></li>
+						<li><a href="{{route('history.workshop')}}">Atelier</a></li>
 						<li><a href="{{route('history.user')}}">Utilisateurs</a></li>
 						<li><a href="#">Produits</a></li>
 					</ul>
@@ -80,10 +80,10 @@
 					@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
 						<li><a href="{{route('product.add')}}">Ajouter un produit</a></li>
 					@endif
-					<li><a href="/product/all-product">Liste des produits</a></li>
+					<li><a href="{{route('product.alls')}}">Liste des produits</a></li>
 				</ul>
 			</li>
-			@if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
+			@if (Auth::user()->role == 'superadmin')
 				<li>
 					<a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
 						<i class="bi bi-person-fill"></i>

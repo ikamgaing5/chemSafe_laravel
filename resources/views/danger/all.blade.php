@@ -1,12 +1,3 @@
-<?php 
-
-// dd($danger->produit);
-// die();
-
-Use App\Helpers\IdEncryptor;
-
-?>
-
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="auto">
 
@@ -74,15 +65,15 @@ Use App\Helpers\IdEncryptor;
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
+                                    <u><a class="text-primary fw-bold fs-5" href="{{route('dangers.all')}}">Liste des Dangers</a></u>
+                                    <i class="bi bi-caret-right-fill"></i>
+                                    <span class="card-title fw-bold fs-5">{{$danger->nomdanger}}</span>
                                 </div>
                             </div>
 
                             <div class="shadow-lg page-title d-xl-none text-center py-2">
                                 <u>
-                                    <a href="{{route('dashboard')}}" class="text-primary fw-bold fs-5">
-                                        <i class="bi bi-caret-right-fill"></i>
-                                        Tableau de Bord
-                                    </a>
+                                    <a href="text-primary fw-bold fs-5" href="{{route('dangers.all')}}">Liste des Dangers</a>
                                 </u>
                             </div>
                         </div>
@@ -118,13 +109,14 @@ Use App\Helpers\IdEncryptor;
                                                         <tr>
                                                             <th>Nom du produit</th>
                                                             <th>Info FDS</th>
-                                                            <th>Médias</th>
+                                                            <th>Photo</th>
+                                                            <th>FDS</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @if ($danger->produit->count() <= 0) 
                                                             <tr>
-                                                                <td colspan='3'>Aucun {{$danger->nomdanger}}. </td>
+                                                                <td colspan='4'>Aucun {{$danger->nomdanger}}. </td>
                                                             </tr>
                                                         @else
                                                             @foreach ($danger->produit as $prod)
@@ -134,14 +126,14 @@ Use App\Helpers\IdEncryptor;
                                                                             <h4>{{$prod->nomprod}}</h4>
                                                                         </div>
                                                                     </td>
-                                                                    <td><a href="{{route('product.one', [IdEncryptor::encode($prod->id)])}}"
+                                                                    <td><a href="{{route('product.one', [$IdEncryptor::encode($prod->id)])}}"
                                                                             class="btn btn-secondary shadow btn-xs sharp me-1"><i
                                                                                 class="bi bi-info-circle-fill"></i></a></td>
                                                                     <td>
-                                                                        <div class="d-flex">
-                                                                            @include('product.partials.photo')
-                                                                            @include('product.partials.fds')
-                                                                        </div>
+                                                                        @include('product.partials.photo')
+                                                                    </td>
+                                                                    <td>
+                                                                        @include('product.partials.fds')
                                                                     </td>
                                                                 </tr>
                                                             @endforeach

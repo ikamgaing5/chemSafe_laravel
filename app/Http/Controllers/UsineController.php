@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AlertHelper;
+use App\Models\historique;
 use App\Models\Usine;
 use App\Models\Atelier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class UsineController extends Controller
@@ -28,6 +30,13 @@ class UsineController extends Controller
             return back()->with('error', AlertHelper::message("L' <strong> $usine->nomusine </strong> contient au moins un atelier et ne peut-être supprimé", "danger"));
         }
         $usine->update(['active' => $request->active]);
+        historique::create([
+            'usine_id' => $usine->id,            
+            'created_by' => Auth::user()->id,
+            'type' => 0,  // 1 pour la création et 0 pour la suppression
+            'action' => "Suppression de l'$usine->nomusine",
+            'created_at' => now(),
+        ]);
         return back()->with('okay', AlertHelper::message("L' <strong> $usine->nomusine </strong> a été supprimée avec succès", "success"));
     }
 
@@ -63,9 +72,16 @@ class UsineController extends Controller
                     'nomusine.required' => 'Le nom de l\'usine est requis.',
                 ]
             ]);
-            Usine::create(['nomusine' => strtoupper($request->input('nomusine'))]);
+            $usine = Usine::create(['nomusine' => strtoupper($request->input('nomusine'))]);
             $nomUsine = strtoupper($validated['nomusine']);
-            return back()->with('successadd', AlertHelper::message("L'<strong>{$nomUsine}</strong> a été ajoutée avec succès.", "success"));
+            historique::create([
+                'usine_id' => $usine->id,
+                'created_by' => Auth::user()->id,
+                'type' => 1,  // 1 pour la création et 0 pour la suppression
+                'action' => "Création de l'$usine->nomusine",
+                'created_at' => now(),
+            ]);
+            return back()->with('successadd', AlertHelper::message("L'<strong>{$nomUsine}</strong> a bien été ajoutée", "success"));
         } catch (\Illuminate\Validation\ValidationException $e) {
             $nomUsine = strtoupper($validated['nomusine']);
             if ($e->validator->errors()->first('nomusine') == "validation.unique" ) {

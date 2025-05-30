@@ -15,7 +15,7 @@
                 </div>
                 <div class="modal-body">
                     <label class="form-label text-secondary">Nom de l'Usine: </label>
-                    <input type="text" class="form-control" name="nomusine" id="" value="">
+                    <input type="text" class="form-control" placeholder="Ex: USINE DE XXXX" name="nomusine" id="" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

@@ -150,6 +150,18 @@
             </div>
         @endif
 
+        <div class="col-xl-12">
+            <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                        <u><a class="text-primary fw-bold fs-5" href="{{ route('dashboard') }}">Tableau de bord</a></u>
+                        <i class="bi bi-caret-right-fill"></i>
+                        <span class="card-title fw-bold fs-5">Liste des produits</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Barre de recherche --}}
         <div class="container-fluid pt-0 ps-0 pe-0">
             <div class="shadow-lg card mb-4">
@@ -187,17 +199,7 @@
 
         {{-- Breadcrumb --}}
         <div class="demo-view">
-            <div class="col-xl-12">
-                <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <div>
-                            <u><a class="text-primary fw-bold fs-5" href="{{ route('dashboard') }}">Tableau de bord</a></u>
-                            <i class="bi bi-caret-right-fill"></i>
-                            <span class="card-title fw-bold fs-5">Tous nos produits</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
 
             {{-- Affichage selon le rôle --}}
             @if($user->isSuperAdmin())

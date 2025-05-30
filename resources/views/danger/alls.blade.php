@@ -1,12 +1,3 @@
-<?php 
-
-// dd($danger);
-// die();
-
-Use App\Helpers\IdEncryptor;
-
-?>
-
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="auto">
 
@@ -57,6 +48,7 @@ Use App\Helpers\IdEncryptor;
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
+                                    <span class="card-title fw-bold fs-5">Liste des Dangers</span>
                                 </div>
                             </div>
 
@@ -99,7 +91,6 @@ Use App\Helpers\IdEncryptor;
                                                         <tr>
                                                             <th>Nom du danger</th>
                                                             <th>Nombre de produits</th>
-                                                            {{-- <th>Médias</th> --}}
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -107,7 +98,7 @@ Use App\Helpers\IdEncryptor;
                                                             <tr>
                                                                 <td>
                                                                     <div class="trans-list">
-                                                                        <h4><a href="{{route('danger.product', IdEncryptor::encode($dangers->id))}}">{{$dangers->nomdanger}}</a></h4>
+                                                                        <h4><a href="{{route('danger.product', $IdEncryptor::encode($dangers->id))}}">{{$dangers->nomdanger}}</a></h4>
                                                                     </div>
                                                                 </td>
                                                                 <td>

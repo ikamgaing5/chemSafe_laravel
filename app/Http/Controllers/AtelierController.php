@@ -7,6 +7,7 @@ use App\Models\Atelier;
 use Illuminate\Http\Request;
 use App\Helpers\AlertHelper;
 use App\Helpers\IdEncryptor;
+use App\Models\historique;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,8 @@ class AtelierController extends Controller
 {
     public function all($idusine)
     {
-        $idusine = IdEncryptor::decode($idusine);
+        $IdEncryptor = IdEncryptor::class;
+        $idusine = $IdEncryptor::decode($idusine);
         $usine = Usine::find($idusine);
         $workshop = Atelier::withCount([
             'contenir',
@@ -27,7 +29,8 @@ class AtelierController extends Controller
         ])->orderBy('nomatelier', 'asc')->where('usine_id', $idusine)->get();
         $AllUsine = Usine::where('active', operator: 'true')->orderBy('nomusine', 'asc')->get();
         $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
-        return view('workshop.all', compact('workshop', 'nbreAtelier', 'AllUsine', 'usine', 'idusine'));
+        $message = "Liste des Ateliers de l'" . $usine->nomusine;
+        return view('workshop.all', compact('workshop', 'nbreAtelier', 'AllUsine', 'usine', 'idusine', 'message', 'IdEncryptor'));
     }
 
     public function alls()
@@ -36,6 +39,15 @@ class AtelierController extends Controller
 
         return view('workshop.alls', compact('AllUsine'));
     }
+
+    public function erase(Request $request,$idhistorique){
+        $historiques = historique::findOrFail($idhistorique);
+        $atelier = Atelier::findOrFail($historiques->atelier->id);
+        $nom = $request->nomatelier;
+        $atelier->delete();
+        $historiques->delete();
+        return redirect()->back()->with("eraseSucces", AlertHelper::message("L'atelier $nom a été définitivement effacé", 'success'));
+    } 
 
     public function delete(Request $request, $id)
     {
@@ -50,7 +62,13 @@ class AtelierController extends Controller
         }
 
         $atelier->update(['active' => $request->active]);
-
+        historique::create([
+            'atelier_id' => $atelier->id,
+            'created_by' => Auth::user()->id,
+            'action' => "Suppression de l'atelier $atelier->nomatelier",
+            'type' => 0,  // 1 pour la création et 0 pour la suppression
+            'created_at' => now(),
+        ]);
         return back()->with('deleteSuccess', AlertHelper::message("L'atelier <strong> $atelier->nomatelier </strong> a bien été effacé", 'success'));
     }
 
@@ -98,6 +116,13 @@ class AtelierController extends Controller
             $atelier = Atelier::create([
                 'nomatelier' => strtoupper($request->input('nomatelier')),
                 'usine_id' => $request->usine_id,
+            ]);
+            historique::create([
+                'atelier_id' => $atelier->id,
+                'created_by' => Auth::user()->id,
+                'type' => 1,  // 1 pour la création et 0 pour la suppression
+                'action' => "Création de l'atelier $atelier->nomatelier",
+                'created_at' => now(),
             ]);
             return back()->with('successadd', AlertHelper::message("L'atelier <strong>{$validated['nomatelier']}</strong> a été ajoutée avec succès.", "success"));
         } catch (\Illuminate\Validation\ValidationException $e) {

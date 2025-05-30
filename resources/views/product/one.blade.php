@@ -1,10 +1,5 @@
 <?php
 use App\Helpers\IdEncryptor;
-// dd( $prod->danger);
-// die();
-// $idprod = IdEncryptor::decode($id);
-
-
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 if (strpos($current_page, 'product/more-detail') === 0) {
@@ -75,44 +70,6 @@ foreach ($prod->danger as $key) {
                         {!!session('successEdit')!!}
                     @endif
                     <div class="row justify-content-center">
-                        <div class="col-xl-12">
-                            <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <div>
-                                        <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de
-                                                bord</a></u>
-                                        <i class="bi bi-caret-right-fill"></i>
-                                        {{-- @if ($atelier != null)
-                                            <u>
-                                                <a href="/workshop/all-workshop/{{IdEncryptor::encode($atelier->usine->id)}}" class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}
-                                                </a>
-                                            </u>
-
-                                            <i class="bi bi-caret-right-fill"></i>
-                                            <u>
-                                                <a class="text-primary fw-bold fs-5" href="{{route('product.forworkshop',IdEncryptor::encode($atelier->usine->id))}}">
-                                                    {{$atelier->nomatelier}}
-                                                </a>
-                                            </u>
-                                        @endif --}}
-                                        <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
-                                        <span class="card-title fw-bold fs-5">Plus d'informations</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- @if ($atelier != null)
-                                <div class="shadow-lg page-title d-xl-none text-center py-2">
-                                    <u>
-                                        <a href="/all-products/{{IdEncryptor::encode($atelier->usine->id)}}" class="text-primary fw-bold fs-5"><i
-                                                class="bi bi-caret-right-fill"></i>
-                                            {{$atelier->nomatelier}}
-                                        </a>
-                                    </u>
-                                </div>
-                            @endif --}}
-                        </div>
                         <div class="col-xl-12 col-lg-12">
                             <div class="card shadow-lg">
                                 <div class="card-header flex-wrap px-3">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AlertHelper;
+use App\Models\historique;
 use App\Models\Usine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,15 @@ class UserController extends Controller
                 'role' => $request->role,
                 'usine_id' => $request->usine,
                 'password' => Hash::make($request->password)
+            ]);
+
+            // Enregistrement pour l'historique
+            historique::create([
+                'user_id' => User::user()->id,
+                'created_by' => Auth::user()->id,
+                'type' => 1,  // 1 pour la création et 0 pour la suppression
+                'action' => "Création de l'utilisateur $request->name",
+                'created_at' => now(),
             ]);
 
             // Message de succès

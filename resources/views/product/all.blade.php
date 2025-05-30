@@ -1,12 +1,3 @@
-@php
-use App\Helpers\IdEncryptor;
-$current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
-if (strpos($current_page, 'workshop/all-products/') === 0) {
-    $message = "Produits de l'atelier $atelier->nomatelier";
-}
-@endphp 
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -159,7 +150,15 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5" href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
-                                    <u><a href="/workshop/all-workshop/{{IdEncryptor::encode($atelier->usine->id)}} "
+                                    @if (Auth::user()->role == "superadmin")
+                                    <u>
+                                        <a href="{{route('all-factorie')}}" class="text-primary fw-bold fs-5">
+                                        Nos Usines
+                                        </a>
+                                    </u>
+                                    <i class="bi bi-caret-right-fill"></i>
+                                    @endif
+                                    <u><a href="/workshop/all-workshop/{{$IdEncryptor::encode($atelier->usine->id)}} "
                                             class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
                                     <span class="card-title fw-bold fs-5">
@@ -226,9 +225,6 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                             <li class="nav-item " role="presentation">
 
                                                 <div class="d-flex">
-                                                    <button type="submit" name="supprimeretudiant"
-                                                        class="btn btn-danger" value="tout supprimer">tout supprimer
-                                                    </button>
                                                      @include('product.partials.add')
                                                 </div>
                                             </li>
@@ -247,9 +243,9 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                         <tr>
                                                             <th>Nom du produit</th>
                                                             <th>Type d'emballage</th>
-                                                            <th>Vol/Poids</th>
-                                                            <th>Plus d'info</th>
-                                                            <th>Médias</th>
+                                                            <th>Info FDS</th>
+                                                            <th>Photo</th>
+                                                            <th>FDS</th>
                                                             @if (Auth::user()->role != 'user')
                                                                 <th class="text-end">Action</th>
                                                             @endif
@@ -273,16 +269,15 @@ if (strpos($current_page, 'workshop/all-products/') === 0) {
                                                                         </span>
                                                                     </td>
                                                                     <td>
-                                                                        <div class="mb-0">{{$prod->poids}}</div>
+                                                                        <a href="{{route('product.one', [$IdEncryptor::encode($prod->id)])}}" class="btn btn-secondary shadow btn-xs sharp me-1">
+                                                                            <i class="bi bi-info-circle-fill"></i>
+                                                                        </a>
                                                                     </td>
-                                                                    <td><a href="{{route('product.one', [IdEncryptor::encode($prod->id)])}}"
-                                                                            class="btn btn-secondary shadow btn-xs sharp me-1"><i
-                                                                                class="bi bi-info-circle-fill"></i></a></td>
                                                                     <td>
-                                                                        <div class="d-flex">
-                                                                            @include('product.partials.photo')
-                                                                            @include('product.partials.fds')
-                                                                        </div>
+                                                                        @include('product.partials.photo')
+                                                                    </td>
+                                                                    <td>
+                                                                        @include('product.partials.fds')
                                                                     </td>
                                                                     @if (Auth::user()->role != 'user')
                                                                         <td>

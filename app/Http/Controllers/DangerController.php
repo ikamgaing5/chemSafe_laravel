@@ -8,6 +8,7 @@ use App\Helpers\IdEncryptor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class DangerController extends Controller
 {
     public function getDangerStatsByAtelier($idatelier)
@@ -154,6 +155,7 @@ class DangerController extends Controller
     }
 
     public function getProductByDanger($iddanger){
+        $IdEncryptor = IdEncryptor::class;
         $iddanger = IdEncryptor::decode($iddanger);
         $danger = Danger::where('id', $iddanger)->with('produit')->first();
         if($danger->nomdanger == "AUCUN DANGER"){
@@ -162,13 +164,14 @@ class DangerController extends Controller
             $message = "Liste des $danger->nomdanger.";
         }
         
-        return view('danger.all', compact('danger', 'message'));
+        return view('danger.all', compact('danger', 'message','IdEncryptor'));
 
     }
 
     public function all(){
+        $IdEncryptor = IdEncryptor::class;
         $danger = Danger::withCount('produit')->orderBy('nomdanger')->get();
         $message = "Liste des Dangers";
-        return view('danger.alls', compact('danger', 'message'));
+        return view('danger.alls', compact('danger', 'message', 'IdEncryptor'));
     }
 }

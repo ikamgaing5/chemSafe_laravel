@@ -70,7 +70,7 @@ class AdminMiddleware
             if ($lastActivity && (time() - $lastActivity) > $this->timeout) {
                 // Stocker l'URL actuelle dans un cookie qui persistera après la déconnexion
                 $currentUrl = $request->fullUrl();
-                cookie()->queue('last_visited_url', $currentUrl, 60); // Le cookie expire après 60 minutes
+                cookie()->queue('last_visited_url', $currentUrl, 120); // Le cookie expire après 120 minutes
 
                 // Créer l'historique
                 Historique::create([

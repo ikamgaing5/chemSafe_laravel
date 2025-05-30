@@ -2,11 +2,8 @@
 $(function() {
     const isMobile = window.innerWidth < 768;
     // Récupérer l'id de l'usine côté Blade
-    const idUsine = {
-        {
-            Auth::user() - > usine_id
-        }
-    };
+    
+    const idUsine = {{Auth::user()->usine_id}};
 
     let dangerChart = null;
 

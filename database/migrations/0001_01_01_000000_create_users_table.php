@@ -87,15 +87,16 @@ return new class extends Migration {
             $table->id();
             $table->string('usine_id');
             $table->string('nomatelier');
-            $table->string('active')->default(true);
+            $table->string('active')->default('true');
         });
 
         schema::create('historique', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('produit_id');
-            $table->string('atelier_id');
-            $table->string('usine_id');
+            $table->string('user_id')->nullable();
+            $table->string('produit_id')->nullable();
+            $table->string('atelier_id')->nullable();
+            $table->string('usine_id')->nullable();
+            $table->string('type');
             $table->string('action');
             $table->timestamp('created_at');
             $table->string('created_by');

@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Helpers;
+
+use Carbon\Carbon;
 use DateTime;
 class AlertHelper
 {
@@ -47,6 +49,40 @@ class AlertHelper
         $annee = $date->format('Y');
         $jour_formate = ($jour === 1) ? '1er' : $jour;
         return $formattedDate = "{$jour_formate} {$mois_fr[$mois]} {$annee}";
+    }
+
+    public function dateTimes($date)
+    {
+        
+        if (is_string($date)) {
+            $date = Carbon::parse($date);
+        }
+
+
+        $mois_fr = [
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre'
+        ];
+
+        $jour = (int) $date->format('j');
+        $mois = (int) $date->format('n');
+        $annee = $date->format('Y');
+        $heure = $date->format('H\hi');
+
+        $jour_formate = ($jour === 1) ? '1er' : $jour;
+
+        $formatted = "{$jour_formate} {$mois_fr[$mois]} {$annee} {$heure}";
+        return $formatted;
     }
 
 }

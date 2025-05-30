@@ -322,14 +322,14 @@ $produitsUniques = $atelier->contenir->filter(fn($p) => $p->atelier->count() ===
                                                         <tr>
                                                             <td>
                                                                 <div class="trans-list">
-                                                                    <h4><?= $prod['nomprod'] ?></h4>
+                                                                    <h4>{{$prod->nomprod}}</h4>
                                                                 </div>
                                                             </td>
                                                             <td><span
-                                                                    class="text-primary font-w600"><?= $prod['type_emballage'] ?></span>
+                                                                    class="text-primary font-w600">{{$prod->type_emballage}}</span>
                                                             </td>
                                                             <td>
-                                                                <div class="mb-0"><?= $prod['poids'] ?></div>
+                                                                <div class="mb-0">{{$prod->poids}}</div>
                                                             </td>
                                                             <td><a href=""
                                                                     class="btn btn-secondary shadow btn-xs sharp me-1"><i

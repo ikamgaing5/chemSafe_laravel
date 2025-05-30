@@ -29,7 +29,7 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::patch('/product/edit-product/{idproduit}', [ProduitController::class, 'editPost'])->name('product.editPost');
     Route::get('/getDangerData', [ProduitController::class, 'getDangerDatas']);
     Route::get('/product/all-product', [ProduitController::class, 'alls'])->name('product.alls');
-    // Route::get('/produit/index', [Prod::class, 'index'])->name('products.index');
+    Route::get('/produit/index', [Prod::class, 'index'])->name('products.index');
     
     
     Route::get('/api/product/dangers/{idatelier}', [DangerController::class, 'getDangerStatsByAtelier']);
@@ -43,6 +43,7 @@ Route::middleware(['auth.middle'])->group(function () {
     Route::patch('/workshop/delete/{id}', [AtelierController::class, 'delete'])->name('workshop.delete');
     Route::post('/workshop/add', [AtelierController::class, 'add'])->name('workshop.add');
     Route::patch('/workshop/edit/{id}', [AtelierController::class, 'update'])->name('workshop.update');
+    Route::delete('/trash/workshop/{idatelier}', [AtelierController::class, 'erase'])->name('workshop.erase');
 
 
     Route::get('/factory/all-factory', [UsineController::class, 'all'])->name('all-factorie');
@@ -64,6 +65,9 @@ Route::middleware(['auth.middle'])->group(function () {
     
     
     Route::get('/history/user', [HistoryController::class, 'all'])->name('history.user');
+    Route::get('/history/workshop', [HistoryController::class, 'historyWorkshop'])->name('history.workshop');
+    Route::get('/trash/workshop', [HistoryController::class, 'TrashWorkshop'])->name('trash.workshop');
+
 
     
 

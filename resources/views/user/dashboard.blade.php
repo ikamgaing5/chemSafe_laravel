@@ -187,11 +187,10 @@ if ($current_page == 'dashboard') {
                         }
                         @endphp
                         @if (Auth::user()->role == 'superadmin')
-                        @include('product.partials.grapheSuper')
-                        @include('user.partials.grapheAtelierSuper')
+                            @include('product.partials.grapheSuper')
+                            @include('user.partials.grapheAtelierSuper')
                         {{-- <script src="{{asset('js/dangerChart.js')}}"></script> --}}
                         @else
-                        @include('product.partials.grapheOther')
-                        @include('user.partials.grapheAtelier')
-
+                            @include('product.partials.grapheOther')
+                            @include('user.partials.grapheAtelier')
                         @endif

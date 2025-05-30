@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Auth;
-use App\Helpers\IdEncryptor;
+// use App\Helpers\$IdEncryptor;
 
 $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
@@ -69,6 +69,14 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
 
         <div class="content-body">
             <div class="container-fluid">
+                @if (
+                    (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') && strpos(
+                        $current_page,
+                        'workshop/all-workshop/'
+                    ) === 0
+                )
+                    @include('workshop.partials.new-workshop')
+                @endif
                 @if (session('successadd'))
                     {!!session('successadd')!!}
                 @elseif (session('erroradd'))
@@ -82,14 +90,7 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
                 @elseif (session('updateOk'))
                     {!!session('updateOk')!!}
                 @endif
-                @if (
-                        (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') && strpos(
-                            $current_page,
-                            'workshop/all-workshop/'
-                        ) === 0
-                    )
-                    @include('workshop.partials.new-workshop')
-                @endif
+               
                 <!-- Row -->
                 <div class="row">
                     @if (session('deleteok'))
@@ -97,18 +98,20 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
                     @endif
                     <div class="col-xl-12">
                         <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
-                            <!-- Ajout des classes de visibilité -->
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <div>
                                     <u><a class="text-primary fw-bold fs-5"href="{{route('dashboard')}}">Tableau de bord</a></u>
                                     @if (Auth::user()->role == 'superadmin')
                                         <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
-                                        <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos  Usines</a></u>
+                                        <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos Usines</a></u>
                                     @endif
 
                                     <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
-                                    <span class="card-title fw-bold fs-5">Nos Ateliers</span>
+                                    <span class="card-title fw-bold fs-5">{{$usine->nomusine}}</span>
+                                </div>
+                                <div class="fs-5">
+                                    Nombre d'ateliers : <strong
+                                        class="card-title fw-bold fs-5">{{$nbreAtelier}}</strong>
                                 </div>
                             </div>
                         </div>
@@ -123,9 +126,8 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
                             </div>
                         </div>
                     </div>
-
                     <?php
-                        foreach ($AllUsine as $key) {
+                    foreach ($AllUsine as $key){
                             $idusines = $key->id;
 
                             // Cas pour l'admin : on vérifie si c'est bien l'usine de l'admin
@@ -133,109 +135,84 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
                                 continue; // On saute les usines qui ne correspondent pas
                             }
                             if (isset($idusine)) {
-                                if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)) {
+                                if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)){ 
                                     continue; // On saute les usines qui ne correspondent pas
                                 }
                             }
                     ?>
-                    <div class="col-xl-12">
-                        <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
-                            <!-- Ajout des classes de visibilité -->
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                <div>
-                                    <div class="fs-5">Atelier de
-                                        l'{{ isset($usine) ? $usine->nomusine : 'Usine' }}
-                                    </div>
-                                </div>
-                                <div class="fs-5">
-                                    Nombre d'ateliers : <strong
-                                        class="card-title fw-bold fs-5">{{$nbreAtelier}}</strong>
-                                </div>
+                        <div class="col-xl-12">
+                            <!-- Row -->
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <!-- Row -->
+                                    <div class="main">
+                                        <div class="scrollable-row ">
+                                            @foreach ($workshop->where('active', 'true')->sortBy('nomatelier') as $keys)
+                                                <div class="col-xl-3 col-lg-4 col-sm-6 px-3">
+                                                    <div class=" card contact_list text-center">
 
-                            </div>
-                        </div>
-
-                        <div class="shadow-lg page-title d-xl-none text-center py-2">
-                            <u>
-                                <div class="fs-5">Atelier de l'{{$usine->nomusine ?? $atelier->usine->nomusine ?? ''}}
-                                </div>
-                            </u>
-                        </div>
-                    </div>
-                    <div class="col-xl-12">
-                        <!-- Row -->
-                        <div class="row">
-                            <div class="col-xl-12">
-                                <!-- Row -->
-                                <div class="main">
-                                    <div class="scrollable-row ">
-                                        @foreach ($workshop->where('active', 'true')->sortBy('nomatelier') as $keys)
-                                            <div class="col-xl-3 col-lg-4 col-sm-6 px-3">
-                                                <div class=" card contact_list text-center">
-
-                                                    <div class="card-body">
-                                                        <div class="user-content">
-                                                            <div class="user-info">
-                                                                <div class="user-details">
-                                                                    <p style="font-weight: 700;">Atelier nommé</p>
-                                                                    <h4 class="user-name mb-0">{{ $keys->nomatelier }}
-                                                                    </h4>
+                                                        <div class="card-body">
+                                                            <div class="user-content">
+                                                                <div class="user-info">
+                                                                    <div class="user-details">
+                                                                        <p style="font-weight: 700;">Atelier nommé</p>
+                                                                        <h4 class="user-name mb-0">{{ $keys->nomatelier }}
+                                                                        </h4>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="contact-icon">
-                                                            <label style="font-weight: 700;"
-                                                                style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Nombre
-                                                                de produit:</label><span
-                                                                class="badge badge-success light">{{ $keys->contenir_count }}</span>
+                                                            <div class="contact-icon">
+                                                                <label style="font-weight: 700;"
+                                                                    style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Nombre
+                                                                    de produit:</label><span
+                                                                    class="badge badge-success light">{{ $keys->contenir_count }}</span>
 
-                                                            <br>
-                                                            <label style="font-weight: 700;"
-                                                                style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
-                                                                sans fds: </label><span
-                                                                class="badge badge-danger light">{{ $keys->produitSansFds()->count() }}</span>
+                                                                <br>
+                                                                <label style="font-weight: 700;"
+                                                                    style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
+                                                                    sans fds: </label><span
+                                                                    class="badge badge-danger light">{{ $keys->produitSansFds()->count() }}</span>
+                                                            </div>
+                                                            <div class="d-flex mb-3 justify-content-center align-items-center">
+                                                                @if (Auth::user()->role != 'user')
+                                                                    <center>
+                                                                        @include('workshop.partials.edit')
+                                                                        @include('workshop.partials.delete')
+                                                                    </center>
+                                                                @endif
+                                                            </div>
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="{{route('product.forworkshop',$IdEncryptor::encode($keys->id))}}"
+                                                                    class="btn btn-secondary btn-sm w-100 me-2">Voir les
+                                                                    produits</a>
+                                                            </div>
                                                         </div>
-                                                        <div class="d-flex mb-3 justify-content-center align-items-center">
-                                                            @if (Auth::user()->role != 'user')
-                                                                <center>
-                                                                    @include('workshop.partials.edit')
-                                                                    @include('workshop.partials.delete')
-                                                                </center>
-                                                            @endif
-                                                        </div>
-                                                        <div class="d-flex align-items-center">
-                                                            <a href="{{route('product.forworkshop',IdEncryptor::encode($keys->id))}}"
-                                                                class="btn btn-secondary btn-sm w-100 me-2">Voir les
-                                                                produits</a>
-                                                        </div>
+
                                                     </div>
-
                                                 </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="scroll-indicator">
+                                            <div class="scroll-indicator-text">Faites défiler pour voir plus</div>
+                                            <div class="scroll-indicator-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                                </svg>
                                             </div>
-                                        @endforeach
-                                    </div>
-                                    <div class="scroll-indicator">
-                                        <div class="scroll-indicator-text">Faites défiler pour voir plus</div>
-                                        <div class="scroll-indicator-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <polyline points="9 18 15 12 9 6"></polyline>
-                                            </svg>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <?php
-                            if (Auth::user()->role === 'admin' || Auth::user()->role === 'user') {
-                                break;
-                            }
+                            @if (Auth::user()->role === 'admin' || Auth::user()->role === 'user')
+                                    @break;
+                            @endif
 
-                        }
-					?>
+                    @php
+                    }
+                    @endphp
                 </div>
             </div>
         </div>

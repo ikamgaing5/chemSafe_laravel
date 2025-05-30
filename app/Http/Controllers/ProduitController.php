@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\historique;
 use App\Models\Usine;
 use App\Models\Danger;
 use App\Models\Atelier;
@@ -37,9 +38,10 @@ class ProduitController extends Controller
         $produitsSansAtelier = Produit::whereDoesntHave('atelier', function ($query) use ($idatelier) {
             $query->where('atelier_id', $idatelier);
         })->get();
+        $message = "Produits de l'atelier $atelier->nomatelier";
+        $IdEncryptor = IdEncryptor::class;
 
-
-        return view('product.all', compact('produits', 'dangers', 'atelier', 'produitsSansAtelier'));
+        return view('product.all', compact('produits', 'dangers', 'atelier', 'produitsSansAtelier', 'message', 'IdEncryptor'));
     }
 
     public function allss()
@@ -329,10 +331,18 @@ class ProduitController extends Controller
             $produit->fds = $stored;
             $temoinFDS = true;
         }
+        // historique
 
         $produit->save();
         $produit->danger()->sync($validated['danger']);
         $produit->atelier()->sync($validated['atelier']);
+        historique::create([
+            'produit_id' => $produit->id,
+            'created_by' => Auth::user()->id,
+            'action' => "Création du produit $produit->nomprod",
+            'type' => 1,  // 1 pour la création et 0 pour la suppression
+            'created_at' => now(),
+        ]);
 
         if ($temoinFDS) {
             return redirect()->route('infofds.add', $produit->id);
@@ -346,7 +356,7 @@ class ProduitController extends Controller
     {
         // Vérifie si un fichier est envoyé
         if (!$request->hasFile('fds')) {
-            return redirect()->back()->with('error', 'Aucun fichier n’a été envoyé.');
+            return redirect()->back()->with('error', "Aucun fichier n’a été envoyé.");
         }
 
         $path = $this->files($request->file('fds'), 'fds');

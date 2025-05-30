@@ -16,6 +16,7 @@ class historique extends Model
         'produit_id',
         'atelier_id',
         'usine_id',
+        'type',
         'action',
         'created_at',
         'created_by'
@@ -23,6 +24,10 @@ class historique extends Model
 
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function userr(){
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function produit(){
