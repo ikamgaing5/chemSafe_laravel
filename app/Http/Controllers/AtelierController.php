@@ -26,11 +26,9 @@ class AtelierController extends Controller
         $workshop = Atelier::withCount([
             'contenir',
             'produitSansFds'
-        ])->orderBy('nomatelier', 'asc')->where('usine_id', $idusine)->get();
-        $AllUsine = Usine::where('active', operator: 'true')->orderBy('nomusine', 'asc')->get();
-        $nbreAtelier = Atelier::where('usine_id', $idusine)->where('active', 'true')->count();
+        ])->where('active', 'true')->with('usine')->orderBy('nomatelier', 'asc')->where('usine_id', $idusine)->get();
         $message = "Liste des Ateliers de l'" . $usine->nomusine;
-        return view('workshop.all', compact('workshop', 'nbreAtelier', 'AllUsine', 'usine', 'idusine', 'message', 'IdEncryptor'));
+        return view('workshop.all', compact('workshop', 'idusine','usine', 'message', 'IdEncryptor'));
     }
 
     public function alls()

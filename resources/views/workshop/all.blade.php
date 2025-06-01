@@ -1,18 +1,5 @@
 <?php
-use Illuminate\Support\Facades\Auth;
-// use App\Helpers\$IdEncryptor;
-
-$current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
-if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmin') {
-    // Cas du superadmin sans usine spécifique
-    $message = 'Liste des Ateliers de toutes les Usines.';
-} elseif (strpos($current_page, 'workshop/all-workshop/') === 0 && isset($usine)) {
-    $message = "Liste des Ateliers de l'" . $usine->nomusine;
-} else {
-    $message = "Liste des Ateliers";
-}
-// dd($usine, $AllUsine);
+// use Illuminate\Support\Facades\Auth;
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +31,7 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
     <script>
         document.title = "ChemSafe";
     </script>
+    @livewireStyles
 
 </head>
 
@@ -69,168 +57,127 @@ if ($current_page == 'workshop/all-workshop' && Auth::user()->role == 'superadmi
 
         <div class="content-body">
             <div class="container-fluid">
-                @if (
-                    (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin') && strpos(
-                        $current_page,
-                        'workshop/all-workshop/'
-                    ) === 0
-                )
-                    @include('workshop.partials.new-workshop')
+                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'superadmin')
+                    <button class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#addModal">
+                        + Ajouter un Atelier
+                    </button>
+                    <livewire:add-entity-modal :entity-type="'atelier'" :usine-id="$idusine" />
                 @endif
-                @if (session('successadd'))
-                    {!!session('successadd')!!}
-                @elseif (session('erroradd'))
-                    {!!session('erroradd')!!}
-                @elseif (session('samename'))
-                    {!!session('samename')!!}
-                @elseif (session('deleteSuccess'))
-                    {!!session('deleteSuccess')!!}
-                @elseif (session('echecDelete'))
-                    {!!session('echecDelete')!!}
-                @elseif (session('updateOk'))
-                    {!!session('updateOk')!!}
-                @endif
-               
-                <!-- Row -->
+                
                 <div class="row">
-                    @if (session('deleteok'))
-                        
-                    @endif
-                    <div class="col-xl-12">
-                        <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
-                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                <div>
-                                    <u><a class="text-primary fw-bold fs-5"href="{{route('dashboard')}}">Tableau de bord</a></u>
-                                    @if (Auth::user()->role == 'superadmin')
-                                        <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
-                                        <u><a class="text-primary fw-bold fs-5" href="/factory/all-factory">Nos Usines</a></u>
-                                    @endif
+                    <div id="alertContainer"></div>
+                    {{-- Le Liveware chargé d'afficher la liste des ateliers --}}
+                    <livewire:ateliers-list :IdEncryptor="$IdEncryptor" :usine_id="$idusine" />
 
-                                    <span class="fs-4"><i class="bi bi-caret-right-fill"></i></span>
-                                    <span class="card-title fw-bold fs-5">{{$usine->nomusine}}</span>
-                                </div>
-                                <div class="fs-5">
-                                    Nombre d'ateliers : <strong
-                                        class="card-title fw-bold fs-5">{{$nbreAtelier}}</strong>
-                                </div>
-                            </div>
-                        </div>
+                    {{-- Le modal de modification --}}
+                    <livewire:edit-entity-modal />
 
-                        <div class="shadow-lg page-title d-xl-none text-center py-2">
-                            <u><a href="/dashboard" class="text-primary fw-bold fs-5"><i
-                                        class="bi bi-caret-right-fill"></i>
-                                    Tableau de bord
-                                </a></u>
-                            <div class="fs-5">
-                                Nombre d'ateliers : <strong class="card-title fw-bold fs-5">{{ $nbreAtelier }}</strong>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                    foreach ($AllUsine as $key){
-                            $idusines = $key->id;
-
-                            // Cas pour l'admin : on vérifie si c'est bien l'usine de l'admin
-                            if ((Auth::user()->role === 'admin' || Auth::user()->role === 'user') && $idusines != ($idusine)) {
-                                continue; // On saute les usines qui ne correspondent pas
-                            }
-                            if (isset($idusine)) {
-                                if (Auth::user()->role === 'superadmin' && $idusines != ($idusine)){ 
-                                    continue; // On saute les usines qui ne correspondent pas
-                                }
-                            }
-                    ?>
-                        <div class="col-xl-12">
-                            <!-- Row -->
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <!-- Row -->
-                                    <div class="main">
-                                        <div class="scrollable-row ">
-                                            @foreach ($workshop->where('active', 'true')->sortBy('nomatelier') as $keys)
-                                                <div class="col-xl-3 col-lg-4 col-sm-6 px-3">
-                                                    <div class=" card contact_list text-center">
-
-                                                        <div class="card-body">
-                                                            <div class="user-content">
-                                                                <div class="user-info">
-                                                                    <div class="user-details">
-                                                                        <p style="font-weight: 700;">Atelier nommé</p>
-                                                                        <h4 class="user-name mb-0">{{ $keys->nomatelier }}
-                                                                        </h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="contact-icon">
-                                                                <label style="font-weight: 700;"
-                                                                    style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Nombre
-                                                                    de produit:</label><span
-                                                                    class="badge badge-success light">{{ $keys->contenir_count }}</span>
-
-                                                                <br>
-                                                                <label style="font-weight: 700;"
-                                                                    style="font-weight: 600; font-size: 11px;padding: 0px 10px;">Produit
-                                                                    sans fds: </label><span
-                                                                    class="badge badge-danger light">{{ $keys->produitSansFds()->count() }}</span>
-                                                            </div>
-                                                            <div class="d-flex mb-3 justify-content-center align-items-center">
-                                                                @if (Auth::user()->role != 'user')
-                                                                    <center>
-                                                                        @include('workshop.partials.edit')
-                                                                        @include('workshop.partials.delete')
-                                                                    </center>
-                                                                @endif
-                                                            </div>
-                                                            <div class="d-flex align-items-center">
-                                                                <a href="{{route('product.forworkshop',$IdEncryptor::encode($keys->id))}}"
-                                                                    class="btn btn-secondary btn-sm w-100 me-2">Voir les
-                                                                    produits</a>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <div class="scroll-indicator">
-                                            <div class="scroll-indicator-text">Faites défiler pour voir plus</div>
-                                            <div class="scroll-indicator-icon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                    stroke-linecap="round" stroke-linejoin="round">
-                                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            @if (Auth::user()->role === 'admin' || Auth::user()->role === 'user')
-                                    @break;
-                            @endif
-
-                    @php
-                    }
-                    @endphp
+                    <livewire:delete-entity-modal  />
                 </div>
             </div>
         </div>
+
+        <script>
+            window.addEventListener('close-modal', () => {
+                const modalEl = document.getElementById('addModal');
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+
+                // Délai pour s'assurer que le focus quitte l'input avant que le modal soit caché
+                setTimeout(() => {
+                    modal.hide();
+
+                    // Déplacer le focus ailleurs (par ex. sur un bouton de la page)
+                    document.activeElement.blur();
+                }, 100);
+            });
+
+            window.addEventListener('entityAddedSuccess', event => {
+                let detail = event.detail;
+
+                // Tenter d'accéder aux données de différentes manières
+                let type = (detail[0].type) || undefined;
+                let message = (detail[0].message) || undefined;
+
+                if (type === undefined || message === undefined) {
+                    console.error('Could not extract type or message from event.detail');
+                    return; // Ne pas continuer si les données manquent
+                }
+
+                const icon = type === 'success' ?
+                    `<svg viewBox='0 0 24 24' width='24' height='24' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' class='me-2'><polyline points='9 11 12 14 22 4'></polyline><path d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'></path></svg>` :
+                    `<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+
+                const alertHTML = `
+                <div class='mx-1'>
+                    <div class='alert alert-${type} solid alert-dismissible fade show'>
+                        ${icon} <strong>${type === 'success' ? 'Succès' : 'Échec'} !</strong> ${message} !
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='btn-close'></button>
+                    </div>
+                </div>`;
+
+                const container = document.createElement('div');
+                container.innerHTML = alertHTML;
+
+                // Insérer l'alerte dans le conteneur dédié
+                const alertContainer = document.getElementById('alertContainer');
+                if (alertContainer) {
+                    alertContainer.innerHTML = ''; // Nettoyer le conteneur
+                    alertContainer.appendChild(container);
+                } else {
+                    document.body.prepend(container);
+                }
+
+                // Supprimer l'alerte après 10 secondes
+                setTimeout(() => {
+                    container.remove();
+                }, 10000);
+            });
+
+            window.addEventListener('close-modal', () => {
+                const modalEl = document.getElementById('editModal');
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+
+                // Délai pour s'assurer que le focus quitte l'input avant que le modal soit caché
+                setTimeout(() => {
+                    modal.hide();
+
+                    // Déplacer le focus ailleurs (par ex. sur un bouton de la page)
+                    document.activeElement.blur();
+                }, 100);
+            });
+
+            window.addEventListener('close-modal', () => {
+                const modalEl = document.getElementById('deleteModal');
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+
+                // Délai pour s'assurer que le focus quitte l'input avant que le modal soit caché
+                setTimeout(() => {
+                    modal.hide();
+
+                    // Déplacer le focus ailleurs (par ex. sur un bouton de la page)
+                    document.activeElement.blur();
+                }, 100);
+            });
         
+            window.addEventListener('open-edit-modal', () => {
+                const modal = new bootstrap.Modal(document.getElementById('editModal'));
+                modal.show();
+            });
+
+            window.addEventListener('open-delete-modal', () => {
+                const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                console.log('modal delete')
+                modal.show();
+            });
+        </script>
+
         <script src="{{ asset('vendor/global/global.min.js') }}"></script>
         <script src="{{ asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('js/dlabnav-init.js') }}"></script>
         <script src="{{ asset('js/all-workshop.js') }}"></script>
         <script src="{{ asset('js/custom.min.js') }}"></script>
         <!-- <script src="/js/demo.js"></script> -->
-
-
-
-
-
-
-
-
+        @livewireScripts
 
 </body>
 
