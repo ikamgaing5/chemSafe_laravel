@@ -381,6 +381,7 @@ class ProduitController extends Controller
     public function edit($idproduit)
     {
         $allDangers = Danger::all();
+        $idproduit = IdEncryptor::decode($idproduit);
         $infoproduit = Produit::with('danger')->findOrFail($idproduit);
         $message = "<span class='fs-4'> Modificaion du Produit " . $infoproduit->nomprod . "</span>";
         $linkedDangers = $infoproduit->danger;

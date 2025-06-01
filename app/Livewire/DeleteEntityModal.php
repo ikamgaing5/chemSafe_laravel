@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Atelier;
+use App\Models\Produit;
 use App\Models\Usine;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -13,12 +14,14 @@ class DeleteEntityModal extends Component
     public $entityType;
     public $entityId;
     public $nom;
+    public $entitySecond;
     public $usine_id;
 
 
-    public function mount($entityType = null, $entityId = null, $nom = null){
+    public function mount($entityType = null, $entityId = null, $nom = null, $entitySecond = null){
         $this->entityId = $entityId;
         $this->entityType = $entityType;
+        $this->entitySecond = $entitySecond;
         $this->nom = $nom;
     }
 
@@ -47,9 +50,14 @@ class DeleteEntityModal extends Component
                     $message = "L'atelier $atelier->nomatelier a bein été supprimé";
                     $atelier->update(['active' => 'false']);
                 }
+            }elseif($this->entityType == 'produit'){
+                // $produit = Produit::findOrFail($this->entityId);
+                $atelier = Atelier::findOrFail($this->entitySecond);
+                $atelier->contenir()->detach($this->entityId);
+
             }
             $this->dispatch('close-modal');
-            $this->dispatch('entityDeleted');
+            $this->dispatch('refresh');
             $this->dispatch('entityAddedSuccess', [
                 'type' => $type,
                 'message' => $message 
@@ -58,9 +66,9 @@ class DeleteEntityModal extends Component
     } 
 
     #[On('openDeleteModal')]
-    public function openModal($entityType, $entityId, $nom)
+    public function openModal($entityType, $entityId, $nom, $entitySecond)
     {
-        $this->mount($entityType, $entityId, $nom);
+        $this->mount($entityType, $entityId, $nom, $entitySecond);
         $this->dispatch('open-delete-modal');
     }
 

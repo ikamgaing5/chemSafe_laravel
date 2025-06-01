@@ -68,6 +68,9 @@
                                             <div class="shadow-lg card-body p-0">
                                                 <div class="table-responsive">
                                                     <table id="basic-btn"  class="display table table-striped" style="min-width: 845px">
+                                                    @if ($allWorkshops->count() == 0)
+                                                        <td colspan="4">Aucun élément dans la corbeille des ateliers</td>
+                                                    @else
                                                         <thead>
                                                             <tr>
                                                                 <th>Supprimé par</th>
@@ -77,9 +80,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if ($allWorkshops->count() <= 0)
-                                                                <td colspan="4">Aucun élément dans la corbeille des ateliers</td>
-                                                            @else
+                                                           
                                                                 @foreach ($allWorkshops as $keys)
                                                                 <tr>
                                                                     <td>

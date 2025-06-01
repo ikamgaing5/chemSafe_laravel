@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AlertHelper;
+use App\Helpers\IdEncryptor;
 use App\Models\Produit;
 use App\Models\FDS;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ class InfofdsController extends Controller
 {
        public function add(Request $request, $idproduit)
        {
+              $idproduit = IdEncryptor::decode($idproduit);
               $produit = Produit::find($idproduit);
               return view('infofds.add', compact('idproduit', 'produit'));
        }

@@ -43,8 +43,8 @@ class AddEntityModal extends Component
     protected function messages()
     {
         return [
-            'nom.required' => 'Le nom de l’atelier est obligatoire.',
-            'nom.unique' => 'Ce nom est déjà utilisé par un autre atelier. Veuillez en choisir un autre.',
+            'nom.required' => 'Le nom est obligatoire.',
+            'nom.unique' => 'Ce nom est déjà utilisé. Veuillez en choisir un autre.',
             'usine_id.required' => 'Veuillez sélectionner une usine.',
             'usine_id.exists' => 'L’usine sélectionnée n’est pas valide.',
         ];
@@ -74,7 +74,7 @@ class AddEntityModal extends Component
         $this->reset(['nom', 'usine_id']);
 
         // Envoyer un seul événement entityAdded pour rafraîchir la liste
-        $this->dispatch('entityAdded');
+        $this->dispatch('refresh');
 
         // Fermer la modal
         $this->dispatch('close-modal');

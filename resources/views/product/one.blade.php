@@ -112,8 +112,7 @@ foreach ($prod->danger as $key) {
                                                 <span class="text-{{$color}} fw-bold">{{$nomdanger}}</span>
                                             </div>
                                             <p class="mb-3">
-                                                <strong>Nature : </strong><span
-                                                    class="fw-bold text-primary">{{$prod['nature']}}</span>
+                                                <strong>Nature : </strong><span class="fw-bold text-primary">{{$prod['nature']}}</span>
                                             </p>
 
                                             <p class="mb-3">
@@ -138,7 +137,7 @@ foreach ($prod->danger as $key) {
                                             <p><strong>Vol/Poids : </strong><span
                                                     class="fw-bold text-primary">{{$prod['poids']}}</span></p>
                                             @php
-                                                if($prod->fds != NULL && $prod->infofds != null){
+                                                if($prod->fds != NULL){
                                                     $temoin = true;
                                                     $color = "success";
                                                     $message = "✔ Disponible";

@@ -6,6 +6,7 @@ use App\Helpers\AlertHelper;
 use App\Models\historique;
 use App\Models\Usine;
 use App\Models\Atelier;
+use App\Helpers\IdEncryptor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -14,9 +15,10 @@ class UsineController extends Controller
 {
     public function all()
     {
+        $IdEncryptor = IdEncryptor::class;
         $AllUsine = Usine::where('active', 'true')->with('ateliers')->orderBy('nomusine', 'asc')->get();
         // $AllUsine = Atelier::where('active', 'true')->get();
-        return view('factory.all', compact('AllUsine'));
+        return view('factory.all', compact('AllUsine', 'IdEncryptor'));
     }
 
     public function delete(Request $request, $id)

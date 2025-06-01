@@ -16,7 +16,7 @@ class AteliersList extends Component
     public $search = '';
 
     protected $paginationTheme = 'bootstrap'; // ou 'tailwind' selon ton CSS
-    protected $listeners = ['entityAdded' => '$refresh', 'entityUpdated' => '$refresh', 'entityDeleted' => '$refresh'];
+    protected $listeners = ['refresh' => '$refresh'];
 
     public function updatingSearch()
     {

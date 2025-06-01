@@ -1,5 +1,4 @@
 <div>
-
     <div class="col-xl-12">
         <div class="shadow-lg page-title flex-wrap d-none d-xl-block">
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
@@ -67,11 +66,8 @@
                                         @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role ==
                                         'superadmin'))
                                         <center>
-                                            {{-- @include('workshop.partials.edit') --}}
-                                            {{-- Dans la boucle affichant chaque atelier dans workshop/all.blade.php
-                                                    --}}
                                             <button type="button" class="btn btn-primary mx-2"
-                                                wire:click="$dispatch('openEditModal', { entityType: 'atelier', entityId: {{ $keys->id }} }); ">
+                                                wire:click="$dispatch('openEditModal', { entityType: 'atelier',  entityId: {{ $keys->id }} }); ">
                                                 Editer
                                             </button>
 
@@ -80,12 +76,10 @@
                                                     entityType: 'atelier',
                                                     nom: '{{ $keys->nomatelier }}', 
                                                     entityId: {{ $keys->id }}, 
+                                                    entitySecond: null
                                                      })">
                                                 Supprimer
                                             </button>
-
-
-                                            {{-- @include('workshop.partials.delete') --}}
                                         </center>
                                         @endif
                                     </div>

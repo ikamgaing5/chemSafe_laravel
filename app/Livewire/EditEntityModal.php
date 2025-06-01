@@ -95,7 +95,12 @@ class EditEntityModal extends Component
             $atelier = Atelier::findOrFail($this->entityId);
 
             // Vérifier si le nom ou l'usine_id a changé
-            if ($this->nom === $this->originalNom && $this->usine_id === $this->originalUsineId) {
+            if ($this->nom === $atelier->nomatelier ) {
+                $message = "Vous n'avez pas effectué de modification";
+                $this->dispatch('entityAddedSuccess', [
+                    'type' => 'danger',
+                    'message' => $message ?? 'Entité modifiée avec succès!'
+                ]);
                 $this->dispatch('close-modal');
                 // Vous pouvez choisir d'envoyer un message d'information si rien n'a changé
                 // ou simplement ne rien faire.
@@ -113,6 +118,11 @@ class EditEntityModal extends Component
 
             // Vérifier si le nom a changé
             if ($this->nom === $this->originalNom) {
+                $message = "Vous n'avez pas effectué de modification";
+                $this->dispatch('entityAddedSuccess', [
+                    'type' => 'danger',
+                    'message' => $message ?? 'Entité modifiée avec succès!'
+                ]);
                 $this->dispatch('close-modal');
                 return;
             }
@@ -120,12 +130,12 @@ class EditEntityModal extends Component
             $usine->update([
                 'nomusine' => strtoupper($this->nom),
             ]);
-            $message = "L'usine <strong>{$this->originalNom}</strong> a été modifiée en <strong>{$this->nom}</strong> avec succès";
+            $message = "L'<strong>{$this->originalNom}</strong> a été modifiée en <strong>{$this->nom}</strong> avec succès";
         }
 
 
 
-        $this->dispatch('entityUpdated'); // Nouvel événement
+        $this->dispatch('refresh'); // Nouvel événement
 
         // Fermer la modal
         $this->dispatch('close-modal');

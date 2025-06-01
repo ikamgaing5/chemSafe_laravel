@@ -94,12 +94,24 @@
 						<li><a href="{{route('user.add')}}">Ajouter un utilisateur</a></li>
 					</ul>
 				</li>
+
+				<li>
+					<a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+						<i class="bi bi-trash-fill"></i>
+						<span class="nav-text">Corbeille</span>
+					</a>
+					<ul aria-expanded="false">
+						<li><a href="{{route('trash.workshop')}}">Ateliers</a></li>
+						<li><a href="#">Ajouter un utilisateur</a></li>
+					</ul>
+				</li>
 			@endif
 		</ul>
+		
 
-		<div class="copyright">
+		{{-- <div class="copyright">
 			<p><strong>Tableau de bord de ChemSafe</strong></p>
 			<p class="fs-12">Developpé par </p>
-		</div>
+		</div> --}}
 	</div>
 </div>

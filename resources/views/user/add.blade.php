@@ -125,7 +125,7 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == 1) {
                                                     class="required">*</span></label>
                                             <select class="default-select form-control wide " name="usine" id="usine">
                                                 <option value="none">Faites un choix</option>
-                                                @foreach ($usinesSansUtilisateur as $key)
+                                                @foreach ($usine as $key)
                                                 <option value="{{$key->id}}">{{$key->nomusine}}</option>
                                                 @endforeach
                                             </select>

@@ -26,7 +26,7 @@ class UserController extends Controller
     public function add()
     {
         $usinesSansUtilisateur = Usine::doesntHave('users')->where('active', 'true')->get();
-        $usine = Usine::where('active', 'true');
+        $usine = Usine::where('active', 'true')->get();
         return view('user.add', compact('usinesSansUtilisateur', 'usine'));
     }
 

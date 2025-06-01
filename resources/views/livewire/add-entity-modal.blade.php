@@ -8,7 +8,7 @@
                 </div>
                 <div class="modal-body">
                     <label class="form-label text-secondary">Nom :</label>
-                    <input type="text" class="form-control" wire:model="nom"> 
+                    <input type="text" class="form-control" wire:model="nom" placeholder="{{ $entityType === 'usine' ? 'Ex: Usine de XXX' : ' ' }}"> 
                     
                     @error('nom') <span class="text-danger">{{ $message }}</span> @enderror
 
