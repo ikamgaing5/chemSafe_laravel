@@ -90,7 +90,7 @@
 						<span class="nav-text">Utilisateur</span>
 					</a>
 					<ul aria-expanded="false">
-						<li><a href="#">Liste des Utilisateurs</a></li>
+						<li><a href="{{route('users.all')}}">Liste des Utilisateurs</a></li>
 						<li><a href="{{route('user.add')}}">Ajouter un utilisateur</a></li>
 					</ul>
 				</li>
@@ -109,9 +109,9 @@
 		</ul>
 		
 
-		{{-- <div class="copyright">
+		<div class="copyright">
 			<p><strong>Tableau de bord de ChemSafe</strong></p>
 			<p class="fs-12">Developpé par </p>
-		</div> --}}
+		</div>
 	</div>
 </div>

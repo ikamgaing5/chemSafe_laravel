@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use App\Models\Atelier;
+use App\Models\historique;
 use App\Models\Produit;
 use App\Models\Usine;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Auth;
 
 class DeleteEntityModal extends Component
 {
@@ -37,6 +39,13 @@ class DeleteEntityModal extends Component
                     $type = "success";
                     $message = "L'usine $usine->nomusine a bien été supprimé";
                     $usine->update(['active' => 'false']);
+                    historique::create([
+                        'usine_id' => $usine->id,
+                        'created_by' => Auth::user()->id,
+                        'type' => 0,  // 1 pour la création et 0 pour la suppression
+                        'action' => "Suppression de l'$usine->nomusine",
+                        'created_at' => now(),
+                    ]);
                 }
                 
             }elseif ($this->entityType == 'atelier') {
@@ -47,13 +56,23 @@ class DeleteEntityModal extends Component
                     $message = "Cet atelier contient au moins un produit et ne peut être supprimé";
                 }else{
                     $type = "success";
-                    $message = "L'atelier $atelier->nomatelier a bein été supprimé";
+                    $message = "L'atelier $atelier->nomatelier a bien été supprimé";
                     $atelier->update(['active' => 'false']);
+                    historique::create([
+                        'atelier_id' => $atelier->id,
+                        'created_by' => Auth::user()->id,
+                        'type' => 0,  // 1 pour la création et 0 pour la suppression
+                        'action' => "Suppression de l'atelier $atelier->nomatelier",
+                        'created_at' => now(),
+                    ]);
+
                 }
             }elseif($this->entityType == 'produit'){
-                // $produit = Produit::findOrFail($this->entityId);
+                $produit = Produit::findOrFail($this->entityId);
                 $atelier = Atelier::findOrFail($this->entitySecond);
                 $atelier->contenir()->detach($this->entityId);
+                $message = "Le produit $produit->nomprod a bien été supprimé de l'atelier $atelier->nomatelier";
+                $type = "success";
 
             }
             $this->dispatch('close-modal');

@@ -41,8 +41,6 @@ if ($current_page == 'dashboard') {
     <link href="{{asset('css/dashboard.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/all.css')}}">
 
-    <!-- <link href="/../css/style.css" rel="stylesheet"> -->
-
 
 </head>
 
@@ -70,24 +68,12 @@ if ($current_page == 'dashboard') {
         <div class="content-body">
             <div class="container-fluid">
                 <div class="row">
-                    <?php
-                    if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insertok") {
-                        echo $package->message("Le produit a été ajoutée, pensez à ajouter sa FDS dès que possible", "success");
-                    } elseif (isset($_SESSION['insertinfoFDS']) && $_SESSION['insertinfoFDS'] == true) {
-                        echo $package->message("Le produit et sa FDS ont été ajouté", "success");
-                    }
-                    unset($_SESSION['insertinfoFDS'], $_SESSION['insert'])
-                        ?>
-
-                    <?php
-                    //  require_once __DIR__ . '/../layouts/info.php'
-                     ?>
                     <div class="col-xl-12">
                         <div class="shadow-lg page-titles">
                             <div class="d-flex align-items-center flex-wrap ">
                                 <h2 class="heading">Bienvenue dans ChemSafe! <span style="color: red;">
-                                        {{Auth::user()->name}} </span>.</h2>
-                                <input type="hidden" id="id_usine" value="{{Auth::user()->usine_id}}>">
+                                        {{Auth::user()->name}}</span>.</h2>
+                                <input type="hidden" id="id_usine" value="{{Auth::user()->usine_id}}">
                             </div>
                         </div>
                     </div>
@@ -109,7 +95,7 @@ if ($current_page == 'dashboard') {
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row ">
                             <div class="col-xl-12 wow fadeInUp" data-wow-delay="2s">
                                 <div class="shadow-lg card">
                                     <div class="card-header border-0 ">
@@ -140,20 +126,19 @@ if ($current_page == 'dashboard') {
                                 </div>
                             </div>
 
-                            <div class="col-xl-6 p-0 wow fadeInUp" data-wow-delay="2s">
-                                <div class="container" style="margin-top: 0px;">
-                                    <div class="row" id="graphRow">
-                                        <div class="col-md-12">
-                                            <div class="card shadow-sm">
-                                                <div class="card-header border-0">
-                                                    <h6 class="mb-0">Répartition des dangers des produits</h6>
-                                                </div>
-
-                                                <div class="chart-container">
-                                                    <canvas id="dangerChart"></canvas>
-                                                </div>
+                            <div class="col-12 col-lg-6 mb-3 mb-lg-0  wow fadeInUp" data-wow-delay="2s">
+                                {{-- <div class="container" style="margin-top: 0px;"> --}}
+                                    <div class="shadow-lg card">
+                                    <div class="card-header border-0 ">
+                                        <h6 class="mb-0">Répartition des dangers des produits</h6>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div class="row" id="graphRow">
+                                            <div class="col-md-12">
+                                                <canvas id="dangerChart"></canvas>
                                             </div>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>

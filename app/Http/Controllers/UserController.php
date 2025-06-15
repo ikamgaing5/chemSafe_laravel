@@ -18,6 +18,12 @@ class UserController extends Controller
         return view('user.dashboard', compact('usine'));
     }
 
+
+    public function all(){
+        $message = "Liste des utilisateurs"; 
+        return view('user.all', ['title' => 'Liste des utilisateurs'], compact('message'));
+    }
+
     public function home()
     {
         return view('index', ['title' => 'ChemSafe']);
@@ -45,7 +51,7 @@ class UserController extends Controller
                 'username.unique' => 'Ce nom d\'utilisateur est déjà utilisé.',
                 'password.regex' => 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.',
                 'password_confirmation.same' => 'Les mots de passe ne correspondent pas.',
-                'usine.exists' => 'L\'usine sélectionnée n\'existe pas.'
+                // 'usine.exists' => 'L\'usine sélectionnée n\'existe pas.'
             ]);
 
             // Création de l'utilisateur

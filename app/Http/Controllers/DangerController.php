@@ -157,7 +157,8 @@ class DangerController extends Controller
     public function getProductByDanger($iddanger){
         $IdEncryptor = IdEncryptor::class;
         $iddanger = IdEncryptor::decode($iddanger);
-        $danger = Danger::where('id', $iddanger)->with('produit')->first();
+        // $danger = Danger::where('id', $iddanger)->with('produit')->first();
+        $danger = Danger::with('produit')->findOrFail($iddanger);
         if($danger->nomdanger == "AUCUN DANGER"){
             $message = "Liste des produits sans danger.";
         }else{

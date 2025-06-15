@@ -1,7 +1,3 @@
-<?php 
-
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -49,9 +45,7 @@
                 <!-- container starts -->
                 <div class="container-fluid">
                     <div class="demo-view">
-                    <?php  
-                        foreach ($all as $key) {
-                    ?>
+                    @foreach ($all as $key) 
                         <div class="col-xl-12">
                             <div class="container-fluid pt-0 ps-0  pe-0">		
                                 <div class="shadow-lg card" id="accordion-one">
@@ -91,7 +85,19 @@
                                                                 
                                                                 <td><span class="text-primary font-w600">{{date('H\hi', strtotime($keys->time))}}</span></td>
                                                                 <td>
-                                                                    <div class="mb-0">{{$keys->action}}</div>
+                                                                    @php
+                                                                        if ($keys->action == 'Connexion') {
+                                                                            
+                                                                            $color = "success";
+                                                                        } elseif ($keys->action == 'Deconnexion') {
+                                                                            $color = "danger";
+                                                                            
+                                                                        } else {
+                                                                            $color = "warning";
+                                                                            
+                                                                        }
+                                                                    @endphp
+                                                                    <div class="mb-0"><span class="fs-6 badge badge-{{$color}}">{{$keys->action}}</span></div>
                                                                 </td>
                                                             </tr>
                                                             @endforeach 
@@ -104,7 +110,7 @@
                                 </div>
                             </div>
                         </div>	
-                    <?php } ?>
+                    @endforeach
                     </div>			
                 </div>
             </div>

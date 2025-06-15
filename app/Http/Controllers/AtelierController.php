@@ -22,7 +22,7 @@ class AtelierController extends Controller
     {
         $IdEncryptor = IdEncryptor::class;
         $idusine = $IdEncryptor::decode($idusine);
-        $usine = Usine::find($idusine);
+        $usine = Usine::findOrFail($idusine);
         $workshop = Atelier::withCount([
             'contenir',
             'produitSansFds'

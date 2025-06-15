@@ -15,6 +15,7 @@ class Danger extends Model
      */
     protected $table = 'danger';
     protected $fillable = [
+        'photo',
         'nomdanger'
     ];
     public $timestamps = false;

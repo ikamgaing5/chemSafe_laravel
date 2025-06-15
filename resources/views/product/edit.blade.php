@@ -55,10 +55,10 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xl-3 col-lg-4">
-                                            <?php
+                                            @php
                                                 $photoPath = "{{ asset('storage/' . $infoproduit->photo) }}";
                                                 $pdfPath = "{{ asset('storage/' . $infoproduit->photo) }}";
-                                            ?>
+                                            @endphp
                                             <label style="font-weight: 700;" class="form-label text-primary">Photo<span
                                                     class="required">*</span></label>
                                             <div class="avatar-upload">

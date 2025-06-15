@@ -3,16 +3,17 @@
     <button type="button" class="btn btn-danger shadow btn-xs sharp me-1" wire:click="openModal">
         <i class="bi bi-trash"></i>
     </button>
+    
     <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <form wire:submit="delete">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5">Suppression d'un produit </h1>
+                        <h1 class="modal-title fs-5">Suppression d'un produit</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
-                    <div class="modal-body" style="word-break: break-word;">
-                        Voulez-vous réellement supprimer {{ $nomprod }} de l'atelier {{$nomatelier}} ?
+                    <div class="modal-body" style="word-wrap: break-word; word-break: break-word; overflow-wrap: break-word; white-space: normal; max-width: 100%;">
+                        Voulez-vous réellement supprimer <strong>{{ $nomprod }}</strong> de l'atelier <strong>{{ $nomatelier }}</strong> ?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

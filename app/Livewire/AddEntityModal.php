@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\historique;
 use Livewire\Component;
 use App\Models\Atelier;
 use App\Models\Usine;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class AddEntityModal extends Component
@@ -56,16 +58,31 @@ class AddEntityModal extends Component
         $this->validate();
 
         if ($this->entityType === 'atelier') {
-            Atelier::create([
+            $atelier = Atelier::create([
                 'nomatelier' => strtoupper($this->nom),
                 'usine_id' => $this->usine_id,
 
             ]);
+            
+            historique::create([
+                'atelier_id' => $atelier->id,
+                'created_by' => Auth::user()->id,
+                'type' => 1,  // 1 pour la création et 0 pour la suppression
+                'action' => "Création de l'atelier $atelier->nomatelier",
+                'created_at' => now(),
+            ]);
             $nom = strtoupper($this->nom);
             $entite = "Atelier <strong>$nom</strong> a bien été ajouté";
         } elseif ($this->entityType === 'usine') {
-            Usine::create([
+            $usine = Usine::create([
                 'nomusine' => strtoupper($this->nom),
+            ]);
+            historique::create([
+                'usine_id' => $usine->id,
+                'created_by' => Auth::user()->id,
+                'type' => 1,  // 1 pour la création et 0 pour la suppression
+                'action' => "Création de l'$usine->nomusine",
+                'created_at' => now(),
             ]);
             $nom = strtoupper($this->nom);
             $entite = "Usine <strong>$nom</strong> a bien été ajoutée";

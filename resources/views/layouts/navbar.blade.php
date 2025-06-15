@@ -58,7 +58,7 @@
 					</div>
 				</div>
 				<ul class="navbar-nav header-right">
-					<li class="nav-item dropdown notification_dropdown all">
+					{{-- <li class="nav-item dropdown notification_dropdown all">
 						<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
 							<svg height="24" class="svg-main-icon" viewBox="0 0 32 32" width="24"
 								xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -73,40 +73,8 @@
 							</svg>
 						</a>
 
-					</li>
-					<li class="nav-item dropdown notification_dropdown search-area-header">
-						<a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown">
-							<svg width="24" height="24" viewBox="0 0 32 32" fill="none"
-								xmlns="http://www.w3.org/2000/svg">
-								<path
-									d="M27.6 25.8L22 20.2C23.3 18.5 24.1 16.4 24.1 14.1C24.1 8.60001 19.6 4.10001 14.1 4.10001C8.6 4.10001 4 8.60001 4 14.1C4 19.6 8.5 24.1 14 24.1C16.3 24.1 18.5 23.3 20.2 21.9L25.8 27.5C26 27.7 26.4 27.9 26.7 27.9C27 27.9 27.3 27.8 27.6 27.5C28.1 27.1 28.1 26.3 27.6 25.8ZM6.5 14.1C6.5 10 9.9 6.60001 14 6.60001C18.1 6.60001 21.5 10 21.5 14.1C21.5 18.2 18.1 21.6 14 21.6C9.9 21.6 6.5 18.3 6.5 14.1Z"
-									fill="#FFFFFF" />
-							</svg>
-
-						</a>
-						<div class="dropdown-menu dropdown-menu-end p-0 rounded">
-							<div class="card mb-0">
-								<div class="card-body px-0">
-									<div class="px-3">
-										<div class="input-group search-area w-100">
-											<input type="text" class="form-control" placeholder="Rechercher ici...">
-											<span class="input-group-text"><a href="javascript:void(0)">
-													<svg width="15" height="15" viewBox="0 0 18 18" fill="none"
-														xmlns="http://www.w3.org/2000/svg">
-														<path
-															d="M17.5605 15.4395L13.7527 11.6317C14.5395 10.446 15 9.02625 15 7.5C15 3.3645 11.6355 0 7.5 0C3.3645 0 0 3.3645 0 7.5C0 11.6355 3.3645 15 7.5 15C9.02625 15 10.446 14.5395 11.6317 13.7527L15.4395 17.5605C16.0245 18.1462 16.9755 18.1462 17.5605 17.5605C18.1462 16.9747 18.1462 16.0252 17.5605 15.4395V15.4395ZM2.25 7.5C2.25 4.605 4.605 2.25 7.5 2.25C10.395 2.25 12.75 4.605 12.75 7.5C12.75 10.395 10.395 12.75 7.5 12.75C4.605 12.75 2.25 10.395 2.25 7.5V7.5Z"
-															fill="#01A3FF"></path>
-													</svg>
-												</a></span>
-										</div>
-										<h6 class="my-2 mt-3">Recherche recentes:</h6>
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</li>
-
+					</li> --}}
+{{-- 
 					<li class="nav-item dropdown notification_dropdown">
 						<a class="nav-link bell dz-theme-mode" href="javascript:void(0);">
 							<i id="icon-light-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -147,7 +115,7 @@
 									style="stroke-dasharray: 37, 57; stroke-dashoffset: 0;"></path>
 							</svg>
 						</a>
-					</li>
+					</li> --}}
 
 					<li class="nav-item">
 						<div class="dropdown header-profile2">

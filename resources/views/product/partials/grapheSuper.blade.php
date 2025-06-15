@@ -1,10 +1,5 @@
-@php
-// use App\Helpers\IdEncryptor;
-    // $encryptedId = IdEncryptor::encode($danger->id);
-@endphp
-
 <script>
-console.log('Js Présent');
+// console.log('Js Présent');
 
 $(function() {
     // Vérifier si l'appareil est mobile
@@ -19,7 +14,7 @@ $(function() {
         method: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.log('Données reçues:', data); // Debug
+            // console.log('Données reçues:', data); // Debug
 
             if (data.length >= 3) {
                 $('#graphRow').show();

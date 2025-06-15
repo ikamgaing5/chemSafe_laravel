@@ -84,7 +84,14 @@
                                                                 
                                                                 <td><span class="text-primary font-w600">{{$keys->atelier->nomatelier}}</span></td>
                                                                 <td>
-                                                                    <div class="mb-0">{{$keys->action}}</div>
+                                                                    @php
+                                                                        if ($keys->type == 0) {
+                                                                            $color = "danger";
+                                                                        }else {
+                                                                            $color = "success";
+                                                                        }
+                                                                    @endphp
+                                                                    <div class="mb-0"><span class="fs-6 badge badge-{{$color}}">{{$keys->action}}</span></div>
                                                                 </td>
                                                             </tr>
                                                             @endforeach

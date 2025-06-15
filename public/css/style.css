@@ -1,6 +1,12 @@
 /*
     Table of Contents
 
+    Name                 : Akadmi
+    Author               : DexignLab
+    Author Portfolio     : https://themeforest.net/user/dexignlab/portfolio
+    
+
+
     Table of Sass Contents
     1. Abstracts
         _bs-custom
@@ -46,7 +52,7 @@
         _page-user-lock
 
 */
-/* 
+
 @import url("../icons/simple-line-icons/css/simple-line-icons.css");
 @import url("../icons/fontawesome/css/all.min.css");
 @import url("../icons/material-design-iconic-font/css/materialdesignicons.min.css");
@@ -60,7 +66,7 @@
 @import url("../vendor/animate/animate.min.css");
 @import url("../vendor/aos/css/aos.min.css");
 @import url("../vendor/perfect-scrollbar/css/perfect-scrollbar.css");
-@import url("../vendor/metismenu/css/metisMenu.min.css"); */
+@import url("../vendor/metismenu/css/metisMenu.min.css");
 :root {
   --primary: #4d44b5;
   --secondary: #fb7d5b;

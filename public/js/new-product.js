@@ -100,6 +100,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Veuillez sélectionner au moins un atelier.";
         }
 
+        const selectedNature = Array.from(nature.selectedOptions).map(
+            (option) => option.value
+        );
+        const isValidNature =
+            selectedNature.length > 0 && !selectedNature.includes("none");
+        if (isValidNature) {
+            validationStates.temoinNature = true;
+            messageNature.style.display = "none";
+        } else {
+            validationStates.temoinNature = false;
+            messageNature.style.display = "block";     
+            messageNature.textContent =
+                "Veuillez sélectionner au moins une nature de produit.";
+        }
+
+
         // Validation du risque
         if (risque.value.trim() !== "") {
             validationStates.temoinRisque = true;
@@ -120,15 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
             messageFabriquant.textContent = "Ce champ est obligatoire.";
         }
 
-        // Validation de la nature
-        if (nature.value.trim() !== "") {
-            validationStates.temoinNature = true;
-            messageNature.style.display = "none";
-        } else {
-            validationStates.temoinNature = false;
-            messageNature.style.display = "block";
-            messageNature.textContent = "Ce champ est obligatoire.";
-        }
+
 
         // Validation de l'utilisation
         if (utilisation.value.trim() !== "") {
@@ -219,15 +227,15 @@ document.addEventListener("DOMContentLoaded", function () {
         submitButton.disabled = !Object.values(validationStates).every(Boolean);
     });
 
-    document.querySelector("form").addEventListener("submit", function (e) {
-        checkValidation(); // Vérification des champs avant soumission
-        if (!Object.values(validationStates).every(Boolean)) {
-            e.preventDefault(); // Empêcher la soumission si un champ est invalide
-            alert(
-                "Veuillez remplir correctement tous les champs obligatoires."
-            );
-        }
-    });
+    // document.querySelector("form").addEventListener("submit", function (e) {
+    //     checkValidation(); // Vérification des champs avant soumission
+    //     if (!Object.values(validationStates).every(Boolean)) {
+    //         e.preventDefault(); // Empêcher la soumission si un champ est invalide
+    //         alert(
+    //             "Veuillez remplir correctement tous les champs obligatoires."
+    //         );
+    //     }
+    // });
 
     // Validation des champs à la saisie de l'utilisateur
     nom.addEventListener("input", function () {

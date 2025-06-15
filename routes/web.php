@@ -17,8 +17,10 @@ Route::post('/', [UserController::class, 'login'])->name('logins');
 
 Route::middleware(['auth.middle'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/user/new-user/', [UserController::class, 'add'])->name('user.add');
+    Route::get('/user/new-user', [UserController::class, 'add'])->name('user.add');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
+    Route::get('/user/all-users', [usercontroller::class, 'all'])->name('users.all');
 
     Route::get('/workshop/all-products/{idatelier}', [ProduitController::class, 'allByWorkshop'])->name('product.forworkshop');
     Route::get('/product/new-product', [ProduitController::class, 'add'])->name('product.add');

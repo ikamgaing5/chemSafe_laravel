@@ -32,86 +32,86 @@
     <script src="/js/all.js"></script>
 
     <style>
-    /* Styles pour le graphique et la légende */
-    .chart-container {
-        position: relative;
-        height: 400px;
-        width: 100%;
-    }
-
-    .custom-legend {
-        padding: 15px;
-        border-radius: 5px;
-        background-color: #f8f9fa;
-    }
-
-    .legend-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #333;
-    }
-
-    .legend-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-        cursor: pointer;
-        padding: 5px;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-    }
-
-    .legend-item:hover {
-        background-color: #e9ecef;
-    }
-
-    .legend-color {
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        margin-right: 10px;
-    }
-
-    .legend-text {
-        font-size: 0.9rem;
-        color: #495057;
-    }
-
-    /* Styles responsifs */
-    @media (max-width: 768px) {
+        /* Styles pour le graphique et la légende */
         .chart-container {
-            height: 300px;
+            position: relative;
+            height: 400px;
+            width: 100%;
         }
 
-        .legend-container-mobile {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+        .custom-legend {
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+
+        .legend-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
         }
 
         .legend-item {
-            flex: 0 0 calc(50% - 8px);
+            display: flex;
+            align-items: center;
             margin-bottom: 8px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .legend-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 10px;
         }
 
         .legend-text {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            color: #495057;
         }
-    }
 
-    /* Styles pour le tableau des dangers */
-    .has-tooltip {
-        cursor: help;
-    }
+        /* Styles responsifs */
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
 
-    #dangersList .table th {
-        background-color: #f8f9fa;
-    }
+            .legend-container-mobile {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
 
-    #dangersList .table td {
-        vertical-align: middle;
-    }
+            .legend-item {
+                flex: 0 0 calc(50% - 8px);
+                margin-bottom: 8px;
+            }
+
+            .legend-text {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Styles pour le tableau des dangers */
+        .has-tooltip {
+            cursor: help;
+        }
+
+        #dangersList .table th {
+            background-color: #f8f9fa;
+        }
+
+        #dangersList .table td {
+            vertical-align: middle;
+        }
     </style>
 
 </head>
@@ -136,9 +136,13 @@
         <div class="content-body">
             <!-- container starts -->
             <div class="container-fluid">
-
+                {{--
                 @if (session('deletesuccess'))
                 {!!session('deletesuccess')!!}
+                @endif --}}
+
+                @if (session('addFromWorkshop'))
+                    {!!session('addFromWorkshop')!!}
                 @endif
 
 
@@ -152,12 +156,12 @@
                                             bord</a></u>
                                     <i class="bi bi-caret-right-fill"></i>
                                     @if (Auth::user()->role == "superadmin")
-                                    <u>
-                                        <a href="{{route('all-factorie')}}" class="text-primary fw-bold fs-5">
-                                            Nos Usines
-                                        </a>
-                                    </u>
-                                    <i class="bi bi-caret-right-fill"></i>
+                                        <u>
+                                            <a href="{{route('all-factorie')}}" class="text-primary fw-bold fs-5">
+                                                Nos Usines
+                                            </a>
+                                        </u>
+                                        <i class="bi bi-caret-right-fill"></i>
                                     @endif
                                     <u><a href="/workshop/all-workshop/{{$IdEncryptor::encode($atelier->usine->id)}} "
                                             class="text-primary fw-bold fs-5">{{$atelier->usine->nomusine}}</a></u>
@@ -176,6 +180,8 @@
                                     </a></u>
                             </div>
                         </div>
+
+                        <div id="alertContainer"></div>
 
                         <div class="row" data-idatelier="{{ $atelier->id }}" id="graphRow" style="display: none;">
                             <div class="col-xl-8 col-md-8 col-sm-12">
@@ -212,148 +218,64 @@
                             </div>
                         </div>
 
-                        <div class="container-fluid pt-0 ps-0  pe-0">
-                            <div class="shadow-lg card" id="accordion-one">
-                                <div class="card-header flex-wrap px-3">
-                                    <div>
-                                        <h6 class="card-title">Produits / Liste des Produits</h6>
-                                        <p class="m-0 subtitle">Ici vous pouvez voir tous les produits enregistrés dans
-                                            l'atelier <strong>{{$atelier->nomatelier}}</strong></p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <ul class="nav nav-tabs dzm-tabs" id="myTab" role="tablist">
 
-                                            <li class="nav-item " role="presentation">
 
-                                                <div class="d-flex">
-                                                    @include('product.partials.add')
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!--tab-content-->
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="Preview" role="tabpanel"
-                                        aria-labelledby="home-tab">
-                                        <div class="shadow-lg card-body p-0">
-                                            <div class="table-responsive">
-                                                <table id="basic-btn" class="display table table-striped"
-                                                    style="min-width: 845px">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Nom du produit</th>
-                                                            <th>Type d'emballage</th>
-                                                            <th>Info FDS</th>
-                                                            <th>Photo</th>
-                                                            <th>FDS</th>
-                                                            @if (Auth::user()->role != 'user')
-                                                            <th class="text-end">Action</th>
-                                                            @endif
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @if ($produits->count() <= 0) <tr>
-                                                            <td colspan='6'>Aucun produit enregistré. </td>
-                                                            </tr>
-                                                            @else
-                                                            @foreach ($produits as $prod)
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="trans-list">
-                                                                        <h4>{{$prod->nomprod}}</h4>
-                                                                    </div>
-                                                                </td>
-                                                                <td><span
-                                                                        class="text-primary font-w600">{{$prod->type_emballage}}
-                                                                    </span>
-                                                                </td>
-                                                                <td>
-                                                                    <a href="{{route('product.one', [$IdEncryptor::encode($prod->id)])}}"
-                                                                        class="btn btn-secondary shadow btn-xs sharp me-1">
-                                                                        <i class="bi bi-info-circle-fill"></i>
-                                                                    </a>
-                                                                </td>
-                                                                <td>
-                                                                    @include('product.partials.photo')
-                                                                </td>
-                                                                <td>
-                                                                    @include('product.partials.fds')
-                                                                </td>
-                                                                @if (Auth::user()->role != 'user')
-                                                                <td>
-                                                                    <div class="d-flex">
-                                                                        <livewire:delete-product :idproduit="$prod->id"
-                                                                            :idatelier="$atelier->id"
-                                                                            :nomatelier="$atelier->nomatelier"
-                                                                            :nomprod="$prod->nomprod" />
-                                                                        {{-- @include('product.partials.delete') --}}
-                                                                    </div>
-                                                                </td>
-                                                                @endif
-                                                            </tr>
-                                                            @endforeach
-                                                            @endif
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!--tab-content-->
+                        <livewire:list-produit :atelier_id="$atelier->id" />
+                        <livewire:delete-entity-modal />
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+    </div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let produit = document.getElementById('produit');
-        let submitBtn = document.getElementById('submitBtn');
-        let messageProduit = document.getElementById('messageProduit');
+        document.addEventListener('DOMContentLoaded', function () {
+            let produit = document.getElementById('produit');
+            let submitBtn = document.getElementById('submitBtn');
+            let messageProduit = document.getElementById('messageProduit');
 
 
-        function validateSelection() {
-            const selectedProduit = Array.from(produit.selectedOptions).map(option => option.value);
-            const isValidProduit = selectedProduit.length > 0 && !selectedProduit.includes("none");
+            function validateSelection() {
+                const selectedProduit = Array.from(produit.selectedOptions).map(option => option.value);
+                const isValidProduit = selectedProduit.length > 0 && !selectedProduit.includes("none");
 
-            if (isValidProduit) {
-                submitBtn.disabled = false;
-                messageProduit.style.display = 'none';
-            } else {
-                submitBtn.disabled = true;
-                messageProduit.style.display = 'block';
-                messageProduit.textContent = 'Veuillez sélectionner au moins un produit.';
+                if (isValidProduit) {
+                    submitBtn.disabled = false;
+                    messageProduit.style.display = 'none';
+                } else {
+                    submitBtn.disabled = true;
+                    messageProduit.style.display = 'block';
+                    messageProduit.textContent = 'Veuillez sélectionner au moins un produit.';
+                }
             }
-        }
 
-        // Écouteur d'événement
-        produit.addEventListener('change', validateSelection);
+            // Écouteur d'événement
+            produit.addEventListener('change', validateSelection);
 
-        // Validation initiale au chargement
-        validateSelection();
-    });
+            // Validation initiale au chargement
+            validateSelection();
+        });
     </script>
     <script>
-    window.addEventListener('entityAddedSuccess', event => {
-        let detail = event.detail;
+        window.addEventListener('entityAddedSuccess', event => {
+            let detail = event.detail;
 
-        // Tenter d'accéder aux données de différentes manières
-        let type = (detail[0].type) || undefined;
-        let message = (detail[0].message) || undefined;
+            // Tenter d'accéder aux données de différentes manières
+            let type = (detail[0].type) || undefined;
+            let message = (detail[0].message) || undefined;
 
-        console.log(detail)
-        if (type === undefined || message === undefined) {
-            console.error('Could not extract type or message from event.detail');
-            return; // Ne pas continuer si les données manquent
-        }
+            if (type === undefined || message === undefined) {
+                console.error('Could not extract type or message from event.detail');
+                return; // Ne pas continuer si les données manquent
+            }
 
-        const icon = type === 'success' ?
-            `<svg viewBox='0 0 24 24' width='24' height='24' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' class='me-2'><polyline points='9 11 12 14 22 4'></polyline><path d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'></path></svg>` :
-            `<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+            const icon = type === 'success' ?
+                `<svg viewBox='0 0 24 24' width='24' height='24' stroke='currentColor' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round' class='me-2'><polyline points='9 11 12 14 22 4'></polyline><path d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'></path></svg>` :
+                `<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
 
-        const alertHTML = `
+            const alertHTML = `
             <div class='mx-1'>
                 <div class='alert alert-${type} solid alert-dismissible fade show'>
                     ${icon} <strong>${type === 'success' ? 'Succès' : 'Échec'} !</strong> ${message} !
@@ -361,42 +283,42 @@
                 </div>
             </div>`;
 
-        const container = document.createElement('div');
-        container.innerHTML = alertHTML;
+            const container = document.createElement('div');
+            container.innerHTML = alertHTML;
 
-        // Insérer l'alerte dans le conteneur dédié
-        const alertContainer = document.getElementById('alertContainer');
-        if (alertContainer) {
-            alertContainer.innerHTML = ''; // Nettoyer le conteneur
-            alertContainer.appendChild(container);
-        } else {
-            document.body.prepend(container);
-        }
+            // Insérer l'alerte dans le conteneur dédié
+            const alertContainer = document.getElementById('alertContainer');
+            if (alertContainer) {
+                alertContainer.innerHTML = ''; // Nettoyer le conteneur
+                alertContainer.appendChild(container);
+            } else {
+                document.body.prepend(container);
+            }
 
-        // Supprimer l'alerte après 10 secondes
-        setTimeout(() => {
-            container.remove();
-        }, 10000);
-    });
+            // Supprimer l'alerte après 10 secondes
+            setTimeout(() => {
+                container.remove();
+            }, 10000);
+        });
 
-    window.addEventListener('close-modal', () => {
-        const modalEl = document.getElementById('deleteModal');
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        window.addEventListener('close-modal', () => {
+            const modalEl = document.getElementById('deleteModal');
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
 
-        // Délai pour s'assurer que le focus quitte l'input avant que le modal soit caché
-        setTimeout(() => {
-            modal.hide();
+            // Délai pour s'assurer que le focus quitte l'input avant que le modal soit caché
+            setTimeout(() => {
+                modal.hide();
 
-            // Déplacer le focus ailleurs (par ex. sur un bouton de la page)
-            document.activeElement.blur();
-        }, 100);
-    });
+                // Déplacer le focus ailleurs (par ex. sur un bouton de la page)
+                document.activeElement.blur();
+            }, 100);
+        });
 
-    window.addEventListener('open-delete-modal', () => {
-        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        console.log('modal delete')
-        modal.show();
-    });
+        window.addEventListener('open-delete-modal', () => {
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            console.log('modal delete')
+            modal.show();
+        });
     </script>
 
     <script src="{{asset('vendor/chart.js/Chart.bundle.min.js')}}"></script>

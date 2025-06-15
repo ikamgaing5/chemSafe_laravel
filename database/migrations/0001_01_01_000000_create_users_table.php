@@ -57,6 +57,7 @@ return new class extends Migration {
 
         schema::create('danger', function (Blueprint $table) {
             $table->id();
+            $table->string('photo');
             $table->string('nomdanger');
         });
 

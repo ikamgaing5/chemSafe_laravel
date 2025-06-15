@@ -33,7 +33,7 @@ class ProduitController extends Controller
             });
         })->get();
 
-        $atelier = Atelier::with('usine')->find($idatelier);
+        $atelier = Atelier::with('usine')->findOrFail($idatelier);
 
         $produitsSansAtelier = Produit::whereDoesntHave('atelier', function ($query) use ($idatelier) {
             $query->where('atelier_id', $idatelier);
@@ -345,7 +345,7 @@ class ProduitController extends Controller
         ]);
 
         if ($temoinFDS) {
-            return redirect()->route('infofds.add', $produit->id);
+            return redirect()->route('infofds.add', IdEncryptor::encode($produit->id));
         } else {
             return redirect()->back()->with('success', AlertHelper::message("Le produit $request->nomprod a bien été enregistré", "success"));
         }
@@ -374,8 +374,10 @@ class ProduitController extends Controller
     public function one($idproduit)
     {
         $idproduit = IdEncryptor::decode($idproduit);
-        $prod = Produit::with('danger', 'infofds')->find($idproduit);
-        return view('product.one', compact('prod'));
+        $prod = Produit::with('danger', 'infofds')->findOrFail($idproduit);
+        $message = "Informations du produit $prod->nomprod.";
+        $IdEncryptor = IdEncryptor::class;
+        return view('product.one', compact('prod', 'message', 'IdEncryptor'));
     }
 
     public function edit($idproduit)
@@ -396,7 +398,7 @@ class ProduitController extends Controller
             'nomprod' => ['required', 'string', 'max:255', Rule::unique('produit', 'nomprod')->ignore($idproduit)],
             'type_emballage' => ['required', 'string', 'max:255'],
             'poids' => ['required', 'string', 'max:255'],
-            'nature' => ['required', 'string', 'max:255'],
+            'nature' => 'required|array',
             'utilisation' => ['required', 'string', 'max:255'],
             'fabricant' => ['required', 'string', 'max:255'],
             'photo' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,gif'],
@@ -462,7 +464,8 @@ class ProduitController extends Controller
         $produit->danger()->sync($request->input('danger'));
         // dd($produit->photo);
 
-        return redirect()->back()->with('successEdit', AlertHelper::message("Le produit $request->nomprod a bien été modifié", "success"));
+        // return redirect()->back()->with('successEdit', AlertHelper::message("Le produit $request->nomprod a bien été modifié", "success"));
+        return redirect()->route('product.one', IdEncryptor::encode($produit->id))->with('successEdit', AlertHelper::message("Le produit $request->nomprod a bien été modifié", "success"));
     }
 
 }

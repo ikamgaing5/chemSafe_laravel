@@ -13,7 +13,7 @@ class InfofdsController extends Controller
        public function add(Request $request, $idproduit)
        {
               $idproduit = IdEncryptor::decode($idproduit);
-              $produit = Produit::find($idproduit);
+              $produit = Produit::findOrFail($idproduit);
               return view('infofds.add', compact('idproduit', 'produit'));
        }
 
@@ -46,12 +46,15 @@ class InfofdsController extends Controller
                      'secours' => strtoupper($request->input('secours')),
                      'epi' => strtoupper($request->input('epi')),
               ]);
-              return redirect()->back()->with('addFDSSuccess', AlertHelper::message("Les informations de la FDS ont été bien enregistrées", "success"));
+              // $prod = Produit::findOrFail($infoFds->produit_id);
+              // return redirect()->back()->with('addFDSSuccess', AlertHelper::message("Les informations de la FDS ont été bien enregistrées", "success"));
+              return redirect()->route('product.one', [IdEncryptor::encode($infoFds->produit_id)])->with('addFDSSuccess', AlertHelper::message("Les informations de la FDS ont été bien enregistrées", "success"));
 
        }
 
        public function edit($id)
        {
+              $id = IdEncryptor::decode($id);
               $fds = FDS::with('produit')->findOrFail($id);
               return view('infofds.edit', compact('fds'));
        }
@@ -87,6 +90,6 @@ class InfofdsController extends Controller
                      'epi' => strtoupper($request->input('epi')),
               ]);
 
-              return redirect()->route('product.one', [$infofds->produit_id])->with('updateInfoFDS', AlertHelper::message("Les informations de la FDS ont bien été modifiées", "success"));
+              return redirect()->route('product.one', [IdEncryptor::encode($infofds->produit_id)])->with('updateInfoFDS', AlertHelper::message("Les informations de la FDS ont bien été modifiées", "success"));
        }
 }

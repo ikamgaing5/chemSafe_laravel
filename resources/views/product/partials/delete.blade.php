@@ -1,7 +1,7 @@
-<a class="btn btn-danger shadow btn-xs sharp me-1" href="#supp{{$prod->id}}"
+<button class="btn btn-danger shadow btn-xs sharp me-1" href="#supp{{$prod->id}}"
     data-bs-toggle="modal" data-bs-target="#supp{{$prod->id}}">
     <i class="bi bi-trash"></i>
-</a>
+</button>
 <div class="modal fade " id="supp{{$prod->id}}" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel{{$prod->id}}" aria-hidden="true">

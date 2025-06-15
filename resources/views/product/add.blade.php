@@ -6,24 +6,8 @@ $current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 if ($current_page == 'product/new-product') {
     $message = 'Ajouter un nouveau produit.';
 }
-// $message = 'Ajouter un nouveau produit.';
-if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonPhoto") {
-    $photo = $_SESSION['insert']['insert'];
-    $nomproduit = $produit->getNameByPhoto($conn, $photo);
-}
-
-if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonsFDS") {
-    $fds = $_SESSION['insert']['insert'];
-    $nomproduitFDS = $produit->getNameByFDS($conn, $fds);
-}
-
-if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insertok") {
-    if (isset($_SESSION['insert']['info']) && $_SESSION['insert']['info']['DispoFDS'] == 'oui') {
-        $id = $_SESSION['insert']['id'];
-    }
 
 
-}
 // die();
 ?>
 <!DOCTYPE html>
@@ -40,6 +24,10 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
     <link rel="stylesheet" href="/vendor/bootstrap-select-country/css/bootstrap-select-country.min.css">
     <link rel="stylesheet" href="/vendor/jquery-nice-select/css/nice-select.css">
     <link href="/vendor/datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=experiment" />
@@ -72,46 +60,46 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
 
         @include('layouts.navbar')
         @include('layouts.sidebar')
-        
+
         <form action="{{route('product.addPost')}}" enctype="multipart/form-data" method="POST">
             @csrf
             <div class="content-body">
                 <div class="container-fluid">
                     <div class="row">
                         @if (session('success'))
-                            {!!session('success')!!}
+                        {!!session('success')!!}
                         @endif
                         <?php
-                        if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insertfalse") {
-                            $message = "Problème lors de l'insertion";
-                            echo $package->message($message, "danger");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insertok") {
-                            $message = "Le produit a été ajoutée, n'oubliez pas d'enregistrer sa FDS dès que possible";
-                            echo $package->message($message, "success");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonProduit") {
-                            $message = "Ce Produit existe déjà ";
-                            echo $package->message($message, "danger");
-                            // 
-                            // echo $package -> message($message,$type);
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "erreur uploadphoto") {
-                            $message = "Problème lors de l'envoie de la photo";
-                            echo $package->message($message, "danger");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "volumineux") {
-                            $message = "Fichier trop volumineux";
-                            echo $package->message($message, "danger");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonPhoto") {
-                            $message = "Cette photo est déjà associée au produit <strong>$nomproduit</strong>";
-                            echo $package->message($message, "danger");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "erreur upload fds") {
-                            $message = "Erreur lors de la sauvegarde de la FDS";
-                            echo $package->message($message, "danger");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "extensionFDS") {
-                            $message = "Veuillez choisir un fichier d'extendion <strong>.pdf</strong>";
-                            echo $package->message($message, "danger");
-                        } elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonsFDS") {
-                            $message = "Cette FDS est déjà associée au produit <strong>$nomproduitFDS</strong>";
-                            echo $package->message($message, "danger");
-                        }
+if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insertfalse") {
+    $message = "Problème lors de l'insertion";
+    echo $package->message($message, "danger");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insertok") {
+    $message = "Le produit a été ajoutée, n'oubliez pas d'enregistrer sa FDS dès que possible";
+    echo $package->message($message, "success");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonProduit") {
+    $message = "Ce Produit existe déjà ";
+    echo $package->message($message, "danger");
+    // 
+    // echo $package -> message($message,$type);
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "erreur uploadphoto") {
+    $message = "Problème lors de l'envoie de la photo";
+    echo $package->message($message, "danger");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "volumineux") {
+    $message = "Fichier trop volumineux";
+    echo $package->message($message, "danger");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonPhoto") {
+    $message = "Cette photo est déjà associée au produit <strong>$nomproduit</strong>";
+    echo $package->message($message, "danger");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "erreur upload fds") {
+    $message = "Erreur lors de la sauvegarde de la FDS";
+    echo $package->message($message, "danger");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "extensionFDS") {
+    $message = "Veuillez choisir un fichier d'extendion <strong>.pdf</strong>";
+    echo $package->message($message, "danger");
+} elseif (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "doublonsFDS") {
+    $message = "Cette FDS est déjà associée au produit <strong>$nomproduitFDS</strong>";
+    echo $package->message($message, "danger");
+}
                         ?>
 
                         <div class="col-xl-12">
@@ -132,8 +120,8 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                 </div>
 
 
-                                                <input type="file" required name="photo"
-                                                    class="form-control d-none" accept="image/*" id="photo">
+                                                <input type="file" required name="photo" class="form-control d-none"
+                                                    accept="image/*" id="photo">
                                                 <label style="font-weight: 700;" for="photo"
                                                     class="btn btn-primary mt-2 btn-sm">Choisir la photo</label>
                                                 <a href="javascript:void"
@@ -149,9 +137,7 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                             class="form-label text-primary">Nom du produit<span
                                                                 class="required">*</span></label>
                                                         <input type="text" class="form-control" name="nomprod" id="nom"
-                                                            placeholder="Le nom du produit" value="<?php if (isset($_SESSION['insert']['info'])) {
-                                                                echo $_SESSION['insert']['info']['nom'];
-                                                            } ?>">
+                                                            placeholder="Le nom du produit" :value="old('nomprod')">
                                                         <span class="fw-bold text-danger" id="messageNom"
                                                             style="display: none;"></span>
                                                     </div>
@@ -162,18 +148,16 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                             produit<span class="required">*</span></label>
                                                         <div class="d-flex">
                                                             <div class="d-flex flex-column">
-                                                                <input type="text" class="form-control" name="type_emballage"
-                                                                    placeholder="Type d'Emballage" id="emballage" value="<?php if (isset($_SESSION['insert']['info'])) {
-                                                                        echo $_SESSION['insert']['info']['emballage'];
-                                                                    } ?>">
+                                                                <input type="text" class="form-control"
+                                                                    name="type_emballage" placeholder="Type d'Emballage"
+                                                                    id="emballage" :value="old('type_emballage')">
                                                                 <span class="fw-bold text-danger" id="messageEmballage"
                                                                     style="display: none;"></span>
                                                             </div>
                                                             <div class="d-flex flex-column">
                                                                 <input type="text" class="form-control w-50 ms-3"
-                                                                    name="poids" id="vol" value="<?php if (isset($_SESSION['insert']['info'])) {
-                                                                        echo $_SESSION['insert']['info']['vol'];
-                                                                    } ?>" placeholder="Vol/Poids">
+                                                                    name="poids" id="vol" placeholder="Vol/Poids"
+                                                                    :value="old('poids')">
                                                                 <span class="fw-bold text-danger" id="messageVol"
                                                                     style="display: none;"></span>
                                                             </div>
@@ -192,7 +176,12 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                                 name="danger[]" id="danger">
                                                                 <option value="none">Faites votre choix</option>
                                                                 @foreach ($danger as $dangers)
-                                                                    <option value="{{ $dangers->id }}">{{ $dangers->nomdanger }}</option>
+                                                                {{-- <option value="{{ $dangers->id }}">{{
+                                                                        $dangers->nomdanger }}</option> --}}
+                                                                <option value="{{ $dangers->id }}"
+                                                                    data-image="{{asset('images/' . $dangers->photo)}}">
+                                                                    {{ $dangers->nomdanger }}
+                                                                </option>
                                                                 @endforeach
                                                             </select>
                                                             <span id="messageDanger" class="text-danger fw-bold"
@@ -214,7 +203,9 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                                 name="atelier[]" id="atelier">
                                                                 <option value="none">Faites votre choix</option>
                                                                 @foreach ($ateliers as $atelier)
-                                                                    <option value="{{ $atelier->id }}">{{ $atelier->nomatelier }} de l'{{$atelier->usine->nomusine}}</option>
+                                                                <option value="{{ $atelier->id }}">
+                                                                    {{ $atelier->nomatelier }} de
+                                                                    l'{{$atelier->usine->nomusine}}</option>
                                                                 @endforeach
 
                                                             </select>
@@ -230,9 +221,7 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                             class="form-label text-primary">Risque<span
                                                                 class="required">*</span></label>
                                                         <textarea class="form-control" name="risque" id="risque"
-                                                            rows="6"> <?php if (isset($_SESSION['insert']['info'])) {
-                                                                echo $_SESSION['insert']['info']['risque'];
-                                                            } ?></textarea>
+                                                            rows="6"></textarea>
                                                         <span class="fw-bold text-danger" id="messageRisque"
                                                             style="display: none;"></span>
                                                     </div>
@@ -245,21 +234,22 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                             produit<span class="required">*</span></label>
                                                         <div class="d-flex">
                                                             <div class="d-flex flex-column">
-                                                                <input type="text" class="form-control"
+                                                                <input type="text" class="form-control "
                                                                     name="fabricant" placeholder="Fabricant"
-                                                                    id="fabriquant" value="<?php if (isset($_SESSION['insert']['info'])) {
-                                                                        echo $_SESSION['insert']['info']['fabriquant'];
-                                                                    } ?>">
+                                                                    id="fabriquant" :value="old('fabricant')">
                                                                 <span class="fw-bold text-danger" id="messageFabriquant"
                                                                     style="display: none;"></span>
                                                             </div>
 
                                                             <div class="d-flex flex-column">
-                                                                <input type="text" class="form-control w-50 ms-3"
-                                                                    name="nature" id="nature" placeholder="Nature"
-                                                                    value="<?php if (isset($_SESSION['insert']['info'])) {
-                                                                        echo $_SESSION['insert']['info']['nature'];
-                                                                    } ?>">
+                                                                <select
+                                                                    class="default-select form-control form-control-m w-200 ms-2"
+                                                                    name="nature" id="nature">
+                                                                    <option value="none">Faites Votre choix</option>
+                                                                    <option value="SOLIDE">Solide</option>
+                                                                    <option value="LIQUIDE">Liquide</option>
+                                                                    <option value="GAZEUX">Gazeux</option>
+                                                                </select>
                                                                 <span class="fw-bold text-danger" id="messageNature"
                                                                     style="display: none;"></span>
                                                             </div>
@@ -272,9 +262,7 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                             class="form-label text-primary">Utilisation<span
                                                                 class="required">*</span></label>
                                                         <textarea class="form-control" name="utilisation"
-                                                            id="utilisation" rows="6"><?php if (isset($_SESSION['insert']['info'])) {
-                                                                echo $_SESSION['insert']['info']['utilisation'];
-                                                            } ?></textarea>
+                                                            id="utilisation" rows="6"></textarea>
                                                         <span class="fw-bold text-danger" id="messageUtilisation"
                                                             style="display: none;"></span>
                                                     </div>
@@ -306,9 +294,8 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
                                                                     style="border: 1px solid #ccc;"></iframe>
                                                             </div>
 
-                                                            <input type="file" name="fds"
-                                                                class="form-control d-none" accept="application/pdf"
-                                                                id="fds">
+                                                            <input type="file" name="fds" class="form-control d-none"
+                                                                accept="application/pdf" id="fds">
                                                             <span id="messageFDS" class="text-danger fw-bold"
                                                                 style="display:none;"></span>
                                                             <label style="font-weight: 700;" for="fds"
@@ -337,7 +324,21 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
         </form>
 
     </div>
-    <?php unset($_SESSION['photo'], $_SESSION['insert']) ?>
+    <script>
+    function formatState(state) {
+        if (!state.id) return state.text;
+        const img = $(state.element).data('image');
+        return $('<span><img src="' + img +
+            '" class="img-flag" style="width: 20px; height: 20px; margin-right: 5px;" />' + state.text + '</span>');
+    }
+
+    $('#danger-select').select2({
+        templateResult: formatState,
+        templateSelection: formatState,
+        minimumResultsForSearch: -1 // optionnel : cache la barre de recherche
+    });
+    </script>
+
 
 
 
@@ -360,12 +361,3 @@ if (isset($_SESSION['insert']['type']) && $_SESSION['insert']['type'] == "insert
     <script src="{{asset('js/demo.js')}}"></script>
     <script src="{{asset('js/all.js')}}"></script>
     <script src="{{asset('js/new-product.js')}}"></script>
-
-
-    <?php
-    if (isset($_SESSION['photo']['photo'])) {
-        echo $photo = $_SESSION['photo']['photo'];
-    }
-
-
-    ?>

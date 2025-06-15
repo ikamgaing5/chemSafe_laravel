@@ -1,11 +1,4 @@
 <?php
-use App\Helpers\IdEncryptor;
-$current_page = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-
-if (strpos($current_page, 'product/more-detail') === 0) {
-    $message = "Informations du produit $prod->nomprod.";
-}
-
 $nomdanger = "";
 
 foreach ($prod->danger as $key) {
@@ -82,7 +75,7 @@ foreach ($prod->danger as $key) {
                                             <li class="nav-item " role="presentation">
                                                 <div class="d-flex">
                                                    
-                                                        <a href="{{route('product.edit', IdEncryptor::encode($prod->id))}}" class="btn btn-primary">
+                                                        <a href="{{route('product.edit', $IdEncryptor::encode($prod->id))}}" class="btn btn-primary">
                                                             Modifier le produit
                                                         </a>
                                                     
@@ -94,7 +87,7 @@ foreach ($prod->danger as $key) {
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-md-7">
-                                            <img src="{{ asset('storage/' . $prod->photo) }}" alt="photo produit"
+                                            <img  src="{{ asset('storage/' . $prod->photo) }}" alt="photo produit"
                                                 class="img-fluid rounded shadow">
                                         </div>
 
@@ -102,40 +95,63 @@ foreach ($prod->danger as $key) {
                                             <h3 class="mt-4">{{$prod->nomprod}}</h3>
                                             <div class="mb-3">
                                                 <h6>Danger : </h6>
+                                                
                                                 @php
+                                                $afficheimg = true;
                                                 if (trim($nomdanger) == "AUCUN DANGER,") {
                                                 $color = "success";
+                                                $afficheimg = false;
                                                 }else{
                                                 $color = "danger";
+                                                
                                                 }
                                                 @endphp
+                                                @if ($afficheimg)
+                                                <table>
+                                                    @foreach ($prod->danger as $keys => $danger)
+                                                        @if ($keys % 3 == 0)
+                                                            <tr>
+                                                        @endif
+                                                            <td>
+                                                                <img class='avatar avatar-xl p-2' src="{{asset('images/'.$danger->photo)}}" title="{{$danger->nomdanger}}" alt="">
+                                                            </td>
+                                                        @if (($keys + 1) % 3 == 0)
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                    @if (count($prod->danger) % 3 != 0)
+                                                        </tr>
+                                                    @endif
+                                                    
+                                                </table>
+                                                @endif
                                                 <span class="text-{{$color}} fw-bold">{{$nomdanger}}</span>
                                             </div>
                                             <p class="mb-3">
-                                                <strong>Nature : </strong><span class="fw-bold text-primary">{{$prod['nature']}}</span>
+                                                <strong>Nature : </strong><span class="fw-bold text-primary">{{$prod->nature}}</span>
                                             </p>
 
                                             <p class="mb-3">
                                                 <strong>Fabricant : </strong><span
-                                                    class="fw-bold text-primary">{{$prod['fabricant']}}</span>
+                                                    class="fw-bold text-primary">{{$prod->fabricant}}</span>
                                             </p>
 
                                             <p class="mb-3">
                                                 <strong>Risque : </strong><span
-                                                    class="fw-bold text-primary">{{$prod['risque']}}</span>
+                                                    class="fw-bold text-primary">{{$prod->risque}}</span>
                                             </p>
 
                                             <div class="mb-3">
                                                 <h6>Utilisation : </h6>
-                                                <span class="text-primary fw-bold">{{$prod['utilisation']}}</span>
+                                                <span class="text-primary fw-bold">{{$prod->utilisation}}</span>
                                             </div>
 
                                             <p><strong>Type d'emballage : </strong><span
-                                                    class="fw-bold text-primary">{{$prod['type_emballage']}}</span></p>
+                                                    class="fw-bold text-primary">{{$prod->type_emballage}}</span></p>
 
 
                                             <p><strong>Vol/Poids : </strong><span
-                                                    class="fw-bold text-primary">{{$prod['poids']}}</span></p>
+                                                    class="fw-bold text-primary">{{$prod->poids}}</span></p>
                                             @php
                                                 if($prod->fds != NULL){
                                                     $temoin = true;
@@ -157,7 +173,7 @@ foreach ($prod->danger as $key) {
 
                                             <div class="d-flex">
                                                 @if ($prod->infofds == null && $temoin == true)
-                                                    <a href="/info-fds/new-info-fds/{{IdEncryptor::encode($prod->id)}}" class="btn btn-outline-dark me-2">
+                                                    <a href="/info-fds/new-info-fds/{{$IdEncryptor::encode($prod->id)}}" class="btn btn-outline-dark me-2">
                                                         Ajouter les informations de la FDS
                                                     </a>
                                                @endif
@@ -184,7 +200,7 @@ foreach ($prod->danger as $key) {
                                                 @if ($prod->infofds != null && $temoin == true)
                                                     <div class="d-flex">
                                                         
-                                                            <a href="{{route('infofds.edit', ['idproduit' => IdEncryptor::encode($prod->infofds->id)])}}" class="btn btn-warning">
+                                                            <a href="{{route('infofds.edit', ['idproduit' => $IdEncryptor::encode($prod->infofds->id)])}}" class="btn btn-warning">
                                                                 Modifier les informations
                                                             </a>
                                                        
@@ -198,7 +214,8 @@ foreach ($prod->danger as $key) {
                                     @if ($prod->infofds == null && $prod->fds != null)
                                     <h2 class="text-center text-danger">Vous n'avez pas ajouté les informations de la
                                         FDS de ce produit.</strong></span></h2>
-                                    @if ($temoin && $prod->infofds != null)
+                                    
+                                    @elseif ($prod->infofds != null)
                                     <div class="row">
                                         <div class="col-xl-6 col-sm-6">
                                             <div class="mb-3">
@@ -245,7 +262,7 @@ foreach ($prod->danger as $key) {
                                             <div class="mb-3">
                                                 <h6 class="text-primary">Réactivité : </h6>
                                                 <span
-                                                    class="text-danger fw-bold">{{$prod->infofdsreactivite}}</span>
+                                                    class="text-danger fw-bold">{{$prod->infofds->reactivite}}</span>
                                             </div>
 
                                             <div class="mb-3">
@@ -268,7 +285,6 @@ foreach ($prod->danger as $key) {
                                     @else
                                     <h2 class="text-center text-danger">Ajouter la FDS pour avoir ses
                                         informations.</strong></span></h2>
-                                    @endif
                                     @endif
                                 </div>
                             </div>
